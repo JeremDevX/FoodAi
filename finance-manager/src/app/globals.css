@@ -1,0 +1,405 @@
+/* 🎯 Thème WCAG AA Optimisé pour Finance Manager */
+@import "../styles/wcag-theme.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset et styles de base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--wcag-primary-text);
+  background: var(--wcag-background);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+  font-size: var(--wcag-font-size-base);
+  line-height: var(--wcag-line-height-base);
+  transition: all 0.2s ease;
+}
+
+/* Accessibilité : focus visible */
+*:focus {
+  outline: 2px solid var(--wcag-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--wcag-focus-ring);
+}
+
+/* Support des préférences utilisateur */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Classes utilitaires d'accessibilité */
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .focus-visible {
+    outline: 2px solid var(--wcag-focus);
+    outline-offset: 2px;
+  }
+
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Composants accessibles */
+@layer components {
+  /* Boutons accessibles WCAG */
+  .wcag-button {
+    min-height: var(--wcag-touch-min);
+    min-width: var(--wcag-touch-min);
+    padding: 12px 16px;
+    font-size: var(--wcag-font-size-base);
+    line-height: var(--wcag-line-height-base);
+    font-weight: var(--wcag-font-weight-medium);
+    border-radius: var(--wcag-radius-md);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wcag-spacing-sm);
+    border: 2px solid transparent;
+  }
+
+  .wcag-button:focus {
+    outline: 2px solid var(--wcag-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--wcag-focus-ring);
+  }
+
+  .wcag-button-primary {
+    background: var(--wcag-nav-active);
+    color: var(--wcag-background);
+  }
+
+  .wcag-button-primary:hover {
+    background: #1e40af;
+  }
+
+  .wcag-button-secondary {
+    background: var(--wcag-surface);
+    color: var(--wcag-primary-text);
+    border: 2px solid var(--wcag-border);
+  }
+
+  .wcag-button-secondary:hover {
+    background: var(--wcag-surface-hover);
+    border-color: var(--wcag-nav-inactive);
+  }
+
+  /* Navigation accessible */
+  .wcag-nav-item {
+    min-height: var(--wcag-touch-min);
+    padding: 12px 16px;
+    font-size: var(--wcag-font-size-base);
+    font-weight: var(--wcag-font-weight-medium);
+    color: var(--wcag-nav-inactive);
+    background: transparent;
+    border: none;
+    border-radius: var(--wcag-radius-md);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--wcag-spacing-sm);
+    width: 100%;
+    text-align: left;
+  }
+
+  .wcag-nav-item[aria-current="page"] {
+    color: var(--wcag-nav-active);
+    background: rgba(37, 99, 235, 0.1);
+    font-weight: var(--wcag-font-weight-bold);
+  }
+
+  .wcag-nav-item:hover {
+    background: rgba(37, 99, 235, 0.05);
+    color: var(--wcag-nav-active);
+  }
+
+  .wcag-nav-item:focus {
+    outline: 2px solid var(--wcag-focus);
+    outline-offset: 2px;
+  }
+
+  /* Formulaires accessibles */
+  .wcag-form-group {
+    margin-bottom: var(--wcag-spacing-lg);
+  }
+
+  .wcag-label {
+    display: block;
+    color: var(--wcag-primary-text);
+    font-size: var(--wcag-font-size-base);
+    font-weight: var(--wcag-font-weight-medium);
+    margin-bottom: var(--wcag-spacing-sm);
+  }
+
+  .wcag-label-required::after {
+    content: " *";
+    color: var(--wcag-error);
+  }
+
+  .wcag-input {
+    min-height: var(--wcag-input-height);
+    padding: 12px 16px;
+    font-size: var(--wcag-font-size-base);
+    line-height: var(--wcag-line-height-base);
+    border: 2px solid var(--wcag-border);
+    border-radius: var(--wcag-radius-md);
+    background: var(--wcag-background);
+    color: var(--wcag-primary-text);
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+
+  .wcag-input:focus {
+    outline: 2px solid var(--wcag-focus);
+    outline-offset: 2px;
+    border-color: var(--wcag-focus);
+    box-shadow: 0 0 0 4px var(--wcag-focus-ring);
+  }
+
+  .wcag-input:invalid {
+    border-color: var(--wcag-error);
+  }
+
+  .wcag-input::placeholder {
+    color: var(--wcag-tertiary-text);
+  }
+
+  /* Messages d'erreur accessibles */
+  .wcag-error-message {
+    color: var(--wcag-error);
+    font-size: 14px;
+    font-weight: var(--wcag-font-weight-medium);
+    margin-top: var(--wcag-spacing-xs);
+  }
+
+  .wcag-success-message {
+    color: var(--wcag-success);
+    font-size: 14px;
+    font-weight: var(--wcag-font-weight-medium);
+    margin-top: var(--wcag-spacing-xs);
+  }
+
+  /* Cards accessibles */
+  .wcag-card {
+    background: var(--wcag-surface);
+    border: 1px solid var(--wcag-border);
+    border-radius: var(--wcag-radius-lg);
+    padding: var(--wcag-spacing-lg);
+    margin-bottom: var(--wcag-spacing-lg);
+    transition: all 0.2s ease;
+  }
+
+  .wcag-card:hover {
+    background: var(--wcag-surface-hover);
+  }
+
+  .wcag-card:focus-within {
+    outline: 2px solid var(--wcag-focus);
+    outline-offset: 2px;
+  }
+
+  /* Skip links pour la navigation au clavier */
+  .wcag-skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--wcag-focus);
+    color: var(--wcag-background);
+    padding: 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    z-index: 1000;
+    transition: top 0.3s;
+  }
+
+  .wcag-skip-link:focus {
+    top: 6px;
+  }
+
+  /* Support des préférences utilisateur */
+  @media (prefers-contrast: high) {
+    :root {
+      --wcag-border: #000000;
+      --wcag-focus: #000000;
+      --wcag-nav-active: #000000;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .wcag-button:hover {
+      transform: none !important;
+    }
+
+    .wcag-card:hover {
+      transform: none !important;
+    }
+  }
+
+  /* Impression optimisée */
+  @media print {
+    .wcag-no-print {
+      display: none !important;
+    }
+
+    .wcag-print-only {
+      display: block !important;
+    }
+
+    body {
+      background: white !important;
+      color: black !important;
+    }
+  }
+}
+
+/* Animations de base */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loading-dots {
+  0%,
+  20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%,
+  100% {
+    content: "...";
+  }
+}
+
+/* Classes utilitaires pour les thèmes */
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  .text-contrast-high {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .bg-contrast {
+    background-color: var(--bg-secondary);
+  }
+
+  .border-contrast {
+    border-color: var(--border-primary);
+  }
+}

@@ -1,0 +1,315 @@
+/* Système de thèmes modernisé pour Finance Manager */
+
+:root {
+  /* Thème Clair - Glassmorphism */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-glass: rgba(255, 255, 255, 0.25);
+  --bg-glass-hover: rgba(255, 255, 255, 0.4);
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155; /* Amélioration du contraste pour WCAG AA */
+  --text-tertiary: #64748b;
+  --text-accent: #1e40af;
+
+  --border-primary: rgba(255, 255, 255, 0.18);
+  --border-secondary: rgba(255, 255, 255, 0.1);
+  --shadow-primary: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --shadow-secondary: 0 4px 16px 0 rgba(31, 38, 135, 0.2);
+
+  /* Couleurs fonctionnelles */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Couleurs financières */
+  --color-income: #10b981;
+  --color-expense: #ef4444;
+  --color-budget: #3b82f6;
+  --color-goal: #8b5cf6;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+
+  /* Effets */
+  --backdrop-blur: blur(20px);
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-medium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Bordures et rayons */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* Thème Sombre - Néon Tech */
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-glass: rgba(30, 41, 59, 0.25);
+  --bg-glass-hover: rgba(30, 41, 59, 0.4);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-accent: #60a5fa;
+
+  --border-primary: rgba(148, 163, 184, 0.18);
+  --border-secondary: rgba(148, 163, 184, 0.1);
+  --shadow-primary: 0 8px 32px 0 rgba(2, 8, 20, 0.5);
+  --shadow-secondary: 0 4px 16px 0 rgba(2, 8, 20, 0.3);
+
+  /* Couleurs Néon */
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-info: #60a5fa;
+
+  /* Gradients Néon */
+  --gradient-primary: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+}
+
+/* Thème Océan - Bleu profond */
+[data-theme="ocean"] {
+  --bg-primary: #0c1e2e;
+  --bg-secondary: #143447;
+  --bg-tertiary: #1e4a61;
+  --bg-glass: rgba(20, 52, 71, 0.3);
+  --bg-glass-hover: rgba(20, 52, 71, 0.5);
+
+  --text-primary: #e0f2fe;
+  --text-secondary: #bae6fd;
+  --text-tertiary: #7dd3fc;
+  --text-accent: #38bdf8;
+
+  --border-primary: rgba(125, 211, 252, 0.2);
+  --border-secondary: rgba(125, 211, 252, 0.1);
+  --shadow-primary: 0 8px 32px 0 rgba(14, 165, 233, 0.3);
+  --shadow-secondary: 0 4px 16px 0 rgba(14, 165, 233, 0.2);
+
+  --color-success: #2dd4bf;
+  --color-warning: #fbbf24;
+  --color-danger: #fb7185;
+  --color-info: #38bdf8;
+
+  --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+  --gradient-success: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-danger: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+}
+
+/* Thème Forêt - Vert nature */
+[data-theme="forest"] {
+  --bg-primary: #0a1f0f;
+  --bg-secondary: #0f2e1a;
+  --bg-tertiary: #14432a;
+  --bg-glass: rgba(15, 46, 26, 0.3);
+  --bg-glass-hover: rgba(15, 46, 26, 0.5);
+
+  --text-primary: #d1fae5;
+  --text-secondary: #a7f3d0;
+  --text-tertiary: #6ee7b7;
+  --text-accent: #34d399;
+
+  --border-primary: rgba(110, 231, 183, 0.2);
+  --border-secondary: rgba(110, 231, 183, 0.1);
+  --shadow-primary: 0 8px 32px 0 rgba(16, 185, 129, 0.3);
+  --shadow-secondary: 0 4px 16px 0 rgba(16, 185, 129, 0.2);
+
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #fb7185;
+  --color-info: #5eead4;
+
+  --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+}
+
+/* Thème Cosmique - Violet mystique */
+[data-theme="cosmic"] {
+  --bg-primary: #1a0a2e;
+  --bg-secondary: #2a1747;
+  --bg-tertiary: #3b2561;
+  --bg-glass: rgba(42, 23, 71, 0.3);
+  --bg-glass-hover: rgba(42, 23, 71, 0.5);
+
+  --text-primary: #f3e8ff;
+  --text-secondary: #e9d5ff;
+  --text-tertiary: #d8b4fe;
+  --text-accent: #c084fc;
+
+  --border-primary: rgba(216, 180, 254, 0.2);
+  --border-secondary: rgba(216, 180, 254, 0.1);
+  --shadow-primary: 0 8px 32px 0 rgba(168, 85, 247, 0.3);
+  --shadow-secondary: 0 4px 16px 0 rgba(168, 85, 247, 0.2);
+
+  --color-success: #a78bfa;
+  --color-warning: #fbbf24;
+  --color-danger: #f472b6;
+  --color-info: #c084fc;
+
+  --gradient-primary: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  --gradient-success: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+}
+
+/* Animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Classes Utilitaires */
+.glass-effect {
+  background: var(--bg-glass);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.glass-effect-hover:hover {
+  background: var(--bg-glass-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-secondary);
+}
+
+.neon-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.slide-in-animation {
+  animation: slide-in 0.6s ease-out;
+}
+
+.fade-in-up-animation {
+  animation: fade-in-up 0.8s ease-out;
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-info);
+}
+
+/* Sélection de texte */
+::selection {
+  background: var(--color-info);
+  color: white;
+}
+
+/* Transitions fluides */
+.smooth-transition {
+  transition: var(--transition-medium);
+}
+
+.smooth-transition-fast {
+  transition: var(--transition-fast);
+}
