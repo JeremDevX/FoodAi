@@ -1,37 +1,36 @@
 {
   "components/Goals/GoalForm.tsx -> @/lib/database": {
-    "id": 10880,
+    "id": "components/Goals/GoalForm.tsx -> @/lib/database",
     "files": []
   },
   "components/Layout/UltimateHeader.tsx -> @/lib/database": {
-    "id": 10880,
+    "id": "components/Layout/UltimateHeader.tsx -> @/lib/database",
     "files": []
   },
   "components/Layout/UltimateHeader.tsx -> @/lib/utils": {
-    "id": 93448,
+    "id": "components/Layout/UltimateHeader.tsx -> @/lib/utils",
     "files": []
   },
   "components/Settings/UltimateSettings.tsx -> @/lib/database": {
-    "id": 10880,
+    "id": "components/Settings/UltimateSettings.tsx -> @/lib/database",
     "files": []
   },
   "components/Theme/ThemeProvider.tsx -> @/lib/database": {
-    "id": 10880,
+    "id": "components/Theme/ThemeProvider.tsx -> @/lib/database",
     "files": [
-      "static/chunks/96-90fedd66cf325a03.js",
-      "static/chunks/880.d0cc124d63d07938.js"
+      "static/chunks/_app-pages-browser_src_lib_database_ts.js"
     ]
   },
   "components/Transactions/ImportModal.tsx -> @/lib/database": {
-    "id": 10880,
-    "files": []
-  },
-  "components/Transactions/TransactionForm.tsx -> @/lib/database": {
-    "id": 10880,
+    "id": "components/Transactions/ImportModal.tsx -> @/lib/database",
     "files": []
   },
   "components/Transactions/TransactionManager.tsx -> @/lib/database": {
-    "id": 10880,
+    "id": "components/Transactions/TransactionManager.tsx -> @/lib/database",
+    "files": []
+  },
+  "components/Transactions/UltimateTransactionForm.tsx -> @/lib/database": {
+    "id": "components/Transactions/UltimateTransactionForm.tsx -> @/lib/database",
     "files": []
   }
 }

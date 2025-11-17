@@ -71,6 +71,28 @@ export default function UltimateHeader() {
     );
   };
 
+  const handleImport = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          const { importData } = await import("@/lib/database");
+          await importData(data);
+          window.location.reload(); // Recharger pour appliquer les données
+        } catch (error) {
+          alert('Erreur lors de l\'importation du fichier');
+          console.error('Import error:', error);
+        }
+      }
+    };
+    input.click();
+  };
+
   const headerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -367,6 +389,7 @@ export default function UltimateHeader() {
               </button>
 
               <button
+                onClick={handleImport}
                 className="p-2 rounded-lg transition-all duration-200"
                 style={{
                   background: "var(--bg-glass)",
@@ -379,7 +402,7 @@ export default function UltimateHeader() {
               </button>
             </div>
 
-            {/* User Menu */}
+            {/* User Menu - Simplifié */}
             <div
               className="flex items-center space-x-2 p-2 rounded-lg"
               style={{
@@ -396,12 +419,6 @@ export default function UltimateHeader() {
                   style={{ color: "var(--text-primary)" }}
                 >
                   Utilisateur
-                </div>
-                <div
-                  className="text-xs"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Premium
                 </div>
               </div>
             </div>
@@ -430,11 +447,8 @@ export default function UltimateHeader() {
               <span>Interface optimisée</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ background: "var(--color-success)" }}
-              />
-              <span>Connecté</span>
+              <Zap className="h-3 w-3" style={{ color: "var(--color-success)" }} />
+              <span>100% Local</span>
             </div>
           </div>
         </motion.div>

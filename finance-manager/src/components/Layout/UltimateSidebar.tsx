@@ -90,16 +90,32 @@ export default function UltimateSidebar() {
   };
 
   return (
-    <motion.div
-      variants={sidebarVariants}
-      initial="expanded"
-      animate={isExpanded ? "expanded" : "collapsed"}
-      className={`relative h-screen overflow-hidden ${isMobile && isExpanded ? 'fixed inset-0 z-50 md:relative md:z-auto' : ''}`}
-      style={{
-        background: "var(--bg-primary)",
-        borderRight: "1px solid var(--border-primary)",
-      }}
-    >
+    <>
+      {/* Bouton flottant pour réouvrir la sidebar sur mobile */}
+      {!isExpanded && isMobile && (
+        <motion.button
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsExpanded(true)}
+          className="fixed top-4 left-4 z-50 p-3 bg-gradient-to-r from-financial-500 to-blue-500 text-white rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-financial-500 focus:ring-offset-2"
+          aria-label="Ouvrir le menu"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </motion.button>
+      )}
+
+      <motion.div
+        variants={sidebarVariants}
+        initial="expanded"
+        animate={isExpanded ? "expanded" : "collapsed"}
+        className={`relative h-screen overflow-hidden ${isMobile && isExpanded ? 'fixed inset-0 z-50 md:relative md:z-auto' : ''}`}
+        style={{
+          background: "var(--bg-primary)",
+          borderRight: "1px solid var(--border-primary)",
+        }}
+      >
       {/* Subtle Background */}
       <div className="absolute inset-0">
         <div
@@ -370,5 +386,6 @@ export default function UltimateSidebar() {
         <Plus className="h-6 w-6" />
       </motion.button>
     </motion.div>
+    </>
   );
 }

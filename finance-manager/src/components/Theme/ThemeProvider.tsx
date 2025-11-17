@@ -39,15 +39,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const settings = await getSettings();
 
         if (settings?.theme) {
-          // Map UserSettings theme to ThemeProvider theme
           let mappedTheme: Theme = "light";
-          if (settings.theme === "dark") mappedTheme = "dark";
-          else if (settings.theme === "system") {
+
+          if (settings.theme === "system") {
             // Detect system preference
             mappedTheme = window.matchMedia("(prefers-color-scheme: dark)")
               .matches
               ? "dark"
               : "light";
+          } else {
+            // Use the theme as-is from settings
+            mappedTheme = settings.theme as Theme;
           }
 
           // Only update if different from localStorage
@@ -88,7 +90,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const { getSettings, updateSettings } = await import("@/lib/database");
       const settings = await getSettings();
       if (settings?.id) {
-        // Map Theme to UserSettings theme format - preserve le thème exact
         await updateSettings({ theme: newTheme });
       }
     } catch (error) {

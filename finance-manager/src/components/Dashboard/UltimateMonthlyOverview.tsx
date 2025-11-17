@@ -2,6 +2,7 @@
 
 import { useFinanceStore } from "@/lib/store";
 import { useFormatCurrency } from "@/lib/utils";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart,
@@ -38,8 +39,17 @@ const COLORS = [
   "#6b7280",
 ];
 
+const getAccessibleBgColor = (theme: string) => {
+  return theme === "dark" ? "bg-gray-800/50" : "bg-white/50";
+};
+
+const getAccessibleTextColor = (theme: string) => {
+  return theme === "dark" ? "text-gray-100" : "text-gray-900";
+};
+
 export default function UltimateMonthlyOverview() {
   const { getMonthlyStats, getCategoryStats } = useFinanceStore();
+  const { theme } = useTheme();
   const formatCurrency = useFormatCurrency();
   const stats = getMonthlyStats();
   const categoryStats = getCategoryStats();
@@ -108,23 +118,29 @@ export default function UltimateMonthlyOverview() {
     trend?: "up" | "down" | "stable";
     delay?: number;
   }) => (
-    <div className="glass-card transition-all duration-200 relative overflow-hidden">
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      transition={{ delay }}
+      className="glass-card transition-all duration-200 relative overflow-hidden p-6 hover:shadow-lg"
+    >
       {/* Subtle background gradient */}
       <div
         className={`absolute inset-0 bg-gradient-to-br ${color} opacity-5`}
       />
 
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <div
-            className="p-2 rounded-lg"
+            className="p-3 rounded-lg"
             style={{ background: "var(--bg-glass)" }}
           >
-            <Icon className="h-5 w-5" style={{ color: "var(--text-accent)" }} />
+            <Icon className="h-6 w-6" style={{ color: "var(--text-accent)" }} />
           </div>
           {trend && (
-            <div
-              className="p-1 rounded-full"
+            <motion.div
+              className="p-2 rounded-full"
               style={{
                 background:
                   trend === "up"
@@ -139,6 +155,7 @@ export default function UltimateMonthlyOverview() {
                     ? "var(--color-danger)"
                     : "var(--text-tertiary)",
               }}
+              whileHover={{ scale: 1.1 }}
             >
               {trend === "up" ? (
                 <TrendingUp className="h-4 w-4" />
@@ -147,19 +164,19 @@ export default function UltimateMonthlyOverview() {
               ) : (
                 <div className="w-4 h-4 bg-current rounded-full" />
               )}
-            </div>
+            </motion.div>
           )}
         </div>
 
         <div>
           <div
-            className="text-sm mb-1"
+            className="text-base font-medium mb-2"
             style={{ color: "var(--text-secondary)" }}
           >
             {title}
           </div>
           <div
-            className="text-2xl font-bold"
+            className="text-3xl font-bold mb-3"
             style={{ color: "var(--text-primary)" }}
           >
             {value}
@@ -168,7 +185,7 @@ export default function UltimateMonthlyOverview() {
 
         {/* Simple progress bar */}
         <div
-          className="mt-4 h-1 rounded-full overflow-hidden"
+          className="mt-4 h-2 rounded-full overflow-hidden"
           style={{ background: "var(--bg-tertiary)" }}
         >
           <div
@@ -177,7 +194,7 @@ export default function UltimateMonthlyOverview() {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   const ChartCard = ({
@@ -196,10 +213,10 @@ export default function UltimateMonthlyOverview() {
       initial="hidden"
       animate="visible"
       transition={{ delay }}
-      className={`glass-card ${className}`}
+      className={`glass-card p-6 ${className}`}
     >
       <h3
-        className="text-lg font-semibold mb-4"
+        className="text-xl font-semibold mb-6"
         style={{ color: "var(--text-primary)" }}
       >
         {title}
@@ -272,7 +289,12 @@ export default function UltimateMonthlyOverview() {
 
       {/* Overview Stats */}
       {selectedView === "overview" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8"
+        >
           <StatCard
             title="Revenus du mois"
             value={formatCurrency(stats.income)}
@@ -303,12 +325,17 @@ export default function UltimateMonthlyOverview() {
             trend={stats.balance >= 0 ? "up" : "down"}
             delay={0.3}
           />
-        </div>
+        </motion.div>
       )}
 
       {/* Categories View */}
       {selectedView === "categories" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8"
+        >
           <ChartCard title="Répartition par Catégorie" delay={0.1}>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -338,29 +365,40 @@ export default function UltimateMonthlyOverview() {
           </ChartCard>
 
           <ChartCard title="Top Dépenses" delay={0.2}>
-            <div className="space-y-3 max-h-80 overflow-y-auto">
+            <div className="space-y-4 max-h-80 overflow-y-auto">
               {chartData.map((item, index) => (
                 <motion.div
                   key={item.category}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${getAccessibleBgColor(
+                    theme
+                  )} hover:shadow-md`}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-4">
                     <div
-                      className="w-4 h-4 rounded-full"
+                      className="w-5 h-5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: item.color }}
                     />
-                    <span className="font-medium text-gray-900">
+                    <span
+                      className={`font-medium ${getAccessibleTextColor(theme)}`}
+                    >
                       {item.category}
                     </span>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold text-gray-900">
+                    <div
+                      className={`font-semibold ${getAccessibleTextColor(
+                        theme
+                      )}`}
+                    >
                       {formatCurrency(item.amount)}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div
+                      className="text-sm"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
                       {item.percentage.toFixed(1)}%
                     </div>
                   </div>
@@ -368,88 +406,169 @@ export default function UltimateMonthlyOverview() {
               ))}
             </div>
           </ChartCard>
-        </div>
+        </motion.div>
       )}
 
       {/* Trends View */}
       {selectedView === "trends" && (
-        <ChartCard title="Évolution Mensuelle" delay={0.1} className="h-96">
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={monthlyTrends}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
-                <XAxis dataKey="month" />
-                <YAxis tickFormatter={(value) => `${value / 1000}k`} />
-                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                <Line
-                  type="monotone"
-                  dataKey="income"
-                  stroke="#10b981"
-                  strokeWidth={3}
-                  dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }}
-                  activeDot={{ r: 8, stroke: "#10b981", strokeWidth: 2 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="expenses"
-                  stroke="#ef4444"
-                  strokeWidth={3}
-                  dot={{ fill: "#ef4444", strokeWidth: 2, r: 6 }}
-                  activeDot={{ r: 8, stroke: "#ef4444", strokeWidth: 2 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </ChartCard>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mb-8"
+        >
+          <ChartCard title="Évolution Mensuelle" delay={0.1} className="h-96">
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={monthlyTrends}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(0,0,0,0.1)"
+                  />
+                  <XAxis dataKey="month" />
+                  <YAxis tickFormatter={(value) => `${value / 1000}k`} />
+                  <Tooltip
+                    formatter={(value) => formatCurrency(Number(value))}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="income"
+                    stroke="#10b981"
+                    strokeWidth={3}
+                    dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }}
+                    activeDot={{ r: 8, stroke: "#10b981", strokeWidth: 2 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="expenses"
+                    stroke="#ef4444"
+                    strokeWidth={3}
+                    dot={{ fill: "#ef4444", strokeWidth: 2, r: 6 }}
+                    activeDot={{ r: 8, stroke: "#ef4444", strokeWidth: 2 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </ChartCard>
+        </motion.div>
       )}
 
       {/* Additional Insights */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-3 gap-8"
       >
-        <div className="glass-card p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-financial-100 rounded-lg">
-              <Calendar className="h-5 w-5 text-financial-600" />
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
+          className={`glass-card p-6 transition-all duration-200 ${getAccessibleBgColor(
+            theme
+          )}`}
+        >
+          <div className="flex items-center space-x-4 mb-4">
+            <div
+              className="p-3 rounded-lg"
+              style={{ background: "var(--bg-glass)" }}
+            >
+              <Calendar
+                className="h-6 w-6"
+                style={{ color: "var(--text-accent)" }}
+              />
             </div>
-            <h4 className="font-semibold text-gray-900">Période Actuelle</h4>
+            <h4
+              className={`font-semibold text-lg ${getAccessibleTextColor(
+                theme
+              )}`}
+            >
+              Période Actuelle
+            </h4>
           </div>
-          <p className="text-gray-600 text-sm">
+          <p
+            className={`text-sm leading-relaxed ${getAccessibleTextColor(
+              theme
+            )}`}
+            style={{ opacity: 0.8 }}
+          >
             Données du mois en cours. Comparez avec les mois précédents pour
             identifier les tendances.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="glass-card p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-success/20 rounded-lg">
-              <Target className="h-5 w-5 text-success" />
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
+          className={`glass-card p-6 transition-all duration-200 ${getAccessibleBgColor(
+            theme
+          )}`}
+        >
+          <div className="flex items-center space-x-4 mb-4">
+            <div
+              className="p-3 rounded-lg"
+              style={{ background: "var(--bg-glass)" }}
+            >
+              <Target
+                className="h-6 w-6"
+                style={{ color: "var(--color-success)" }}
+              />
             </div>
-            <h4 className="font-semibold text-gray-900">Objectif</h4>
+            <h4
+              className={`font-semibold text-lg ${getAccessibleTextColor(
+                theme
+              )}`}
+            >
+              Objectif
+            </h4>
           </div>
-          <p className="text-gray-600 text-sm">
+          <p
+            className={`text-sm leading-relaxed ${getAccessibleTextColor(
+              theme
+            )}`}
+            style={{ opacity: 0.8 }}
+          >
             Maintenez un ratio épargne/revenus de 20% pour une santé financière
             optimale.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="glass-card p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-warning/20 rounded-lg">
-              <Zap className="h-5 w-5 text-warning" />
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ scale: 1.02 }}
+          className={`glass-card p-6 transition-all duration-200 ${getAccessibleBgColor(
+            theme
+          )}`}
+        >
+          <div className="flex items-center space-x-4 mb-4">
+            <div
+              className="p-3 rounded-lg"
+              style={{ background: "var(--bg-glass)" }}
+            >
+              <Zap
+                className="h-6 w-6"
+                style={{ color: "var(--color-warning)" }}
+              />
             </div>
-            <h4 className="font-semibold text-gray-900">Conseil</h4>
+            <h4
+              className={`font-semibold text-lg ${getAccessibleTextColor(
+                theme
+              )}`}
+            >
+              Conseil
+            </h4>
           </div>
-          <p className="text-gray-600 text-sm">
+          <p
+            className={`text-sm leading-relaxed ${getAccessibleTextColor(
+              theme
+            )}`}
+            style={{ opacity: 0.8 }}
+          >
             {stats.balance > 0
               ? "Excellent ! Vous épargnez plus que vous ne dépensez. Continuez ainsi !"
               : "Attention à vos dépenses. Essayez de réduire les achats non essentiels."}
           </p>
-        </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );

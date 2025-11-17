@@ -7,6 +7,7 @@ import {
   getFinancialColor,
   normalizeDate,
 } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -17,15 +18,17 @@ export default function RecentTransactions() {
 
   const getTransactionIcon = (type: "income" | "expense") => {
     if (type === "income") {
-      return <ArrowUpRight className="h-4 w-4 text-success" />;
+      return (
+        <ArrowUpRight className="h-4 w-4 text-success" aria-hidden="true" />
+      );
     }
-    return <ArrowDownLeft className="h-4 w-4 text-danger" />;
+    return <ArrowDownLeft className="h-4 w-4 text-danger" aria-hidden="true" />;
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
           Transactions Récentes
         </h2>
         <Link
@@ -33,7 +36,7 @@ export default function RecentTransactions() {
           onClick={() =>
             useFinanceStore.getState().setCurrentView("transactions")
           }
-          className="text-sm text-financial-600 hover:text-financial-700"
+          className="text-sm text-financial-600 hover:text-financial-700 dark:text-financial-400 dark:hover:text-financial-300"
         >
           Voir tout
         </Link>
@@ -41,44 +44,62 @@ export default function RecentTransactions() {
 
       <div className="space-y-4">
         {recentTransactions.length === 0 ? (
-          <div className="text-center py-8">
-            <div className="text-gray-400 mb-2">Aucune transaction</div>
-            <div className="text-sm text-gray-500">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-8"
+          >
+            <div className="text-gray-400 dark:text-gray-500 mb-2">
+              Aucune transaction
+            </div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               Commencez par ajouter une transaction
             </div>
-          </div>
+          </motion.div>
         ) : (
-          recentTransactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <div className="flex items-center space-x-3">
-                <div className="flex-shrink-0">
-                  {getTransactionIcon(transaction.type)}
-                </div>
-                <div>
-                  <div className="font-medium text-gray-900">
-                    {transaction.description}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {transaction.category} •{" "}
-                    {formatShortDate(new Date(transaction.date))}
-                  </div>
-                </div>
-              </div>
-              <div
-                className={`font-semibold ${getFinancialColor(
-                  transaction.type === "income"
-                    ? transaction.amount
-                    : -transaction.amount
-                )}`}
+          <div className="space-y-3">
+            {recentTransactions.map((transaction, index) => (
+              <motion.div
+                key={transaction.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 cursor-pointer"
+                onClick={() =>
+                  useFinanceStore.getState().setCurrentView("transactions")
+                }
               >
-                {transaction.type === "income" ? "+" : "-"}
-                {formatCurrency(Math.abs(transaction.amount))}
-              </div>
-            </div>
-          ))
+                <div className="flex items-center space-x-4">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="flex-shrink-0"
+                  >
+                    {getTransactionIcon(transaction.type)}
+                  </motion.div>
+                  <div>
+                    <div className="font-medium text-gray-900 dark:text-white text-base">
+                      {transaction.description}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {transaction.category} •{" "}
+                      {formatShortDate(new Date(transaction.date))}
+                    </div>
+                  </div>
+                </div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className={`font-semibold text-lg ${getFinancialColor(
+                    transaction.type === "income"
+                      ? transaction.amount
+                      : -transaction.amount
+                  )}`}
+                >
+                  {transaction.type === "income" ? "+" : "-"}
+                  {formatCurrency(Math.abs(transaction.amount))}
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
 
@@ -87,7 +108,8 @@ export default function RecentTransactions() {
           onClick={() =>
             useFinanceStore.getState().setCurrentView("transactions")
           }
-          className="w-full px-4 py-2 bg-financial-100 hover:bg-financial-200 text-financial-700 rounded-lg transition-colors font-medium"
+          className="w-full px-4 py-2 bg-financial-100 hover:bg-financial-200 dark:bg-financial-900 dark:hover:bg-financial-800 text-financial-700 dark:text-financial-300 rounded-lg transition-colors font-medium"
+          aria-label="Gérer toutes les transactions"
         >
           Gérer les transactions
         </button>

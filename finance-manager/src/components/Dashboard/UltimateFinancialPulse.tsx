@@ -78,7 +78,7 @@ export default function UltimateFinancialPulse() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="relative glass-card overflow-hidden"
+      className="relative glass-card overflow-hidden p-8"
     >
       {/* Header */}
       <motion.div
@@ -148,7 +148,7 @@ export default function UltimateFinancialPulse() {
       </motion.div>
 
       {/* Main Content */}
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Pulse Circle */}
         <motion.div
           variants={itemVariants}
@@ -156,7 +156,7 @@ export default function UltimateFinancialPulse() {
         >
           <div className="relative">
             <svg
-              className="w-40 h-40 transform -rotate-90"
+              className="w-32 h-32 transform -rotate-90"
               viewBox="0 0 100 100"
             >
               <defs>
@@ -237,27 +237,27 @@ export default function UltimateFinancialPulse() {
 
         {/* Key Metrics */}
         <motion.div variants={itemVariants} className="space-y-4">
-          <div className="glass-card p-4 transition-all duration-200">
+          <div className="glass-card p-4 transition-all duration-200 h-32">
             <div className="flex items-center justify-between mb-2">
               <div
-                className="text-sm"
+                className="text-base font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Revenus du mois
               </div>
               <TrendingUp
-                className="h-4 w-4"
+                className="h-5 w-5"
                 style={{ color: "var(--color-success)" }}
               />
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-2xl font-bold mb-2"
               style={{ color: "var(--color-success)" }}
             >
               {formatCurrency(pulse.monthlyIncome)}
             </div>
             <div
-              className="mt-2 h-2 rounded-full overflow-hidden"
+              className="h-2 rounded-full overflow-hidden"
               style={{ background: "var(--bg-tertiary)" }}
             >
               <div
@@ -273,27 +273,27 @@ export default function UltimateFinancialPulse() {
             </div>
           </div>
 
-          <div className="glass-card p-4 transition-all duration-200">
+          <div className="glass-card p-4 transition-all duration-200 h-32">
             <div className="flex items-center justify-between mb-2">
               <div
-                className="text-sm"
+                className="text-base font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Dépenses du mois
               </div>
               <TrendingDown
-                className="h-4 w-4"
+                className="h-5 w-5"
                 style={{ color: "var(--color-danger)" }}
               />
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-2xl font-bold mb-2"
               style={{ color: "var(--color-danger)" }}
             >
               {formatCurrency(pulse.monthlyExpenses)}
             </div>
             <div
-              className="mt-2 h-2 rounded-full overflow-hidden"
+              className="h-2 rounded-full overflow-hidden"
               style={{ background: "var(--bg-tertiary)" }}
             >
               <div
@@ -312,21 +312,21 @@ export default function UltimateFinancialPulse() {
 
         {/* Projections */}
         <motion.div variants={itemVariants} className="space-y-4">
-          <div className="glass-card p-4 transition-all duration-200">
+          <div className="glass-card p-4 transition-all duration-200 h-32">
             <div className="flex items-center justify-between mb-2">
               <div
-                className="text-sm"
+                className="text-base font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Budget restant
               </div>
               <Zap
-                className="h-4 w-4"
+                className="h-5 w-5"
                 style={{ color: "var(--text-accent)" }}
               />
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-2xl font-bold mb-2"
               style={{
                 color:
                   pulse.remainingBudget >= 0
@@ -337,37 +337,37 @@ export default function UltimateFinancialPulse() {
               {formatCurrency(pulse.remainingBudget)}
             </div>
             <div
-              className="mt-2 text-xs"
+              className="text-sm font-medium"
               style={{ color: "var(--text-tertiary)" }}
             >
               {pulse.remainingBudget >= 0 ? "Excédent" : "Déficit"}
             </div>
           </div>
 
-          <div className="glass-card p-4 transition-all duration-200">
+          <div className="glass-card p-4 transition-all duration-200 h-32">
             <div className="flex items-center justify-between mb-2">
               <div
-                className="text-sm"
+                className="text-base font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Jours restants
               </div>
               <Waves
-                className="h-4 w-4"
+                className="h-5 w-5"
                 style={{ color: "var(--text-tertiary)" }}
               />
             </div>
             <div
-              className="text-2xl font-bold"
+              className="text-2xl font-bold mb-2"
               style={{ color: "var(--text-primary)" }}
             >
               {pulse.daysUntilNextIncome}
             </div>
             <div
-              className="mt-2 text-xs"
+              className="text-sm font-medium"
               style={{ color: "var(--text-tertiary)" }}
             >
-              jours
+              jours jusqu'au prochain revenu
             </div>
           </div>
         </motion.div>
@@ -376,20 +376,42 @@ export default function UltimateFinancialPulse() {
       {/* Quick Actions */}
       <motion.div
         variants={itemVariants}
-        className="relative z-10 mt-8 pt-6"
+        className="relative z-10 mt-6 pt-4"
         style={{ borderTop: "1px solid var(--border-primary)" }}
       >
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-4">
           {pulse.remainingBudget > 0 && (
-            <button className="px-6 py-3 bg-gradient-to-r from-success to-emerald-500 text-white rounded-xl transition-all duration-200 shadow-lg font-medium">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                // Créer une transaction d'épargne
+                const saveAmount = pulse.remainingBudget * 0.2;
+                if (confirm(`Épargner ${formatCurrency(saveAmount)} ?`)) {
+                  // Logique pour créer une transaction d'épargne
+                  console.log(`Épargne de ${formatCurrency(saveAmount)} créée`);
+                  alert(`Épargne de ${formatCurrency(saveAmount)} enregistrée !`);
+                }
+              }}
+              className="px-6 py-3 bg-gradient-to-r from-success to-emerald-500 text-white rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
+            >
               <Sparkles className="h-4 w-4 inline mr-2" />
               Épargner {formatCurrency(pulse.remainingBudget * 0.2)}
-            </button>
+            </motion.button>
           )}
 
-          <button className="px-6 py-3 bg-gradient-to-r from-financial-500 to-blue-600 text-white rounded-xl transition-all duration-200 shadow-lg font-medium">
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              // Naviguer vers la vue analytique détaillée
+              const { setCurrentView } = useFinanceStore.getState();
+              setCurrentView('analytics');
+            }}
+            className="px-6 py-3 bg-gradient-to-r from-financial-500 to-blue-600 text-white rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
+          >
             Voir le détail
-          </button>
+          </motion.button>
         </div>
       </motion.div>
     </motion.div>
