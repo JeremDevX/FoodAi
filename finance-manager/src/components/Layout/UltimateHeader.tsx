@@ -1,32 +1,25 @@
 "use client";
 
-import { useFinanceStore } from "@/lib/store";
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Calendar,
   Download,
   Upload,
   Settings,
   Bell,
-  Search,
   User,
   Sparkles,
   Clock,
   Globe,
   Zap,
-  ChevronRight,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { formatShortDate } from "@/lib/utils";
 
 export default function UltimateHeader() {
-  const { selectedDateRange, setDateRange } = useFinanceStore();
   const { theme } = useTheme();
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showNotifications, setShowNotifications] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -35,28 +28,7 @@ export default function UltimateHeader() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleQuickDateSelect = (type: "current" | "previous" | "next") => {
-    const now = new Date();
-    let start: Date, end: Date;
 
-    switch (type) {
-      case "current":
-        start = new Date(now.getFullYear(), now.getMonth(), 1);
-        end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        break;
-      case "previous":
-        start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        end = new Date(now.getFullYear(), now.getMonth(), 0);
-        break;
-      case "next":
-        start = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-        end = new Date(now.getFullYear(), now.getMonth() + 2, 0);
-        break;
-    }
-
-    setDateRange(start, end);
-    setShowDatePicker(false);
-  };
 
   const handleExport = async () => {
     const { exportData } = await import("@/lib/database");
@@ -126,7 +98,7 @@ export default function UltimateHeader() {
       {/* Subtle Background */}
       <div className="absolute inset-0">
         <div
-          className="absolute inset-0 opacity-3"
+          className="absolute inset-0 opacity-10"
           style={{ background: "var(--gradient-primary)" }}
         />
       </div>
@@ -176,75 +148,7 @@ export default function UltimateHeader() {
               </div>
             </div>
 
-            {/* Date Range Selector */}
-            <div className="relative">
-              <button
-                onClick={() => setShowDatePicker(!showDatePicker)}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200"
-                style={{
-                  background: "var(--bg-glass)",
-                  border: "1px solid var(--border-primary)",
-                  color: "var(--text-primary)",
-                }}
-              >
-                <Calendar
-                  className="h-4 w-4"
-                  style={{ color: "var(--text-accent)" }}
-                />
-                <span className="text-sm font-medium">
-                  {formatShortDate(selectedDateRange.start)} -{" "}
-                  {formatShortDate(selectedDateRange.end)}
-                </span>
-                <ChevronRight
-                  className="h-4 w-4"
-                  style={{
-                    transform: showDatePicker ? "rotate(90deg)" : "none",
-                    transition: "transform 0.2s",
-                  }}
-                />
-              </button>
 
-              <AnimatePresence>
-                {showDatePicker && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full left-0 mt-2 w-64 rounded-xl shadow-xl p-4 z-50"
-                    style={{
-                      background: "var(--bg-secondary)",
-                      border: "1px solid var(--border-primary)",
-                    }}
-                  >
-                    <div className="space-y-2">
-                      {[
-                        { key: "previous", name: "Mois précédent" },
-                        { key: "current", name: "Mois en cours" },
-                        { key: "next", name: "Mois suivant" },
-                      ].map((option) => (
-                        <button
-                          key={option.key}
-                          onClick={() =>
-                            handleQuickDateSelect(option.key as any)
-                          }
-                          className="w-full text-left px-3 py-2 rounded-lg transition-colors"
-                          style={{ color: "var(--text-primary)" }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.background =
-                              "var(--bg-glass)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.background = "transparent")
-                          }
-                        >
-                          {option.name}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
           </motion.div>
 
           {/* Right Section - Actions */}
@@ -252,28 +156,6 @@ export default function UltimateHeader() {
             variants={itemVariants}
             className="flex items-center space-x-3"
           >
-            {/* Search */}
-            <div className="relative">
-              <div className="relative">
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 z-10"
-                  style={{ color: "var(--text-tertiary)" }}
-                />
-                <input
-                  type="text"
-                  placeholder="Rechercher..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full max-w-xs md:max-w-sm lg:w-64 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
-                  style={{
-                    background: "var(--bg-glass)",
-                    border: "1px solid var(--border-primary)",
-                    color: "var(--text-primary)",
-                  }}
-                />
-              </div>
-            </div>
-
             {/* Notifications */}
             <div className="relative">
               <button
@@ -441,10 +323,6 @@ export default function UltimateHeader() {
             <div className="flex items-center space-x-2">
               <Globe className="h-3 w-3" />
               <span>Données stockées localement</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Zap className="h-3 w-3" />
-              <span>Interface optimisée</span>
             </div>
             <div className="flex items-center space-x-2">
               <Zap className="h-3 w-3" style={{ color: "var(--color-success)" }} />

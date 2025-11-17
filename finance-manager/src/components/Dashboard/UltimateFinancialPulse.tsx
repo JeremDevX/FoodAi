@@ -16,11 +16,19 @@ import { useTheme } from "@/components/Theme/ThemeProvider";
 import { useState, useEffect } from "react";
 
 export default function UltimateFinancialPulse() {
-  const { getFinancialPulse } = useFinanceStore();
+  const { getFinancialPulse, addTransaction, categories, refreshData } = useFinanceStore();
   const { theme } = useTheme();
   const formatCurrency = useFormatCurrency();
   const pulse = getFinancialPulse();
   const [isAnimated, setIsAnimated] = useState(true);
+
+  // Utiliser une catégorie existante ou 'Autre' pour l'épargne
+  const getSavingsCategory = () => {
+    return categories.find(cat => cat.name === 'Épargne') || 
+           categories.find(cat => cat.name === 'Autre') ||
+           categories[0] ||
+           { name: 'Autre', color: '#6b7280', icon: '📝', type: 'expense' as const };
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -148,7 +156,7 @@ export default function UltimateFinancialPulse() {
       </motion.div>
 
       {/* Main Content */}
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-4">
         {/* Pulse Circle */}
         <motion.div
           variants={itemVariants}
@@ -376,29 +384,63 @@ export default function UltimateFinancialPulse() {
       {/* Quick Actions */}
       <motion.div
         variants={itemVariants}
-        className="relative z-10 mt-6 pt-4"
+        className="relative z-10 mt-8 pt-6"
         style={{ borderTop: "1px solid var(--border-primary)" }}
       >
         <div className="flex flex-wrap gap-4">
-          {pulse.remainingBudget > 0 && (
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                // Créer une transaction d'épargne
-                const saveAmount = pulse.remainingBudget * 0.2;
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={async () => {
+              // Créer une transaction d'épargne
+              const saveAmount = pulse.remainingBudget > 0 ? pulse.remainingBudget * 0.2 : 0;
+              if (saveAmount > 0) {
                 if (confirm(`Épargner ${formatCurrency(saveAmount)} ?`)) {
-                  // Logique pour créer une transaction d'épargne
-                  console.log(`Épargne de ${formatCurrency(saveAmount)} créée`);
-                  alert(`Épargne de ${formatCurrency(saveAmount)} enregistrée !`);
+                  try {
+                    // Obtenir la catégorie pour l'épargne
+                    const savingsCategory = getSavingsCategory();
+
+                    // Créer la transaction d'épargne avec la date d'aujourd'hui
+                    const today = new Date();
+                    const dateString = today.toISOString().split('T')[0];
+                    
+                    await addTransaction({
+                      amount: saveAmount,
+                      type: 'expense',
+                      category: savingsCategory.name,
+                      description: 'Épargne mensuelle automatique',
+                      date: dateString,
+                      account: 'Compte Principal'
+                    });
+                    alert(`Épargne de ${formatCurrency(saveAmount)} enregistrée avec succès !\n\nVous pouvez retrouver cette transaction dans :\n• Transactions Récentes (section du dashboard)\n• Gestion des transactions\n• Recherchez "Épargne" dans la barre de recherche`);
+                    
+                    // Rafraîchir les données pour que la transaction apparaisse
+                    await refreshData();
+                    
+                    // Message de débogage
+                    console.log('Transaction épargne créée:', {
+                      amount: saveAmount,
+                      category: 'Épargne',
+                      date: dateString,
+                      type: 'expense'
+                    });
+                    
+                    // Message pour aider l'utilisateur à trouver sa transaction
+                    console.log('💡 L\épargne apparaîtra dans : 1) Transactions Récentes sur le dashboard, 2) Gestion des transactions, 3) Recherchez "Épargne" dans la barre de recherche');
+                  } catch (error) {
+                    console.error('Erreur lors de l\épargne:', error);
+                    alert('Erreur lors de l\enregistrement de l\épargne');
+                  }
                 }
-              }}
-              className="px-6 py-3 bg-gradient-to-r from-success to-emerald-500 text-white rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
-            >
-              <Sparkles className="h-4 w-4 inline mr-2" />
-              Épargner {formatCurrency(pulse.remainingBudget * 0.2)}
-            </motion.button>
-          )}
+              } else {
+                alert('Aucun budget disponible pour épargner');
+              }
+            }}
+            className="px-6 py-3 bg-gradient-to-r from-success to-emerald-500 text-white rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
+          >
+            <Sparkles className="h-4 w-4 inline mr-2" />
+            Épargner {formatCurrency(pulse.remainingBudget > 0 ? pulse.remainingBudget * 0.2 : 0)}
+          </motion.button>
 
           <motion.button 
             whileHover={{ scale: 1.05 }}

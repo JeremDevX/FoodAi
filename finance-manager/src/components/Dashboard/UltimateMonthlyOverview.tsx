@@ -40,11 +40,13 @@ const COLORS = [
 ];
 
 const getAccessibleBgColor = (theme: string) => {
-  return theme === "dark" ? "bg-gray-800/50" : "bg-white/50";
+  // Utiliser les variables CSS du thème au lieu des couleurs en dur
+  return "glass-card";
 };
 
 const getAccessibleTextColor = (theme: string) => {
-  return theme === "dark" ? "text-gray-100" : "text-gray-900";
+  // Utiliser les variables CSS du thème
+  return "";
 };
 
 export default function UltimateMonthlyOverview() {
@@ -464,9 +466,7 @@ export default function UltimateMonthlyOverview() {
         <motion.div
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
-          className={`glass-card p-6 transition-all duration-200 ${getAccessibleBgColor(
-            theme
-          )}`}
+          className="glass-card p-6 transition-all duration-200"
         >
           <div className="flex items-center space-x-4 mb-4">
             <div
@@ -479,18 +479,15 @@ export default function UltimateMonthlyOverview() {
               />
             </div>
             <h4
-              className={`font-semibold text-lg ${getAccessibleTextColor(
-                theme
-              )}`}
+              className="font-semibold text-lg"
+              style={{ color: "var(--text-primary)" }}
             >
               Période Actuelle
             </h4>
           </div>
           <p
-            className={`text-sm leading-relaxed ${getAccessibleTextColor(
-              theme
-            )}`}
-            style={{ opacity: 0.8 }}
+            className="text-sm leading-relaxed"
+            style={{ color: "var(--text-secondary)", opacity: 0.8 }}
           >
             Données du mois en cours. Comparez avec les mois précédents pour
             identifier les tendances.
@@ -500,9 +497,7 @@ export default function UltimateMonthlyOverview() {
         <motion.div
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
-          className={`glass-card p-6 transition-all duration-200 ${getAccessibleBgColor(
-            theme
-          )}`}
+          className="glass-card p-6 transition-all duration-200"
         >
           <div className="flex items-center space-x-4 mb-4">
             <div
@@ -515,18 +510,15 @@ export default function UltimateMonthlyOverview() {
               />
             </div>
             <h4
-              className={`font-semibold text-lg ${getAccessibleTextColor(
-                theme
-              )}`}
+              className="font-semibold text-lg"
+              style={{ color: "var(--text-primary)" }}
             >
               Objectif
             </h4>
           </div>
           <p
-            className={`text-sm leading-relaxed ${getAccessibleTextColor(
-              theme
-            )}`}
-            style={{ opacity: 0.8 }}
+            className="text-sm leading-relaxed"
+            style={{ color: "var(--text-secondary)", opacity: 0.8 }}
           >
             Maintenez un ratio épargne/revenus de 20% pour une santé financière
             optimale.
@@ -536,9 +528,7 @@ export default function UltimateMonthlyOverview() {
         <motion.div
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
-          className={`glass-card p-6 transition-all duration-200 ${getAccessibleBgColor(
-            theme
-          )}`}
+          className="glass-card p-6 transition-all duration-200"
         >
           <div className="flex items-center space-x-4 mb-4">
             <div
@@ -551,18 +541,15 @@ export default function UltimateMonthlyOverview() {
               />
             </div>
             <h4
-              className={`font-semibold text-lg ${getAccessibleTextColor(
-                theme
-              )}`}
+              className="font-semibold text-lg"
+              style={{ color: "var(--text-primary)" }}
             >
               Conseil
             </h4>
           </div>
           <p
-            className={`text-sm leading-relaxed ${getAccessibleTextColor(
-              theme
-            )}`}
-            style={{ opacity: 0.8 }}
+            className="text-sm leading-relaxed"
+            style={{ color: "var(--text-secondary)", opacity: 0.8 }}
           >
             {stats.balance > 0
               ? "Excellent ! Vous épargnez plus que vous ne dépensez. Continuez ainsi !"

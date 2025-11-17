@@ -26,9 +26,9 @@ export default function RecentTransactions() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <div className="glass-card rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
           Transactions Récentes
         </h2>
         <Link
@@ -36,7 +36,7 @@ export default function RecentTransactions() {
           onClick={() =>
             useFinanceStore.getState().setCurrentView("transactions")
           }
-          className="text-sm text-financial-600 hover:text-financial-700 dark:text-financial-400 dark:hover:text-financial-300"
+          className="text-sm" style={{ color: "var(--text-accent)" }}
         >
           Voir tout
         </Link>
@@ -49,10 +49,10 @@ export default function RecentTransactions() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-8"
           >
-            <div className="text-gray-400 dark:text-gray-500 mb-2">
+            <div className="mb-2" style={{ color: "var(--text-tertiary)" }}>
               Aucune transaction
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
               Commencez par ajouter une transaction
             </div>
           </motion.div>
@@ -64,7 +64,8 @@ export default function RecentTransactions() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 cursor-pointer"
+                className="flex items-center justify-between p-4 rounded-lg transition-all duration-200 cursor-pointer hover:bg-opacity-50"
+                style={{ background: "var(--bg-secondary)" }}
                 onClick={() =>
                   useFinanceStore.getState().setCurrentView("transactions")
                 }
@@ -77,10 +78,10 @@ export default function RecentTransactions() {
                     {getTransactionIcon(transaction.type)}
                   </motion.div>
                   <div>
-                    <div className="font-medium text-gray-900 dark:text-white text-base">
+                    <div className="font-medium text-base" style={{ color: "var(--text-primary)" }}>
                       {transaction.description}
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
                       {transaction.category} •{" "}
                       {formatShortDate(new Date(transaction.date))}
                     </div>
@@ -103,12 +104,16 @@ export default function RecentTransactions() {
         )}
       </div>
 
-      <div className="mt-6 pt-4 border-t border-gray-200">
+      <div className="mt-6 pt-4" style={{ borderTop: "1px solid var(--border-primary)" }}>
         <button
           onClick={() =>
             useFinanceStore.getState().setCurrentView("transactions")
           }
-          className="w-full px-4 py-2 bg-financial-100 hover:bg-financial-200 dark:bg-financial-900 dark:hover:bg-financial-800 text-financial-700 dark:text-financial-300 rounded-lg transition-colors font-medium"
+          className="w-full px-4 py-2 rounded-lg transition-colors font-medium"
+          style={{ 
+            background: "var(--bg-secondary)", 
+            color: "var(--text-accent)"
+          }}
           aria-label="Gérer toutes les transactions"
         >
           Gérer les transactions

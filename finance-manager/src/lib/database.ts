@@ -47,6 +47,7 @@ export async function initializeDatabase() {
         { name: 'Shopping', color: '#ec4899', icon: '🛍️', type: 'expense' as const },
         { name: 'Restaurant', color: '#f97316', icon: '🍽️', type: 'expense' as const },
         { name: 'Services', color: '#6b7280', icon: '⚡', type: 'expense' as const },
+        { name: 'Épargne', color: '#14b8a6', icon: '🏦', type: 'expense' as const },
         { name: 'Salaire', color: '#10b981', icon: '💰', type: 'income' as const },
         { name: 'Investissement', color: '#6366f1', icon: '📈', type: 'income' as const },
         { name: 'Cadeau', color: '#f59e0b', icon: '🎁', type: 'income' as const },
