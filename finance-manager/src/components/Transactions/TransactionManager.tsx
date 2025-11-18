@@ -26,15 +26,16 @@ import UltimateTransactionForm from "./UltimateTransactionForm";
 import ImportModal from "./ImportModal";
 
 export default function TransactionManager() {
-  const { transactions, categories, refreshData } = useFinanceStore();
+  const { transactions, categories, selectedAccount, refreshData } =
+    useFinanceStore();
   const [showForm, setShowForm] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState<"all" | "income" | "expense">(
-    "all"
-  );
+  const [filterType, setFilterType] = useState<
+    "all" | "income" | "expense" | "transfer"
+  >("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   const filteredTransactions = transactions.filter((transaction) => {
@@ -47,7 +48,14 @@ export default function TransactionManager() {
     const matchesCategory =
       filterCategory === "all" || transaction.category === filterCategory;
 
-    return matchesSearch && matchesType && matchesCategory;
+    // Filtrer par compte sélectionné
+    const matchesAccount =
+      transaction.account === selectedAccount ||
+      (transaction.type === "transfer" &&
+        (transaction.fromAccount === selectedAccount ||
+          transaction.toAccount === selectedAccount));
+
+    return matchesSearch && matchesType && matchesCategory && matchesAccount;
   });
 
   const handleExportCSV = () => {

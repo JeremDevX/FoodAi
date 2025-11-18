@@ -37,18 +37,26 @@ const COLORS = [
 ];
 
 export default function AnalyticsDashboard() {
-  const { transactions, categories, selectedDateRange } = useFinanceStore();
+  const { transactions, categories, selectedDateRange, selectedAccount } =
+    useFinanceStore();
   const [viewType, setViewType] = useState<"monthly" | "category" | "trends">(
     "monthly"
   );
 
-  // Filter transactions by date range
+  // Filter transactions by date range and selected account
   const filteredTransactions = transactions.filter((t) => {
     const transactionDate = new Date(t.date);
-    return (
+    const matchesDate =
       transactionDate >= selectedDateRange.start &&
-      transactionDate <= selectedDateRange.end
-    );
+      transactionDate <= selectedDateRange.end;
+
+    // Filtrer par compte sélectionné
+    const matchesAccount =
+      t.account === selectedAccount ||
+      (t.type === "transfer" &&
+        (t.fromAccount === selectedAccount || t.toAccount === selectedAccount));
+
+    return matchesDate && matchesAccount;
   });
 
   // Monthly analysis

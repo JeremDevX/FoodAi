@@ -34,8 +34,10 @@ export default function UltimateTransactionForm({
     amount: "",
     description: "",
     category: "",
-    account: "Compte Principal",
-    type: "expense" as "income" | "expense",
+    account: "Compte Courant",
+    type: "expense" as "income" | "expense" | "transfer",
+    fromAccount: "Compte Courant",
+    toAccount: "Compte Épargne",
     notes: "",
     tags: [] as string[],
   });
@@ -142,7 +144,7 @@ export default function UltimateTransactionForm({
   ];
 
   const filteredCategories = categories.filter(
-    (cat) => cat.type === formData.type
+    (cat) => cat.type === formData.type && formData.type !== "transfer"
   );
 
   useEffect(() => {
@@ -154,6 +156,8 @@ export default function UltimateTransactionForm({
         category: transaction.category,
         account: transaction.account,
         type: transaction.type,
+        fromAccount: transaction.fromAccount || "Compte Courant",
+        toAccount: transaction.toAccount || "Compte Épargne",
         notes: transaction.notes || "",
         tags: transaction.tags || [],
       });
@@ -175,8 +179,16 @@ export default function UltimateTransactionForm({
       newErrors.description = "La description est requise";
     }
 
-    if (!formData.category) {
+    if (formData.type !== "transfer" && !formData.category) {
       newErrors.category = "La catégorie est requise";
+    }
+
+    if (
+      formData.type === "transfer" &&
+      formData.fromAccount === formData.toAccount
+    ) {
+      newErrors.transfer =
+        "Les comptes source et destination doivent être différents";
     }
 
     setErrors(newErrors);
@@ -202,11 +214,21 @@ export default function UltimateTransactionForm({
         amount:
           formData.type === "income"
             ? Math.abs(parseFloat(formData.amount))
+            : formData.type === "transfer"
+            ? Math.abs(parseFloat(formData.amount))
             : -Math.abs(parseFloat(formData.amount)),
         description: formData.description.trim(),
-        category: formData.category,
-        account: formData.account,
+        category:
+          formData.type === "transfer" ? "Transfert" : formData.category,
+        account:
+          formData.type === "transfer"
+            ? formData.fromAccount
+            : formData.account,
         type: formData.type,
+        fromAccount:
+          formData.type === "transfer" ? formData.fromAccount : undefined,
+        toAccount:
+          formData.type === "transfer" ? formData.toAccount : undefined,
         notes: formData.notes.trim(),
         tags: formData.tags,
       };
@@ -362,7 +384,7 @@ export default function UltimateTransactionForm({
               >
                 Type de transaction
               </label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 {[
                   {
                     type: "expense",
@@ -377,6 +399,13 @@ export default function UltimateTransactionForm({
                     icon: "💰",
                     gradientStart: "#10b981",
                     gradientEnd: "#059669",
+                  },
+                  {
+                    type: "transfer",
+                    label: "Transfert",
+                    icon: "↔️",
+                    gradientStart: "#3b82f6",
+                    gradientEnd: "#8b5cf6",
                   },
                 ].map((option) => (
                   <button
@@ -529,58 +558,123 @@ export default function UltimateTransactionForm({
               )}
             </div>
 
-            {/* Category Selection */}
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Catégorie
-              </label>
-              <div className="grid grid-cols-3 gap-3">
-                {filteredCategories.map((category) => (
-                  <button
-                    key={category.name}
-                    type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, category: category.name })
+            {/* Transfer Accounts - Only show for transfers */}
+            {formData.type === "transfer" && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label
+                    className="text-sm font-medium"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Depuis
+                  </label>
+                  <select
+                    value={formData.fromAccount}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fromAccount: e.target.value })
                     }
-                    className="relative p-4 rounded-xl border-2 transition-all duration-200 overflow-hidden backdrop-blur-sm"
+                    className="w-full px-4 py-3 rounded-lg transition-colors"
                     style={{
-                      borderColor:
-                        formData.category === category.name
-                          ? "var(--color-accent)"
-                          : "var(--border-color)",
-                      background: "rgba(0, 0, 0, 0.2)",
+                      background: "var(--bg-secondary)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border-color)",
                     }}
                   >
-                    {/* Gradient background */}
-                    <div
-                      className="absolute inset-0 transition-opacity duration-200"
-                      style={{
-                        background: `linear-gradient(to bottom right, ${category.gradientStart}, ${category.gradientEnd})`,
-                        opacity:
-                          formData.category === category.name ? 0.5 : 0.25,
-                      }}
-                    />
-                    <div className="relative z-10 text-center">
-                      <div className="text-2xl mb-1">{category.icon}</div>
-                      <div
-                        className="text-xs font-medium"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {category.name}
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    <option value="Compte Courant">Compte Courant</option>
+                    <option value="Compte Épargne">Compte Épargne</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label
+                    className="text-sm font-medium"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Vers
+                  </label>
+                  <select
+                    value={formData.toAccount}
+                    onChange={(e) =>
+                      setFormData({ ...formData, toAccount: e.target.value })
+                    }
+                    className="w-full px-4 py-3 rounded-lg transition-colors"
+                    style={{
+                      background: "var(--bg-secondary)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border-color)",
+                    }}
+                  >
+                    <option value="Compte Courant">Compte Courant</option>
+                    <option value="Compte Épargne">Compte Épargne</option>
+                  </select>
+                </div>
+                {errors.transfer && (
+                  <p
+                    className="text-sm col-span-2"
+                    style={{ color: "var(--color-danger)" }}
+                  >
+                    {errors.transfer}
+                  </p>
+                )}
               </div>
-              {errors.category && (
-                <p className="text-sm" style={{ color: "var(--color-danger)" }}>
-                  {errors.category}
-                </p>
-              )}
-            </div>
+            )}
+
+            {/* Category Selection */}
+            {formData.type !== "transfer" && (
+              <div className="space-y-2">
+                <label
+                  className="text-sm font-medium"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Catégorie
+                </label>
+                <div className="grid grid-cols-3 gap-3">
+                  {filteredCategories.map((category) => (
+                    <button
+                      key={category.name}
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, category: category.name })
+                      }
+                      className="relative p-4 rounded-xl border-2 transition-all duration-200 overflow-hidden backdrop-blur-sm"
+                      style={{
+                        borderColor:
+                          formData.category === category.name
+                            ? "var(--color-accent)"
+                            : "var(--border-color)",
+                        background: "rgba(0, 0, 0, 0.2)",
+                      }}
+                    >
+                      {/* Gradient background */}
+                      <div
+                        className="absolute inset-0 transition-opacity duration-200"
+                        style={{
+                          background: `linear-gradient(to bottom right, ${category.gradientStart}, ${category.gradientEnd})`,
+                          opacity:
+                            formData.category === category.name ? 0.5 : 0.25,
+                        }}
+                      />
+                      <div className="relative z-10 text-center">
+                        <div className="text-2xl mb-1">{category.icon}</div>
+                        <div
+                          className="text-xs font-medium"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {category.name}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                {errors.category && (
+                  <p
+                    className="text-sm"
+                    style={{ color: "var(--color-danger)" }}
+                  >
+                    {errors.category}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Advanced Options */}
             <div className="space-y-4">

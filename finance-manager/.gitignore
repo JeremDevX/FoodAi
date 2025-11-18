@@ -1,6 +1,9 @@
 node_modules/
-.next
-finance-manger/.next/server/
+next
+.next/
+.next/cache/
+.next/standalone/
+finance-manager/.next/server/
 @build/
 out/
 dist/

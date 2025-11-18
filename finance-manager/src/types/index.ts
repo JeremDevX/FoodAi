@@ -5,7 +5,9 @@ export interface Transaction {
   description: string;
   category: string;
   account: string;
-  type: "income" | "expense";
+  type: "income" | "expense" | "transfer";
+  fromAccount?: string; // Pour les transferts
+  toAccount?: string; // Pour les transferts
   tags?: string[];
   notes?: string;
   importedFrom?: string;

@@ -1,25 +1,28 @@
 "use client";
 
 import { useTheme } from "@/components/Theme/ThemeProvider";
+import { useFinanceStore } from "@/lib/store";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Download,
   Upload,
-  Settings,
   Bell,
-  User,
-  Sparkles,
-  Clock,
-  Globe,
-  Zap,
+  Wallet,
+  PiggyBank,
+  ChevronDown,
+  X,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { formatShortDate } from "@/lib/utils";
+import { useState, useEffect, useMemo } from "react";
+import { formatShortDate, useFormatCurrency } from "@/lib/utils";
 
 export default function UltimateHeader() {
   const { theme } = useTheme();
+  const formatCurrency = useFormatCurrency();
+  const { transactions, selectedAccount, setSelectedAccount } =
+    useFinanceStore();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,7 +31,48 @@ export default function UltimateHeader() {
     return () => clearInterval(timer);
   }, []);
 
+  // Calculer les soldes des comptes
+  const accountBalances = useMemo(() => {
+    const courant = transactions
+      .filter(
+        (t) =>
+          t.account === "Compte Courant" || t.account === "Compte Principal"
+      )
+      .reduce((acc, t) => {
+        if (t.type === "income") return acc + t.amount;
+        if (t.type === "expense") return acc - t.amount;
+        if (t.type === "transfer") {
+          if (
+            t.fromAccount === "Compte Courant" ||
+            t.fromAccount === "Compte Principal"
+          )
+            return acc - t.amount;
+          if (
+            t.toAccount === "Compte Courant" ||
+            t.toAccount === "Compte Principal"
+          )
+            return acc + t.amount;
+        }
+        return acc;
+      }, 0);
 
+    const epargne = transactions
+      .filter((t) => t.account === "Compte Épargne")
+      .reduce((acc, t) => {
+        if (t.type === "income") return acc + t.amount;
+        if (t.type === "expense") return acc - t.amount;
+        if (t.type === "transfer") {
+          if (t.fromAccount === "Compte Épargne") return acc - t.amount;
+          if (t.toAccount === "Compte Épargne") return acc + t.amount;
+        }
+        return acc;
+      }, 0);
+
+    return {
+      "Compte Courant": courant,
+      "Compte Épargne": epargne,
+    };
+  }, [transactions]);
 
   const handleExport = async () => {
     const { exportData } = await import("@/lib/database");
@@ -44,9 +88,9 @@ export default function UltimateHeader() {
   };
 
   const handleImport = async () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -57,8 +101,8 @@ export default function UltimateHeader() {
           await importData(data);
           window.location.reload(); // Recharger pour appliquer les données
         } catch (error) {
-          alert('Erreur lors de l\'importation du fichier');
-          console.error('Import error:', error);
+          alert("Erreur lors de l'importation du fichier");
+          console.error("Import error:", error);
         }
       }
     };
@@ -85,181 +129,329 @@ export default function UltimateHeader() {
   };
 
   return (
-    <motion.div
-      variants={headerVariants}
-      initial="hidden"
-      animate="visible"
-      className="relative overflow-hidden"
+    <header
+      className="sticky top-0 z-[100] backdrop-blur-md"
       style={{
         background: "var(--bg-secondary)",
         borderBottom: "1px solid var(--border-primary)",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
       }}
     >
-      {/* Subtle Background */}
-      <div className="absolute inset-0">
+      <div className="relative">
+        {/* Gradient Background */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-5"
           style={{ background: "var(--gradient-primary)" }}
         />
-      </div>
 
-      {/* Content */}
-      <div className="relative z-10 px-6 py-4 mb-4">
-        <div className="flex items-center justify-between gap-8">
-          {/* Left Section - Date & Time */}
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center space-x-6"
-          >
-            {/* Live Clock */}
-            <div className="flex items-center space-x-2">
-              <div
-                className="p-2 rounded-lg"
-                style={{
-                  background: "var(--bg-glass)",
-                  border: "1px solid var(--border-primary)",
-                }}
-              >
-                <Clock
-                  className="h-4 w-4"
-                  style={{ color: "var(--text-accent)" }}
-                />
-              </div>
-              <div className="text-sm">
+        {/* Main Header Content */}
+        <div className="relative z-10 px-6 py-3">
+          <div className="flex items-center justify-between gap-6">
+            {/* Left: Brand & Time */}
+            <div className="flex items-center space-x-6">
+              {/* Brand */}
+              <div className="flex items-center space-x-3">
                 <div
-                  className="font-medium"
-                  style={{ color: "var(--text-primary)" }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, var(--color-accent), var(--text-accent))",
+                  }}
                 >
-                  {currentTime.toLocaleTimeString("fr-FR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  <Wallet className="h-5 w-5 text-white" />
                 </div>
-                <div
-                  className="text-xs"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {currentTime.toLocaleDateString("fr-FR", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </div>
-              </div>
-            </div>
-
-
-          </motion.div>
-
-          {/* Right Section - Actions */}
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center space-x-3"
-          >
-            {/* Notifications */}
-            <div className="relative">
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2 rounded-lg transition-all duration-200 relative"
-                style={{
-                  background: "var(--bg-glass)",
-                  border: "1px solid var(--border-primary)",
-                  color: "var(--text-primary)",
-                }}
-              >
-                <Bell className="h-5 w-5" />
-                <div
-                  className="absolute -top-1 -right-1 w-3 h-3 rounded-full"
-                  style={{ background: "var(--color-info)" }}
-                />
-              </button>
-
-              <AnimatePresence>
-                {showNotifications && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full right-0 mt-2 w-80 rounded-xl shadow-xl p-4 z-50"
-                    style={{
-                      background: "var(--bg-secondary)",
-                      border: "1px solid var(--border-primary)",
-                    }}
+                <div>
+                  <div
+                    className="text-lg font-bold"
+                    style={{ color: "var(--text-primary)" }}
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <h4
-                        className="font-medium"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        Notifications
-                      </h4>
-                      <button
-                        onClick={() => setShowNotifications(false)}
-                        className="transition-colors"
-                        style={{ color: "var(--text-secondary)" }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color = "var(--text-primary)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.color =
-                            "var(--text-secondary)")
-                        }
-                      >
-                        <span className="text-xs">✕</span>
-                      </button>
-                    </div>
-                    <div className="space-y-2">
-                      <div
-                        className="p-3 rounded-lg"
-                        style={{
-                          background: "var(--color-success)" + "20",
-                          border: "1px solid " + "var(--color-success)" + "30",
-                        }}
-                      >
-                        <div
-                          className="text-sm font-medium"
-                          style={{ color: "var(--color-success)" }}
-                        >
-                          Objectif atteint!
-                        </div>
-                        <div
-                          className="text-xs"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
-                          Vous avez atteint 75% de votre objectif vacances
-                        </div>
-                      </div>
-                      <div
-                        className="p-3 rounded-lg"
-                        style={{
-                          background: "var(--color-warning)" + "20",
-                          border: "1px solid " + "var(--color-warning)" + "30",
-                        }}
-                      >
-                        <div
-                          className="text-sm font-medium"
-                          style={{ color: "var(--color-warning)" }}
-                        >
-                          Alerte budget
-                        </div>
-                        <div
-                          className="text-xs"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
-                          Vos dépenses restaurants dépassent la moyenne
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    Finance Manager
+                  </div>
+                  <div
+                    className="text-xs"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
+                    {currentTime.toLocaleDateString("fr-FR", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    })}{" "}
+                    •{" "}
+                    {currentTime.toLocaleTimeString("fr-FR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Export/Import */}
-            <div className="flex space-x-2">
+            {/* Right: Account Selector & Actions */}
+            <div className="flex items-center space-x-3">
+              {/* Account Selector */}
+              <div className="relative z-[200]">
+                <button
+                  onClick={() => {
+                    setShowAccountDropdown(!showAccountDropdown);
+                    setShowNotifications(false);
+                  }}
+                  className="flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all duration-200 hover:scale-105"
+                  style={{
+                    background: "var(--bg-glass)",
+                    border: "1px solid var(--border-primary)",
+                  }}
+                >
+                  {selectedAccount === "Compte Courant" ? (
+                    <Wallet
+                      className="h-5 w-5"
+                      style={{ color: "var(--text-accent)" }}
+                    />
+                  ) : (
+                    <PiggyBank
+                      className="h-5 w-5"
+                      style={{ color: "var(--color-success)" }}
+                    />
+                  )}
+                  <div className="text-left">
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {selectedAccount}
+                    </div>
+                    <div
+                      className="text-xs font-bold"
+                      style={{
+                        color:
+                          selectedAccount === "Compte Courant"
+                            ? "var(--text-accent)"
+                            : "var(--color-success)",
+                      }}
+                    >
+                      {formatCurrency(
+                        accountBalances[
+                          selectedAccount as keyof typeof accountBalances
+                        ]
+                      )}
+                    </div>
+                  </div>
+                  <ChevronDown
+                    className="h-4 w-4 transition-transform"
+                    style={{
+                      color: "var(--text-tertiary)",
+                      transform: showAccountDropdown
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                    }}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {showAccountDropdown && (
+                    <>
+                      {/* Backdrop */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[190]"
+                        onClick={() => setShowAccountDropdown(false)}
+                      />
+                      {/* Dropdown */}
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full right-0 mt-2 w-80 rounded-xl shadow-2xl p-3 z-[200]"
+                        style={{
+                          background: "var(--bg-secondary)",
+                          border: "1px solid var(--border-primary)",
+                        }}
+                      >
+                        <div className="space-y-2">
+                          {["Compte Courant", "Compte Épargne"].map(
+                            (account) => (
+                              <button
+                                key={account}
+                                onClick={() => {
+                                  setSelectedAccount(account);
+                                  setShowAccountDropdown(false);
+                                }}
+                                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 hover:scale-[1.02]"
+                                style={{
+                                  background:
+                                    selectedAccount === account
+                                      ? "var(--bg-glass)"
+                                      : "transparent",
+                                  border: `1px solid ${
+                                    selectedAccount === account
+                                      ? "var(--border-primary)"
+                                      : "transparent"
+                                  }`,
+                                }}
+                              >
+                                {account === "Compte Courant" ? (
+                                  <Wallet
+                                    className="h-5 w-5"
+                                    style={{ color: "var(--text-accent)" }}
+                                  />
+                                ) : (
+                                  <PiggyBank
+                                    className="h-5 w-5"
+                                    style={{ color: "var(--color-success)" }}
+                                  />
+                                )}
+                                <div className="flex-1 text-left">
+                                  <div
+                                    className="font-medium text-sm"
+                                    style={{ color: "var(--text-primary)" }}
+                                  >
+                                    {account}
+                                  </div>
+                                  <div
+                                    className="text-xs font-bold"
+                                    style={{
+                                      color:
+                                        account === "Compte Courant"
+                                          ? "var(--text-accent)"
+                                          : "var(--color-success)",
+                                    }}
+                                  >
+                                    {formatCurrency(
+                                      accountBalances[
+                                        account as keyof typeof accountBalances
+                                      ]
+                                    )}
+                                  </div>
+                                </div>
+                                {selectedAccount === account && (
+                                  <div
+                                    className="w-2 h-2 rounded-full"
+                                    style={{ background: "var(--text-accent)" }}
+                                  />
+                                )}
+                              </button>
+                            )
+                          )}
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Notifications */}
+              <div className="relative z-[200]">
+                <button
+                  onClick={() => {
+                    setShowNotifications(!showNotifications);
+                    setShowAccountDropdown(false);
+                  }}
+                  className="p-2.5 rounded-lg transition-all duration-200 relative hover:scale-110"
+                  style={{
+                    background: "var(--bg-glass)",
+                    border: "1px solid var(--border-primary)",
+                    color: "var(--text-primary)",
+                  }}
+                >
+                  <Bell className="h-5 w-5" />
+                  <div
+                    className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse"
+                    style={{ background: "var(--color-info)" }}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {showNotifications && (
+                    <>
+                      {/* Backdrop */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[190]"
+                        onClick={() => setShowNotifications(false)}
+                      />
+                      {/* Dropdown */}
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full right-0 mt-2 w-80 rounded-xl shadow-2xl p-4 z-[200]"
+                        style={{
+                          background: "var(--bg-secondary)",
+                          border: "1px solid var(--border-primary)",
+                        }}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <h4
+                            className="font-semibold"
+                            style={{ color: "var(--text-primary)" }}
+                          >
+                            Notifications
+                          </h4>
+                          <button
+                            onClick={() => setShowNotifications(false)}
+                            className="p-1 rounded-lg transition-colors hover:bg-opacity-10"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          <div
+                            className="p-3 rounded-lg"
+                            style={{
+                              background: "rgba(16, 185, 129, 0.1)",
+                              border: "1px solid rgba(16, 185, 129, 0.2)",
+                            }}
+                          >
+                            <div
+                              className="text-sm font-medium"
+                              style={{ color: "var(--color-success)" }}
+                            >
+                              Objectif atteint!
+                            </div>
+                            <div
+                              className="text-xs mt-1"
+                              style={{ color: "var(--text-secondary)" }}
+                            >
+                              Vous avez atteint 75% de votre objectif vacances
+                            </div>
+                          </div>
+                          <div
+                            className="p-3 rounded-lg"
+                            style={{
+                              background: "rgba(245, 158, 11, 0.1)",
+                              border: "1px solid rgba(245, 158, 11, 0.2)",
+                            }}
+                          >
+                            <div
+                              className="text-sm font-medium"
+                              style={{ color: "var(--color-warning)" }}
+                            >
+                              Alerte budget
+                            </div>
+                            <div
+                              className="text-xs mt-1"
+                              style={{ color: "var(--text-secondary)" }}
+                            >
+                              Vos dépenses restaurants dépassent la moyenne
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Export */}
               <button
                 onClick={handleExport}
-                className="p-2 rounded-lg transition-all duration-200"
+                className="p-2.5 rounded-lg transition-all duration-200 hover:scale-110"
                 style={{
                   background: "var(--bg-glass)",
                   border: "1px solid var(--border-primary)",
@@ -270,9 +462,10 @@ export default function UltimateHeader() {
                 <Download className="h-5 w-5" />
               </button>
 
+              {/* Import */}
               <button
                 onClick={handleImport}
-                className="p-2 rounded-lg transition-all duration-200"
+                className="p-2.5 rounded-lg transition-all duration-200 hover:scale-110"
                 style={{
                   background: "var(--bg-glass)",
                   border: "1px solid var(--border-primary)",
@@ -283,54 +476,9 @@ export default function UltimateHeader() {
                 <Upload className="h-5 w-5" />
               </button>
             </div>
-
-            {/* User Menu - Simplifié */}
-            <div
-              className="flex items-center space-x-2 p-2 rounded-lg"
-              style={{
-                background: "var(--bg-glass)",
-                border: "1px solid var(--border-primary)",
-              }}
-            >
-              <div className="w-8 h-8 bg-gradient-to-r from-financial-500 to-blue-500 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-white" />
-              </div>
-              <div className="text-sm">
-                <div
-                  className="font-medium"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  Utilisateur
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Status Bar */}
-        <motion.div
-          variants={itemVariants}
-          className="px-6 py-2"
-          style={{
-            background: "var(--bg-tertiary)",
-            borderTop: "1px solid var(--border-primary)",
-          }}
-        >
-          <div
-            className="flex items-center justify-between text-xs"
-            style={{ color: "var(--text-tertiary)" }}
-          >
-            <div className="flex items-center space-x-2">
-              <Globe className="h-3 w-3" />
-              <span>Données stockées localement</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Zap className="h-3 w-3" style={{ color: "var(--color-success)" }} />
-              <span>100% Local</span>
-            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </header>
   );
 }
