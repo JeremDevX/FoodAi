@@ -76,19 +76,43 @@ export default function UltimateMonthlyOverview() {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.2 },
+      scale: 1,
+      transition: { 
+        duration: 0.3,
+        ease: "easeOut"
+      },
     },
+    hover: {
+      scale: 1.02,
+      boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    }
   };
 
   const cardVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.2 },
+      scale: 1,
+      transition: { 
+        duration: 0.3,
+        ease: "easeOut"
+      },
     },
+    hover: {
+      scale: 1.02,
+      boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    }
   };
 
   // Prepare data for charts
@@ -124,8 +148,12 @@ export default function UltimateMonthlyOverview() {
       variants={cardVariants}
       initial="hidden"
       animate="visible"
+      whileHover="hover"
       transition={{ delay }}
-      className="glass-card transition-all duration-200 relative overflow-hidden p-6 hover:shadow-lg"
+      className="glass-card transition-all duration-200 relative overflow-hidden p-6"
+      style={{
+        boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+      }}
     >
       {/* Subtle background gradient */}
       <div
@@ -214,8 +242,12 @@ export default function UltimateMonthlyOverview() {
       variants={itemVariants}
       initial="hidden"
       animate="visible"
+      whileHover="hover"
       transition={{ delay }}
       className={`glass-card p-6 ${className}`}
+      style={{
+        boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+      }}
     >
       <h3
         className="text-xl font-semibold mb-6"
@@ -371,12 +403,17 @@ export default function UltimateMonthlyOverview() {
               {chartData.map((item, index) => (
                 <motion.div
                   key={item.category}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover="hover"
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${getAccessibleBgColor(
+                  className={`flex items-center justify-between p-4 rounded-lg ${getAccessibleBgColor(
                     theme
-                  )} hover:shadow-md`}
+                  )}`}
+                  style={{
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                  }}
                 >
                   <div className="flex items-center space-x-4">
                     <div
@@ -460,13 +497,20 @@ export default function UltimateMonthlyOverview() {
 
       {/* Additional Insights */}
       <motion.div
-        variants={itemVariants}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
         className="grid grid-cols-1 md:grid-cols-3 gap-8"
       >
         <motion.div
           variants={itemVariants}
-          whileHover={{ scale: 1.02 }}
-          className="glass-card p-6 transition-all duration-200"
+          initial="hidden"
+          animate="visible"
+          whileHover="hover"
+          className="glass-card p-6"
+          style={{
+            boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+          }}
         >
           <div className="flex items-center space-x-4 mb-4">
             <div
@@ -496,8 +540,13 @@ export default function UltimateMonthlyOverview() {
 
         <motion.div
           variants={itemVariants}
-          whileHover={{ scale: 1.02 }}
-          className="glass-card p-6 transition-all duration-200"
+          initial="hidden"
+          animate="visible"
+          whileHover="hover"
+          className="glass-card p-6"
+          style={{
+            boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+          }}
         >
           <div className="flex items-center space-x-4 mb-4">
             <div
@@ -527,8 +576,13 @@ export default function UltimateMonthlyOverview() {
 
         <motion.div
           variants={itemVariants}
-          whileHover={{ scale: 1.02 }}
-          className="glass-card p-6 transition-all duration-200"
+          initial="hidden"
+          animate="visible"
+          whileHover="hover"
+          className="glass-card p-6"
+          style={{
+            boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+          }}
         >
           <div className="flex items-center space-x-4 mb-4">
             <div

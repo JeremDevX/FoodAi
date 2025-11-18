@@ -104,8 +104,8 @@ export default function UltimateHeader() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="relative z-10 px-6 py-4 mb-4">
+        <div className="flex items-center justify-between gap-8">
           {/* Left Section - Date & Time */}
           <motion.div
             variants={itemVariants}

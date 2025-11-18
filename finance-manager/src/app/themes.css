@@ -23,6 +23,8 @@
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
   --color-info: #3b82f6;
+  --color-accent: #3b82f6;
+  --text-on-accent: #ffffff;
 
   /* Couleurs financières */
   --color-income: #10b981;
@@ -73,6 +75,8 @@
   --color-warning: #fbbf24;
   --color-danger: #f87171;
   --color-info: #60a5fa;
+  --color-accent: #60a5fa;
+  --text-on-accent: #0f172a;
 
   /* Gradients Néon */
   --gradient-primary: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
@@ -103,6 +107,8 @@
   --color-warning: #fbbf24;
   --color-danger: #fb7185;
   --color-info: #38bdf8;
+  --color-accent: #38bdf8;
+  --text-on-accent: #0c1e2e;
 
   --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
   --gradient-success: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
@@ -132,6 +138,8 @@
   --color-warning: #fbbf24;
   --color-danger: #fb7185;
   --color-info: #5eead4;
+  --color-accent: #34d399;
+  --text-on-accent: #0a1f0f;
 
   --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
   --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
@@ -161,6 +169,8 @@
   --color-warning: #fbbf24;
   --color-danger: #f472b6;
   --color-info: #c084fc;
+  --color-accent: #c084fc;
+  --text-on-accent: #1a0a2e;
 
   --gradient-primary: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
   --gradient-success: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);

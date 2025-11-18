@@ -49,20 +49,31 @@ export default function GoalsManager() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="glass-card p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2
+              className="text-2xl font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
               Gestion des Objectifs
             </h2>
-            <p className="text-gray-600 mt-1">Suivez vos projets d'épargne</p>
+            <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
+              Suivez vos projets d'épargne
+            </p>
           </div>
           <button
             onClick={() => {
               setEditingGoal(null);
               setShowForm(true);
             }}
-            className="flex items-center space-x-2 px-4 py-2 bg-financial-600 hover:bg-financial-700 text-white rounded-lg transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
+            style={{
+              background: "var(--color-accent)",
+              color: "var(--text-on-accent)",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
             <Plus className="h-4 w-4" />
             <span>Nouvel objectif</span>
@@ -71,36 +82,79 @@ export default function GoalsManager() {
 
         {/* Summary */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-financial-50 p-4 rounded-lg">
-            <div className="text-sm text-financial-600 mb-1">Total épargné</div>
-            <div className="text-2xl font-bold text-financial-700">
-              {formatCurrency(totalSaved)}
+          <div className="glass-card p-4 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 opacity-5" />
+            <div className="relative z-10">
+              <div
+                className="text-sm mb-1"
+                style={{ color: "var(--text-accent)" }}
+              >
+                Total épargné
+              </div>
+              <div
+                className="text-2xl font-bold"
+                style={{ color: "var(--text-accent)" }}
+              >
+                {formatCurrency(totalSaved)}
+              </div>
             </div>
           </div>
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">Objectif total</div>
-            <div className="text-2xl font-bold text-gray-900">
-              {formatCurrency(totalTarget)}
+          <div className="glass-card p-4 relative overflow-hidden">
+            <div className="relative z-10">
+              <div
+                className="text-sm mb-1"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Objectif total
+              </div>
+              <div
+                className="text-2xl font-bold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {formatCurrency(totalTarget)}
+              </div>
             </div>
           </div>
-          <div className="bg-success/10 p-4 rounded-lg">
-            <div className="text-sm text-success mb-1">Progression globale</div>
-            <div className="text-2xl font-bold text-success">
-              {overallProgress}%
+          <div className="glass-card p-4 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 opacity-5" />
+            <div className="relative z-10">
+              <div
+                className="text-sm mb-1"
+                style={{ color: "var(--color-success)" }}
+              >
+                Progression globale
+              </div>
+              <div
+                className="text-2xl font-bold"
+                style={{ color: "var(--color-success)" }}
+              >
+                {overallProgress}%
+              </div>
             </div>
           </div>
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="text-sm text-blue-600 mb-1">Objectifs actifs</div>
-            <div className="text-2xl font-bold text-blue-700">
-              {activeGoals.length}
+          <div className="glass-card p-4 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-violet-600 opacity-5" />
+            <div className="relative z-10">
+              <div
+                className="text-sm mb-1"
+                style={{ color: "var(--color-info)" }}
+              >
+                Objectifs actifs
+              </div>
+              <div
+                className="text-2xl font-bold"
+                style={{ color: "var(--color-info)" }}
+              >
+                {activeGoals.length}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="border-b border-gray-200">
+      <div className="glass-card">
+        <div style={{ borderBottom: "1px solid var(--border-color)" }}>
           <nav className="flex space-x-8 px-6">
             {[
               { key: "all", label: "Tous", count: goals.length },
@@ -114,14 +168,34 @@ export default function GoalsManager() {
               <button
                 key={tab.key}
                 onClick={() => setFilterStatus(tab.key as any)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                  filterStatus === tab.key
-                    ? "border-financial-500 text-financial-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
+                className="py-4 px-1 font-medium text-sm transition-colors"
+                style={{
+                  borderBottom:
+                    filterStatus === tab.key
+                      ? "2px solid var(--color-accent)"
+                      : "2px solid transparent",
+                  color:
+                    filterStatus === tab.key
+                      ? "var(--color-accent)"
+                      : "var(--text-secondary)",
+                }}
+                onMouseEnter={(e) =>
+                  filterStatus !== tab.key &&
+                  (e.currentTarget.style.color = "var(--text-primary)")
+                }
+                onMouseLeave={(e) =>
+                  filterStatus !== tab.key &&
+                  (e.currentTarget.style.color = "var(--text-secondary)")
+                }
               >
                 {tab.label}
-                <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+                <span
+                  className="ml-2 py-0.5 px-2 rounded-full text-xs"
+                  style={{
+                    background: "var(--bg-secondary)",
+                    color: "var(--text-secondary)",
+                  }}
+                >
                   {tab.count}
                 </span>
               </button>
@@ -132,15 +206,21 @@ export default function GoalsManager() {
         <div className="p-6">
           {filteredGoals.length === 0 ? (
             <div className="text-center py-12">
-              <Target className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <div className="text-gray-400 mb-2">
+              <Target
+                className="h-16 w-16 mx-auto mb-4"
+                style={{ color: "var(--text-tertiary)" }}
+              />
+              <div className="mb-2" style={{ color: "var(--text-secondary)" }}>
                 {filterStatus === "active"
                   ? "Aucun objectif actif"
                   : filterStatus === "completed"
                   ? "Aucun objectif terminé"
                   : "Aucun objectif"}
               </div>
-              <div className="text-sm text-gray-500">
+              <div
+                className="text-sm"
+                style={{ color: "var(--text-tertiary)" }}
+              >
                 {filterStatus === "active"
                   ? "Créez votre premier objectif pour commencer à épargner !"
                   : filterStatus === "completed"
@@ -164,22 +244,32 @@ export default function GoalsManager() {
                 return (
                   <div
                     key={goal.id}
-                    className="bg-gray-50 rounded-xl p-6 hover:shadow-md transition-shadow"
+                    className="glass-card p-6 transition-all duration-200"
+                    style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.1)" }}
                   >
                     {/* Goal Header */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-1">
+                        <h3
+                          className="font-semibold mb-1"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {goal.name}
                         </h3>
                         {goal.description && (
-                          <p className="text-sm text-gray-600">
+                          <p
+                            className="text-sm"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
                             {goal.description}
                           </p>
                         )}
                       </div>
                       {isCompleted && (
-                        <CheckCircle className="h-6 w-6 text-success flex-shrink-0" />
+                        <CheckCircle
+                          className="h-6 w-6 flex-shrink-0"
+                          style={{ color: "var(--color-success)" }}
+                        />
                       )}
                     </div>
 
@@ -215,7 +305,10 @@ export default function GoalsManager() {
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className="text-center">
-                            <div className="text-lg font-bold text-gray-900">
+                            <div
+                              className="text-lg font-bold"
+                              style={{ color: "var(--text-primary)" }}
+                            >
                               {progress}%
                             </div>
                           </div>
@@ -226,21 +319,36 @@ export default function GoalsManager() {
                     {/* Progress Info */}
                     <div className="space-y-3 mb-4">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Épargné</span>
-                        <span className="font-medium">
+                        <span style={{ color: "var(--text-secondary)" }}>
+                          Épargné
+                        </span>
+                        <span
+                          className="font-medium"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {formatCurrency(goal.currentAmount)}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Objectif</span>
-                        <span className="font-medium">
+                        <span style={{ color: "var(--text-secondary)" }}>
+                          Objectif
+                        </span>
+                        <span
+                          className="font-medium"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {formatCurrency(goal.targetAmount)}
                         </span>
                       </div>
                       {!isCompleted && (
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Restant</span>
-                          <span className="font-medium">
+                          <span style={{ color: "var(--text-secondary)" }}>
+                            Restant
+                          </span>
+                          <span
+                            className="font-medium"
+                            style={{ color: "var(--text-primary)" }}
+                          >
                             {formatCurrency(
                               goal.targetAmount - goal.currentAmount
                             )}
@@ -248,20 +356,31 @@ export default function GoalsManager() {
                         </div>
                       )}
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Échéance</span>
-                        <span className="font-medium">
+                        <span style={{ color: "var(--text-secondary)" }}>
+                          Échéance
+                        </span>
+                        <span
+                          className="font-medium"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {isCompleted ? "Terminé" : `${daysLeft} jours`}
                         </span>
                       </div>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div
+                      className="w-full rounded-full h-2 mb-4"
+                      style={{ background: "var(--bg-tertiary)" }}
+                    >
                       <div
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          isCompleted ? "bg-success" : "bg-financial-600"
-                        }`}
-                        style={{ width: `${Math.min(progress, 100)}%` }}
+                        className="h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${Math.min(progress, 100)}%`,
+                          background: isCompleted
+                            ? "var(--color-success)"
+                            : "var(--color-accent)",
+                        }}
                       />
                     </div>
 
@@ -272,7 +391,17 @@ export default function GoalsManager() {
                           setEditingGoal(goal);
                           setShowForm(true);
                         }}
-                        className="flex-1 px-3 py-2 text-sm bg-financial-100 hover:bg-financial-200 text-financial-700 rounded-lg transition-colors flex items-center justify-center space-x-1"
+                        className="flex-1 px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-center space-x-1"
+                        style={{
+                          background: "var(--bg-secondary)",
+                          color: "var(--text-accent)",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.opacity = "0.8")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.opacity = "1")
+                        }
                       >
                         <Edit className="h-3 w-3" />
                         <span>Modifier</span>
@@ -282,7 +411,17 @@ export default function GoalsManager() {
                           onClick={() => {
                             // Add contribution logic would go here
                           }}
-                          className="flex-1 px-3 py-2 text-sm bg-success hover:bg-success/90 text-white rounded-lg transition-colors flex items-center justify-center space-x-1"
+                          className="flex-1 px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-center space-x-1"
+                          style={{
+                            background: "var(--color-success)",
+                            color: "#ffffff",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.opacity = "0.9")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.opacity = "1")
+                          }
                         >
                           <TrendingUp className="h-3 w-3" />
                           <span>Ajouter</span>

@@ -122,7 +122,9 @@ export default function UltimateSidebar() {
             className="p-6"
             style={{ borderBottom: "1px solid var(--border-primary)" }}
           >
-            <div className="flex items-center space-x-3 mb-4">
+            <div className={`flex items-center mb-4 ${
+              isExpanded ? "space-x-3" : "justify-center"
+            }`}>
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-financial-500 to-blue-500 rounded-full blur-lg opacity-75" />
                 <div
