@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Transaction } from '@/types';
-import { formatCurrency } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  X, 
-  Calendar, 
-  DollarSign, 
-  Tag, 
+import { useState, useEffect } from "react";
+import { Transaction } from "@/types";
+import { formatCurrency } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  X,
+  Calendar,
+  DollarSign,
+  Tag,
   FileText,
   Plus,
   Save,
   Camera,
   Mic,
   Sparkles,
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";
 
 interface UltimateTransactionFormProps {
   transaction?: Transaction | null;
@@ -24,16 +24,20 @@ interface UltimateTransactionFormProps {
   onSave: () => void;
 }
 
-export default function UltimateTransactionForm({ transaction, onClose, onSave }: UltimateTransactionFormProps) {
+export default function UltimateTransactionForm({
+  transaction,
+  onClose,
+  onSave,
+}: UltimateTransactionFormProps) {
   const [formData, setFormData] = useState({
-    date: new Date().toISOString().split('T')[0],
-    amount: '',
-    description: '',
-    category: '',
-    account: 'Compte Principal',
-    type: 'expense' as 'income' | 'expense',
-    notes: '',
-    tags: [] as string[]
+    date: new Date().toISOString().split("T")[0],
+    amount: "",
+    description: "",
+    category: "",
+    account: "Compte Principal",
+    type: "expense" as "income" | "expense",
+    notes: "",
+    tags: [] as string[],
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -43,52 +47,136 @@ export default function UltimateTransactionForm({ transaction, onClose, onSave }
 
   const categories = [
     // Income categories
-    { name: 'Salaire', type: 'income', icon: '💰', color: 'from-green-500 to-emerald-500' },
-    { name: 'Investissement', type: 'income', icon: '📈', color: 'from-blue-500 to-cyan-500' },
-    { name: 'Cadeau', type: 'income', icon: '🎁', color: 'from-purple-500 to-pink-500' },
-    { name: 'Autre', type: 'income', icon: '📝', color: 'from-gray-500 to-slate-500' },
+    {
+      name: "Salaire",
+      type: "income",
+      icon: "💰",
+      gradientStart: "#10b981",
+      gradientEnd: "#059669",
+    },
+    {
+      name: "Investissement",
+      type: "income",
+      icon: "📈",
+      gradientStart: "#3b82f6",
+      gradientEnd: "#06b6d4",
+    },
+    {
+      name: "Cadeau",
+      type: "income",
+      icon: "🎁",
+      gradientStart: "#a855f7",
+      gradientEnd: "#ec4899",
+    },
+    {
+      name: "Autre",
+      type: "income",
+      icon: "📝",
+      gradientStart: "#6b7280",
+      gradientEnd: "#64748b",
+    },
     // Expense categories
-    { name: 'Alimentation', type: 'expense', icon: '🍎', color: 'from-red-500 to-orange-500' },
-    { name: 'Transport', type: 'expense', icon: '🚗', color: 'from-blue-500 to-indigo-500' },
-    { name: 'Logement', type: 'expense', icon: '🏠', color: 'from-amber-500 to-yellow-500' },
-    { name: 'Santé', type: 'expense', icon: '🏥', color: 'from-pink-500 to-rose-500' },
-    { name: 'Loisirs', type: 'expense', icon: '🎮', color: 'from-purple-500 to-violet-500' },
-    { name: 'Shopping', type: 'expense', icon: '🛍️', color: 'from-indigo-500 to-purple-500' },
-    { name: 'Restaurant', type: 'expense', icon: '🍽️', color: 'from-orange-500 to-red-500' },
-    { name: 'Services', type: 'expense', icon: '⚡', color: 'from-cyan-500 to-blue-500' },
-    { name: 'Autre', type: 'expense', icon: '📝', color: 'from-gray-500 to-slate-500' }
+    {
+      name: "Alimentation",
+      type: "expense",
+      icon: "🍎",
+      gradientStart: "#ef4444",
+      gradientEnd: "#f43f5e",
+    },
+    {
+      name: "Transport",
+      type: "expense",
+      icon: "🚗",
+      gradientStart: "#0ea5e9",
+      gradientEnd: "#2563eb",
+    },
+    {
+      name: "Logement",
+      type: "expense",
+      icon: "🏠",
+      gradientStart: "#f59e0b",
+      gradientEnd: "#ea580c",
+    },
+    {
+      name: "Santé",
+      type: "expense",
+      icon: "🏥",
+      gradientStart: "#ec4899",
+      gradientEnd: "#c026d3",
+    },
+    {
+      name: "Loisirs",
+      type: "expense",
+      icon: "🎮",
+      gradientStart: "#8b5cf6",
+      gradientEnd: "#7c3aed",
+    },
+    {
+      name: "Shopping",
+      type: "expense",
+      icon: "🛍️",
+      gradientStart: "#6366f1",
+      gradientEnd: "#1d4ed8",
+    },
+    {
+      name: "Restaurant",
+      type: "expense",
+      icon: "🍽️",
+      gradientStart: "#f97316",
+      gradientEnd: "#dc2626",
+    },
+    {
+      name: "Services",
+      type: "expense",
+      icon: "⚡",
+      gradientStart: "#06b6d4",
+      gradientEnd: "#0d9488",
+    },
+    {
+      name: "Autre",
+      type: "expense",
+      icon: "📝",
+      gradientStart: "#64748b",
+      gradientEnd: "#475569",
+    },
   ];
 
-  const filteredCategories = categories.filter(cat => cat.type === formData.type);
+  const filteredCategories = categories.filter(
+    (cat) => cat.type === formData.type
+  );
 
   useEffect(() => {
     if (transaction) {
       setFormData({
-        date: new Date(transaction.date).toISOString().split('T')[0],
+        date: new Date(transaction.date).toISOString().split("T")[0],
         amount: Math.abs(transaction.amount).toString(),
         description: transaction.description,
         category: transaction.category,
         account: transaction.account,
         type: transaction.type,
-        notes: transaction.notes || '',
-        tags: transaction.tags || []
+        notes: transaction.notes || "",
+        tags: transaction.tags || [],
       });
     }
   }, [transaction]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
-    if (!formData.amount || isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = 'Veuillez entrer un montant valide supérieur à 0';
+
+    if (
+      !formData.amount ||
+      isNaN(parseFloat(formData.amount)) ||
+      parseFloat(formData.amount) <= 0
+    ) {
+      newErrors.amount = "Veuillez entrer un montant valide supérieur à 0";
     }
-    
+
     if (!formData.description.trim()) {
-      newErrors.description = 'La description est requise';
+      newErrors.description = "La description est requise";
     }
-    
+
     if (!formData.category) {
-      newErrors.category = 'La catégorie est requise';
+      newErrors.category = "La catégorie est requise";
     }
 
     setErrors(newErrors);
@@ -97,25 +185,30 @@ export default function UltimateTransactionForm({ transaction, onClose, onSave }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      const { addTransaction, updateTransaction } = await import('@/lib/database');
-      
+      const { addTransaction, updateTransaction } = await import(
+        "@/lib/database"
+      );
+
       const transactionData = {
         date: new Date(formData.date),
-        amount: formData.type === 'income' ? Math.abs(parseFloat(formData.amount)) : -Math.abs(parseFloat(formData.amount)),
+        amount:
+          formData.type === "income"
+            ? Math.abs(parseFloat(formData.amount))
+            : -Math.abs(parseFloat(formData.amount)),
         description: formData.description.trim(),
         category: formData.category,
         account: formData.account,
         type: formData.type,
         notes: formData.notes.trim(),
-        tags: formData.tags
+        tags: formData.tags,
       };
 
       if (transaction?.id) {
@@ -130,336 +223,386 @@ export default function UltimateTransactionForm({ transaction, onClose, onSave }
         setShowSuccess(false);
         onSave();
       }, 2000);
-
     } catch (error) {
-      console.error('Error saving transaction:', error);
-      alert('Erreur lors de la sauvegarde de la transaction');
+      console.error("Error saving transaction:", error);
+      alert("Erreur lors de la sauvegarde de la transaction");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleVoiceInput = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+      const SpeechRecognition =
+        (window as any).webkitSpeechRecognition ||
+        (window as any).SpeechRecognition;
       const recognition = new SpeechRecognition();
-      
-      recognition.lang = 'fr-FR';
+
+      recognition.lang = "fr-FR";
       recognition.continuous = false;
       recognition.interimResults = false;
-      
+
       recognition.onstart = () => {
         setIsListening(true);
       };
-      
+
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
-        setFormData({...formData, description: transcript});
+        setFormData({ ...formData, description: transcript });
         setIsListening(false);
       };
-      
+
       recognition.onerror = () => {
         setIsListening(false);
-        alert('Erreur de reconnaissance vocale');
+        alert("Erreur de reconnaissance vocale");
       };
-      
+
       recognition.onend = () => {
         setIsListening(false);
       };
-      
+
       recognition.start();
     } else {
-      alert('La reconnaissance vocale n\'est pas supportée par votre navigateur');
-    }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4, ease: "easeOut" }
+      alert(
+        "La reconnaissance vocale n'est pas supportée par votre navigateur"
+      );
     }
   };
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      <div
+        className="fixed inset-0 flex items-center justify-center z-50 p-4"
+        style={{
+          background: "rgba(0, 0, 0, 0.7)",
+          backdropFilter: "blur(4px)",
+        }}
         onClick={onClose}
       >
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/20"
+        <div
+          className="glass-card rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <motion.div
-            variants={itemVariants}
-            className="relative p-6 border-b border-white/10 bg-gradient-to-r from-financial-500/20 to-blue-500/20"
+          <div
+            className="p-6"
+            style={{ borderBottom: "1px solid var(--border-color)" }}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="p-2 bg-gradient-to-r from-financial-500 to-blue-500 rounded-lg"
+                <div
+                  className="p-2 rounded-lg"
+                  style={{ background: "var(--color-accent)" }}
                 >
-                  <Sparkles className="h-6 w-6 text-white" />
-                </motion.div>
+                  <DollarSign
+                    className="h-6 w-6"
+                    style={{ color: "var(--text-on-accent)" }}
+                  />
+                </div>
                 <div>
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                    {transaction ? 'Modifier la Transaction' : 'Nouvelle Transaction'}
+                  <h2
+                    className="text-2xl font-bold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {transaction
+                      ? "Modifier la Transaction"
+                      : "Nouvelle Transaction"}
                   </h2>
-                  <p className="text-gray-400 text-sm">Remplissez les détails avec style</p>
+                  <p
+                    className="text-sm"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Remplissez les détails de la transaction
+                  </p>
                 </div>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
+              <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                className="p-2 rounded-lg transition-colors"
+                style={{ color: "var(--text-secondary)" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--bg-secondary)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "var(--text-secondary)";
+                }}
               >
                 <X className="h-6 w-6" />
-              </motion.button>
+              </button>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Success Animation */}
-          <AnimatePresence>
-            {showSuccess && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: -50 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: -50 }}
-                className="absolute inset-x-0 top-20 z-50 flex items-center justify-center"
+          {/* Success Message */}
+          {showSuccess && (
+            <div
+              className="p-4"
+              style={{ background: "var(--color-success)20" }}
+            >
+              <div
+                className="flex items-center justify-center space-x-2"
+                style={{ color: "var(--color-success)" }}
               >
-                <div className="bg-gradient-to-r from-success to-emerald-500 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center space-x-2">
-                  <Zap className="h-5 w-5" />
-                  <span className="font-medium">Transaction enregistrée avec succès !</span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <Zap className="h-5 w-5" />
+                <span className="font-medium">
+                  Transaction enregistrée avec succès !
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Form Content */}
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
-            {/* Type Selection with Animation */}
-            <motion.div variants={itemVariants} className="space-y-4">
-              <label className="text-sm font-medium text-gray-300">Type de transaction</label>
+            {/* Type Selection */}
+            <div className="space-y-4">
+              <label
+                className="text-sm font-medium"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Type de transaction
+              </label>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { type: 'expense', label: 'Dépense', icon: '💸', color: 'from-red-500 to-orange-500' },
-                  { type: 'income', label: 'Revenu', icon: '💰', color: 'from-green-500 to-emerald-500' }
+                  {
+                    type: "expense",
+                    label: "Dépense",
+                    icon: "💸",
+                    gradientStart: "#ef4444",
+                    gradientEnd: "#f43f5e",
+                  },
+                  {
+                    type: "income",
+                    label: "Revenu",
+                    icon: "💰",
+                    gradientStart: "#10b981",
+                    gradientEnd: "#059669",
+                  },
                 ].map((option) => (
-                  <motion.button
+                  <button
                     key={option.type}
                     type="button"
-                    onClick={() => setFormData({...formData, type: option.type as any})}
-                    className={`
-                      relative p-6 rounded-xl border-2 transition-all duration-300 group
-                      ${formData.type === option.type 
-                        ? `border-${option.type === 'expense' ? 'red' : 'green'}-500 bg-${option.type === 'expense' ? 'red' : 'green'}-500/20 scale-105` 
-                        : 'border-white/20 hover:border-white/40 hover:scale-102'
-                      }
-                      overflow-hidden
-                    `}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        type: option.type as any,
+                        category: "",
+                      })
+                    }
+                    className="relative p-6 rounded-xl border-2 transition-all duration-200 overflow-hidden backdrop-blur-sm"
+                    style={{
+                      borderColor:
+                        formData.type === option.type
+                          ? "var(--color-accent)"
+                          : "var(--border-color)",
+                      background: "rgba(0, 0, 0, 0.2)",
+                    }}
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${option.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
+                    {/* Gradient background */}
+                    <div
+                      className="absolute inset-0 transition-opacity duration-200"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${option.gradientStart}, ${option.gradientEnd})`,
+                        opacity: formData.type === option.type ? 0.4 : 0.2,
+                      }}
+                    />
                     <div className="relative z-10 text-center">
-                      <motion.div
-                        animate={{ scale: formData.type === option.type ? [1, 1.2, 1] : 1 }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                        className="text-3xl mb-2"
+                      <div className="text-3xl mb-2">{option.icon}</div>
+                      <div
+                        className="text-lg font-bold"
+                        style={{ color: "var(--text-primary)" }}
                       >
-                        {option.icon}
-                      </motion.div>
-                      <div className="text-lg font-bold text-white">{option.label}</div>
+                        {option.label}
+                      </div>
                     </div>
-                    {formData.type === option.type && (
-                      <motion.div
-                        animate={{ scale: [1, 1.5, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="absolute top-2 right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center"
-                      >
-                        <div className="w-3 h-3 bg-current rounded-full" />
-                      </motion.div>
-                    )}
-                  </motion.button>
+                  </button>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
-            {/* Amount with Voice Input */}
-            <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Amount and Date */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300 flex items-center">
-                  <DollarSign className="h-4 w-4 mr-2 text-financial-400" />
+                <label
+                  className="text-sm font-medium flex items-center"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  <DollarSign className="h-4 w-4 mr-2" />
                   Montant (€)
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-financial-400">
+                  <div
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                    style={{ color: "var(--text-accent)" }}
+                  >
                     <DollarSign className="h-5 w-5" />
                   </div>
-                  <motion.input
-                    whileFocus={{ scale: 1.02 }}
+                  <input
                     type="number"
                     step="0.01"
                     min="0.01"
                     value={formData.amount}
-                    onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                    className={`w-full pl-10 pr-4 py-3 bg-white/10 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-financial-500 focus:border-transparent backdrop-blur-sm transition-all duration-200 ${
-                      errors.amount ? 'border-danger' : 'border-white/20'
-                    }`}
+                    onChange={(e) =>
+                      setFormData({ ...formData, amount: e.target.value })
+                    }
+                    className="w-full pl-10 pr-4 py-3 rounded-lg transition-colors"
+                    style={{
+                      background: "var(--bg-secondary)",
+                      color: "var(--text-primary)",
+                      border: `1px solid ${
+                        errors.amount
+                          ? "var(--color-danger)"
+                          : "var(--border-color)"
+                      }`,
+                    }}
                     placeholder="0.00"
                     required
                   />
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    type="button"
-                    onClick={handleVoiceInput}
-                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded transition-colors ${
-                      isListening ? 'text-red-500 animate-pulse' : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    <Mic className="h-4 w-4" />
-                  </motion.button>
                 </div>
                 {errors.amount && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-danger text-sm"
+                  <p
+                    className="text-sm"
+                    style={{ color: "var(--color-danger)" }}
                   >
                     {errors.amount}
-                  </motion.p>
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300 flex items-center">
-                  <Calendar className="h-4 w-4 mr-2 text-financial-400" />
+                <label
+                  className="text-sm font-medium flex items-center"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
                   Date
                 </label>
-                <motion.input
-                  whileFocus={{ scale: 1.02 }}
+                <input
                   type="date"
                   value={formData.date}
-                  onChange={(e) => setFormData({...formData, date: e.target.value})}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-financial-500 focus:border-transparent backdrop-blur-sm transition-all duration-200"
+                  onChange={(e) =>
+                    setFormData({ ...formData, date: e.target.value })
+                  }
+                  className="w-full px-4 py-3 rounded-lg transition-colors"
+                  style={{
+                    background: "var(--bg-secondary)",
+                    color: "var(--text-primary)",
+                    border: "1px solid var(--border-color)",
+                  }}
                   required
                 />
               </div>
-            </motion.div>
+            </div>
 
-            {/* Description with AI Suggestions */}
-            <motion.div variants={itemVariants} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 flex items-center justify-between">
-                <span className="flex items-center">
-                  <Tag className="h-4 w-4 mr-2 text-financial-400" />
-                  Description
-                </span>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  type="button"
-                  className="text-xs text-financial-400 hover:text-financial-300 flex items-center space-x-1"
-                >
-                  <Sparkles className="h-3 w-3" />
-                  <span>Suggestions IA</span>
-                </motion.button>
+            {/* Description */}
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium flex items-center"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                <Tag className="h-4 w-4 mr-2" />
+                Description
               </label>
-              <motion.textarea
-                whileFocus={{ scale: 1.01 }}
+              <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
-                className={`w-full px-4 py-3 bg-white/10 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-financial-500 focus:border-transparent backdrop-blur-sm transition-all duration-200 resize-none ${
-                  errors.description ? 'border-danger' : 'border-white/20'
-                }`}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                className="w-full px-4 py-3 rounded-lg resize-none transition-colors"
+                style={{
+                  background: "var(--bg-secondary)",
+                  color: "var(--text-primary)",
+                  border: `1px solid ${
+                    errors.description
+                      ? "var(--color-danger)"
+                      : "var(--border-color)"
+                  }`,
+                }}
                 placeholder="Décrivez la transaction..."
                 rows={3}
                 required
               />
               {errors.description && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-danger text-sm"
-                >
+                <p className="text-sm" style={{ color: "var(--color-danger)" }}>
                   {errors.description}
-                </motion.p>
+                </p>
               )}
-            </motion.div>
+            </div>
 
             {/* Category Selection */}
-            <motion.div variants={itemVariants} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Catégorie</label>
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Catégorie
+              </label>
               <div className="grid grid-cols-3 gap-3">
                 {filteredCategories.map((category) => (
-                  <motion.button
+                  <button
                     key={category.name}
                     type="button"
-                    onClick={() => setFormData({...formData, category: category.name})}
-                    className={`
-                      relative p-4 rounded-xl border-2 transition-all duration-300 group
-                      ${formData.category === category.name
-                        ? 'border-financial-500 bg-financial-500/20 scale-105' 
-                        : 'border-white/20 hover:border-white/40 hover:scale-102'
-                      }
-                      overflow-hidden
-                    `}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      setFormData({ ...formData, category: category.name })
+                    }
+                    className="relative p-4 rounded-xl border-2 transition-all duration-200 overflow-hidden backdrop-blur-sm"
+                    style={{
+                      borderColor:
+                        formData.category === category.name
+                          ? "var(--color-accent)"
+                          : "var(--border-color)",
+                      background: "rgba(0, 0, 0, 0.2)",
+                    }}
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
+                    {/* Gradient background */}
+                    <div
+                      className="absolute inset-0 transition-opacity duration-200"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${category.gradientStart}, ${category.gradientEnd})`,
+                        opacity:
+                          formData.category === category.name ? 0.5 : 0.25,
+                      }}
+                    />
                     <div className="relative z-10 text-center">
                       <div className="text-2xl mb-1">{category.icon}</div>
-                      <div className="text-xs font-medium text-white">{category.name}</div>
-                    </div>
-                    {formData.category === category.name && (
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="absolute top-1 right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center"
+                      <div
+                        className="text-xs font-medium"
+                        style={{ color: "var(--text-primary)" }}
                       >
-                        <div className="w-2 h-2 bg-financial-500 rounded-full" />
-                      </motion.div>
-                    )}
-                  </motion.button>
+                        {category.name}
+                      </div>
+                    </div>
+                  </button>
                 ))}
               </div>
-            </motion.div>
+              {errors.category && (
+                <p className="text-sm" style={{ color: "var(--color-danger)" }}>
+                  {errors.category}
+                </p>
+              )}
+            </div>
 
             {/* Advanced Options */}
-            <motion.div variants={itemVariants} className="space-y-4">
+            <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Compte</label>
+                  <label
+                    className="text-sm font-medium"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Compte
+                  </label>
                   <select
                     value={formData.account}
-                    onChange={(e) => setFormData({...formData, account: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-financial-500 focus:border-transparent backdrop-blur-sm transition-all duration-200"
+                    onChange={(e) =>
+                      setFormData({ ...formData, account: e.target.value })
+                    }
+                    className="w-full px-4 py-3 rounded-lg transition-colors"
+                    style={{
+                      background: "var(--bg-secondary)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border-color)",
+                    }}
                   >
                     <option value="Compte Principal">Compte Principal</option>
                     <option value="Compte Épargne">Compte Épargne</option>
@@ -469,63 +612,90 @@ export default function UltimateTransactionForm({ transaction, onClose, onSave }
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300 flex items-center">
-                    <FileText className="h-4 w-4 mr-2 text-financial-400" />
+                  <label
+                    className="text-sm font-medium flex items-center"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
                     Notes (optionnel)
                   </label>
                   <textarea
                     value={formData.notes}
-                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-financial-500 focus:border-transparent backdrop-blur-sm transition-all duration-200 resize-none"
+                    onChange={(e) =>
+                      setFormData({ ...formData, notes: e.target.value })
+                    }
+                    className="w-full px-4 py-3 rounded-lg resize-none transition-colors"
+                    style={{
+                      background: "var(--bg-secondary)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border-color)",
+                    }}
                     placeholder="Ajoutez des notes..."
                     rows={3}
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Actions */}
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center justify-end space-x-4 pt-6 border-t border-white/10"
+            <div
+              className="flex items-center justify-end space-x-4 pt-6"
+              style={{ borderTop: "1px solid var(--border-color)" }}
             >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-3 text-gray-300 hover:text-white font-medium transition-all duration-200"
+                className="px-6 py-3 font-medium rounded-lg transition-colors"
+                style={{ color: "var(--text-secondary)" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--text-primary)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--text-secondary)")
+                }
               >
                 Annuler
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              </button>
+
+              <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-8 py-3 bg-gradient-to-r from-financial-500 to-blue-500 hover:from-financial-600 hover:to-blue-600 disabled:from-gray-500 disabled:to-gray-600 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center space-x-2"
+                className="px-8 py-3 rounded-xl font-medium flex items-center space-x-2 transition-all duration-200"
+                style={{
+                  background: isSubmitting
+                    ? "var(--bg-tertiary)"
+                    : "var(--color-accent)",
+                  color: isSubmitting
+                    ? "var(--text-secondary)"
+                    : "var(--text-on-accent)",
+                }}
+                onMouseEnter={(e) =>
+                  !isSubmitting && (e.currentTarget.style.opacity = "0.9")
+                }
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               >
                 {isSubmitting ? (
                   <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                    <div
+                      className="w-4 h-4 border-2 rounded-full animate-spin"
+                      style={{
+                        borderColor: "var(--text-secondary)",
+                        borderTopColor: "transparent",
+                      }}
                     />
                     <span>Enregistrement...</span>
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    <span>{transaction ? 'Modifier' : 'Enregistrer'}</span>
+                    <span>{transaction ? "Modifier" : "Enregistrer"}</span>
                   </>
                 )}
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           </form>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </AnimatePresence>
   );
 }
