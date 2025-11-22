@@ -27,7 +27,7 @@ import { downloadFile } from "@/lib/utils";
 
 export default function UltimateSettings() {
   const { settings, refreshData } = useFinanceStore();
-  const { theme, setTheme, animationLevel, setAnimationLevel } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [formData, setFormData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{
@@ -176,7 +176,7 @@ export default function UltimateSettings() {
   };
 
   function ThemeSelector() {
-    const { theme, setTheme, animationLevel, setAnimationLevel } = useTheme();
+    const { theme, setTheme } = useTheme();
 
     const themes = [
       {
@@ -209,12 +209,6 @@ export default function UltimateSettings() {
         icon: Sparkles,
         color: "from-purple-500 to-pink-600",
       },
-    ];
-
-    const animationLevels = [
-      { id: "minimal", name: "Minimal", description: "Animations réduites" },
-      { id: "normal", name: "Normal", description: "Animations équilibrées" },
-      { id: "rich", name: "Riche", description: "Animations complètes" },
     ];
 
     return (
@@ -272,49 +266,6 @@ export default function UltimateSettings() {
                 </motion.button>
               );
             })}
-          </div>
-        </div>
-
-        {/* Animation Level */}
-        <div>
-          <h4 className="text-lg font-semibold text-white mb-4">
-            Niveau d'Animation
-          </h4>
-          <div className="space-y-2">
-            {animationLevels.map((level) => (
-              <motion.label
-                key={level.id}
-                whileHover={{ scale: 1.01 }}
-                className={`
-                flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
-                ${
-                  animationLevel === level.id
-                    ? "border-financial-500 bg-financial-500/20"
-                    : "border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10"
-                }
-              `}
-              >
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="animation"
-                    value={level.id}
-                    checked={animationLevel === level.id}
-                    onChange={() => setAnimationLevel(level.id as any)}
-                    className="mr-3 w-4 h-4 text-financial-600 bg-white/10 border-white/30 focus:ring-financial-500"
-                  />
-                  <div>
-                    <div className="font-medium text-white">{level.name}</div>
-                    <div className="text-sm text-gray-300">
-                      {level.description}
-                    </div>
-                  </div>
-                </div>
-                {animationLevel === level.id && (
-                  <CheckCircle className="h-5 w-5 text-financial-400" />
-                )}
-              </motion.label>
-            ))}
           </div>
         </div>
       </div>

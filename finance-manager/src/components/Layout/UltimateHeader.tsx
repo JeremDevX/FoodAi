@@ -18,8 +18,13 @@ import { formatShortDate, useFormatCurrency } from "@/lib/utils";
 export default function UltimateHeader() {
   const { theme } = useTheme();
   const formatCurrency = useFormatCurrency();
-  const { transactions, selectedAccount, setSelectedAccount } =
-    useFinanceStore();
+  const {
+    transactions,
+    selectedAccount,
+    setSelectedAccount,
+    accounts,
+    getAccountBalance,
+  } = useFinanceStore();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
@@ -30,49 +35,6 @@ export default function UltimateHeader() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
-  // Calculer les soldes des comptes
-  const accountBalances = useMemo(() => {
-    const courant = transactions
-      .filter(
-        (t) =>
-          t.account === "Compte Courant" || t.account === "Compte Principal"
-      )
-      .reduce((acc, t) => {
-        if (t.type === "income") return acc + t.amount;
-        if (t.type === "expense") return acc - t.amount;
-        if (t.type === "transfer") {
-          if (
-            t.fromAccount === "Compte Courant" ||
-            t.fromAccount === "Compte Principal"
-          )
-            return acc - t.amount;
-          if (
-            t.toAccount === "Compte Courant" ||
-            t.toAccount === "Compte Principal"
-          )
-            return acc + t.amount;
-        }
-        return acc;
-      }, 0);
-
-    const epargne = transactions
-      .filter((t) => t.account === "Compte Épargne")
-      .reduce((acc, t) => {
-        if (t.type === "income") return acc + t.amount;
-        if (t.type === "expense") return acc - t.amount;
-        if (t.type === "transfer") {
-          if (t.fromAccount === "Compte Épargne") return acc - t.amount;
-          if (t.toAccount === "Compte Épargne") return acc + t.amount;
-        }
-        return acc;
-      }, 0);
-
-    return {
-      "Compte Courant": courant,
-      "Compte Épargne": epargne,
-    };
-  }, [transactions]);
 
   const handleExport = async () => {
     const { exportData } = await import("@/lib/database");
@@ -228,11 +190,7 @@ export default function UltimateHeader() {
                             : "var(--color-success)",
                       }}
                     >
-                      {formatCurrency(
-                        accountBalances[
-                          selectedAccount as keyof typeof accountBalances
-                        ]
-                      )}
+                      {formatCurrency(getAccountBalance(selectedAccount))}
                     </div>
                   </div>
                   <ChevronDown
@@ -270,70 +228,66 @@ export default function UltimateHeader() {
                         }}
                       >
                         <div className="space-y-2">
-                          {["Compte Courant", "Compte Épargne"].map(
-                            (account) => (
-                              <button
-                                key={account}
-                                onClick={() => {
-                                  setSelectedAccount(account);
-                                  setShowAccountDropdown(false);
-                                }}
-                                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 hover:scale-[1.02]"
-                                style={{
-                                  background:
-                                    selectedAccount === account
-                                      ? "var(--bg-glass)"
-                                      : "transparent",
-                                  border: `1px solid ${
-                                    selectedAccount === account
-                                      ? "var(--border-primary)"
-                                      : "transparent"
-                                  }`,
-                                }}
-                              >
-                                {account === "Compte Courant" ? (
-                                  <Wallet
-                                    className="h-5 w-5"
-                                    style={{ color: "var(--text-accent)" }}
-                                  />
-                                ) : (
-                                  <PiggyBank
-                                    className="h-5 w-5"
-                                    style={{ color: "var(--color-success)" }}
-                                  />
-                                )}
-                                <div className="flex-1 text-left">
-                                  <div
-                                    className="font-medium text-sm"
-                                    style={{ color: "var(--text-primary)" }}
-                                  >
-                                    {account}
-                                  </div>
-                                  <div
-                                    className="text-xs font-bold"
-                                    style={{
-                                      color:
-                                        account === "Compte Courant"
-                                          ? "var(--text-accent)"
-                                          : "var(--color-success)",
-                                    }}
-                                  >
-                                    {formatCurrency(
-                                      accountBalances[
-                                        account as keyof typeof accountBalances
-                                      ]
-                                    )}
-                                  </div>
+                          {accounts.map((account) => (
+                            <button
+                              key={account.id}
+                              onClick={() => {
+                                setSelectedAccount(account.name);
+                                setShowAccountDropdown(false);
+                              }}
+                              className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 hover:scale-[1.02]"
+                              style={{
+                                background:
+                                  selectedAccount === account.name
+                                    ? "var(--bg-glass)"
+                                    : "transparent",
+                                border: `1px solid ${
+                                  selectedAccount === account.name
+                                    ? "var(--border-primary)"
+                                    : "transparent"
+                                }`,
+                              }}
+                            >
+                              {account.name === "Compte Courant" ? (
+                                <Wallet
+                                  className="h-5 w-5"
+                                  style={{ color: "var(--text-accent)" }}
+                                />
+                              ) : (
+                                <PiggyBank
+                                  className="h-5 w-5"
+                                  style={{ color: "var(--color-success)" }}
+                                />
+                              )}
+                              <div className="flex-1 text-left">
+                                <div
+                                  className="font-medium text-sm"
+                                  style={{ color: "var(--text-primary)" }}
+                                >
+                                  {account.name}
                                 </div>
-                                {selectedAccount === account && (
-                                  <div
-                                    className="w-2 h-2 rounded-full"
-                                    style={{ background: "var(--text-accent)" }}
-                                  />
-                                )}
-                              </button>
-                            )
-                          )}
+                                <div
+                                  className="text-xs font-bold"
+                                  style={{
+                                    color:
+                                      account.name === "Compte Courant"
+                                        ? "var(--text-accent)"
+                                        : "var(--color-success)",
+                                  }}
+                                >
+                                  {formatCurrency(
+                                    getAccountBalance(account.name)
+                                  )}
+                                </div>
+                              </div>
+                              {selectedAccount === account.name && (
+                                <div
+                                  className="w-2 h-2 rounded-full"
+                                  style={{ background: "var(--text-accent)" }}
+                                />
+                              )}
+                            </button>
+                          ))}
                         </div>
                       </motion.div>
                     </>

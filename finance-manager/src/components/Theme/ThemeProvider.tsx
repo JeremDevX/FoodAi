@@ -4,13 +4,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Palette, Sun, Moon, Sparkles } from "lucide-react";
 
 type Theme = "light" | "dark" | "ocean" | "forest" | "cosmic";
-type AnimationLevel = "minimal" | "normal" | "rich";
 
 interface ThemeContextType {
   theme: Theme;
-  animationLevel: AnimationLevel;
   setTheme: (theme: Theme) => void;
-  setAnimationLevel: (level: AnimationLevel) => void;
   isDark: boolean;
 }
 
@@ -18,19 +15,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
-  const [animationLevel, setAnimationLevel] =
-    useState<AnimationLevel>("normal");
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     // Load theme from localStorage first (for immediate display)
     const savedTheme = localStorage.getItem("finance-theme") as Theme;
-    const savedAnimation = localStorage.getItem(
-      "finance-animation"
-    ) as AnimationLevel;
-
     if (savedTheme) setTheme(savedTheme);
-    if (savedAnimation) setAnimationLevel(savedAnimation);
 
     // Then sync with database settings
     const syncWithDatabase = async () => {
@@ -71,7 +61,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Apply theme
     document.documentElement.setAttribute("data-theme", theme);
-    document.documentElement.setAttribute("data-animation", animationLevel);
 
     // Update body class for smooth transitions
     document.body.classList.add("theme-transitioning");
@@ -79,7 +68,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => {
       document.body.classList.remove("theme-transitioning");
     }, 300);
-  }, [theme, animationLevel]);
+  }, [theme]);
 
   const handleSetTheme = async (newTheme: Theme) => {
     setTheme(newTheme);
@@ -97,11 +86,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleSetAnimationLevel = (level: AnimationLevel) => {
-    setAnimationLevel(level);
-    localStorage.setItem("finance-animation", level);
-  };
-
   const isDark =
     theme === "dark" ||
     theme === "ocean" ||
@@ -112,9 +96,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     <ThemeContext.Provider
       value={{
         theme,
-        animationLevel,
         setTheme: handleSetTheme,
-        setAnimationLevel: handleSetAnimationLevel,
         isDark,
       }}
     >
@@ -132,7 +114,7 @@ export function useTheme() {
 }
 
 export function ThemeSelector() {
-  const { theme, setTheme, animationLevel, setAnimationLevel } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   const themes = [
     {
@@ -165,12 +147,6 @@ export function ThemeSelector() {
       icon: Sparkles,
       color: "from-purple-500 to-pink-600",
     },
-  ];
-
-  const animationLevels = [
-    { id: "minimal", name: "Minimal", description: "Animations réduites" },
-    { id: "normal", name: "Normal", description: "Animations équilibrées" },
-    { id: "rich", name: "Riche", description: "Animations complètes" },
   ];
 
   return (
@@ -224,46 +200,6 @@ export function ThemeSelector() {
               </button>
             );
           })}
-        </div>
-      </div>
-
-      {/* Animation Level */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Niveau d'Animation
-        </h3>
-        <div className="space-y-2">
-          {animationLevels.map((level) => (
-            <label
-              key={level.id}
-              className={`
-                flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer
-                ${
-                  animationLevel === level.id
-                    ? "border-financial-500 bg-financial-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }
-                transition-all duration-200
-              `}
-            >
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  name="animation"
-                  value={level.id}
-                  checked={animationLevel === level.id}
-                  onChange={() => setAnimationLevel(level.id as any)}
-                  className="mr-3 text-financial-600"
-                />
-                <div>
-                  <div className="font-medium text-gray-900">{level.name}</div>
-                  <div className="text-sm text-gray-600">
-                    {level.description}
-                  </div>
-                </div>
-              </div>
-            </label>
-          ))}
         </div>
       </div>
     </div>

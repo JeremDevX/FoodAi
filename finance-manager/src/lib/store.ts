@@ -65,6 +65,7 @@ interface FinanceStore {
     amount: number;
     percentage: number;
   }>;
+  getAccountBalance: (accountName: string) => number;
 }
 
 export const useFinanceStore = create<FinanceStore>()(
@@ -163,20 +164,33 @@ export const useFinanceStore = create<FinanceStore>()(
 
     // Computed values
     getFinancialPulse: () => {
-      const { transactions, selectedDateRange } = get();
-      const monthlyTransactions = transactions.filter((t) =>
-        isWithinInterval(new Date(t.date), {
-          start: selectedDateRange.start,
-          end: selectedDateRange.end,
-        })
+      const { transactions, selectedDateRange, selectedAccount } = get();
+      const monthlyTransactions = transactions.filter(
+        (t) =>
+          isWithinInterval(new Date(t.date), {
+            start: selectedDateRange.start,
+            end: selectedDateRange.end,
+          }) &&
+          (t.account === selectedAccount ||
+            (t.type === "transfer" &&
+              (t.fromAccount === selectedAccount ||
+                t.toAccount === selectedAccount)))
       );
 
       const income = monthlyTransactions
-        .filter((t) => t.type === "income")
+        .filter(
+          (t) =>
+            t.type === "income" ||
+            (t.type === "transfer" && t.toAccount === selectedAccount)
+        )
         .reduce((sum, t) => sum + t.amount, 0);
 
       const expenses = monthlyTransactions
-        .filter((t) => t.type === "expense")
+        .filter(
+          (t) =>
+            t.type === "expense" ||
+            (t.type === "transfer" && t.fromAccount === selectedAccount)
+        )
         .reduce((sum, t) => sum + t.amount, 0);
 
       const balance = income - expenses;
@@ -216,20 +230,33 @@ export const useFinanceStore = create<FinanceStore>()(
     },
 
     getMonthlyStats: () => {
-      const { transactions, selectedDateRange } = get();
-      const monthlyTransactions = transactions.filter((t) =>
-        isWithinInterval(new Date(t.date), {
-          start: selectedDateRange.start,
-          end: selectedDateRange.end,
-        })
+      const { transactions, selectedDateRange, selectedAccount } = get();
+      const monthlyTransactions = transactions.filter(
+        (t) =>
+          isWithinInterval(new Date(t.date), {
+            start: selectedDateRange.start,
+            end: selectedDateRange.end,
+          }) &&
+          (t.account === selectedAccount ||
+            (t.type === "transfer" &&
+              (t.fromAccount === selectedAccount ||
+                t.toAccount === selectedAccount)))
       );
 
       const income = monthlyTransactions
-        .filter((t) => t.type === "income")
+        .filter(
+          (t) =>
+            t.type === "income" ||
+            (t.type === "transfer" && t.toAccount === selectedAccount)
+        )
         .reduce((sum, t) => sum + t.amount, 0);
 
       const expenses = monthlyTransactions
-        .filter((t) => t.type === "expense")
+        .filter(
+          (t) =>
+            t.type === "expense" ||
+            (t.type === "transfer" && t.fromAccount === selectedAccount)
+        )
         .reduce((sum, t) => sum + t.amount, 0);
 
       return {
@@ -240,17 +267,30 @@ export const useFinanceStore = create<FinanceStore>()(
     },
 
     getCategoryStats: () => {
-      const { transactions, categories, selectedDateRange } = get();
-      const monthlyTransactions = transactions.filter((t) =>
-        isWithinInterval(new Date(t.date), {
-          start: selectedDateRange.start,
-          end: selectedDateRange.end,
-        })
+      const { transactions, categories, selectedDateRange, selectedAccount } =
+        get();
+      const monthlyTransactions = transactions.filter(
+        (t) =>
+          isWithinInterval(new Date(t.date), {
+            start: selectedDateRange.start,
+            end: selectedDateRange.end,
+          }) &&
+          (t.account === selectedAccount ||
+            (t.type === "transfer" &&
+              (t.fromAccount === selectedAccount ||
+                t.toAccount === selectedAccount)))
       );
 
       const categoryTotals = monthlyTransactions.reduce((acc, transaction) => {
-        const category = transaction.category || "Autre";
-        acc[category] = (acc[category] || 0) + transaction.amount;
+        // Only count expenses (including outgoing transfers) for category stats
+        if (
+          transaction.type === "expense" ||
+          (transaction.type === "transfer" &&
+            transaction.fromAccount === selectedAccount)
+        ) {
+          const category = transaction.category || "Autre";
+          acc[category] = (acc[category] || 0) + transaction.amount;
+        }
         return acc;
       }, {} as Record<string, number>);
 
@@ -266,6 +306,27 @@ export const useFinanceStore = create<FinanceStore>()(
           percentage: totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0,
         }))
         .sort((a, b) => b.amount - a.amount);
+    },
+
+    getAccountBalance: (accountName: string) => {
+      const { transactions } = get();
+      return transactions.reduce((acc, t) => {
+        // Income for the account
+        if (
+          (t.type === "income" && t.account === accountName) ||
+          (t.type === "transfer" && t.toAccount === accountName)
+        ) {
+          return acc + t.amount;
+        }
+        // Expense for the account
+        if (
+          (t.type === "expense" && t.account === accountName) ||
+          (t.type === "transfer" && t.fromAccount === accountName)
+        ) {
+          return acc - t.amount;
+        }
+        return acc;
+      }, 0);
     },
   }))
 );

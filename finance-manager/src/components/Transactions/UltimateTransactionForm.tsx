@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Transaction } from "@/types";
 import { formatCurrency } from "@/lib/utils";
+import { useFinanceStore } from "@/lib/store";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -29,6 +30,7 @@ export default function UltimateTransactionForm({
   onClose,
   onSave,
 }: UltimateTransactionFormProps) {
+  const { accounts } = useFinanceStore();
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
     amount: "",
@@ -580,8 +582,11 @@ export default function UltimateTransactionForm({
                       border: "1px solid var(--border-color)",
                     }}
                   >
-                    <option value="Compte Courant">Compte Courant</option>
-                    <option value="Compte Épargne">Compte Épargne</option>
+                    {accounts.map((account) => (
+                      <option key={account.id} value={account.name}>
+                        {account.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -603,8 +608,11 @@ export default function UltimateTransactionForm({
                       border: "1px solid var(--border-color)",
                     }}
                   >
-                    <option value="Compte Courant">Compte Courant</option>
-                    <option value="Compte Épargne">Compte Épargne</option>
+                    {accounts.map((account) => (
+                      <option key={account.id} value={account.name}>
+                        {account.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 {errors.transfer && (
@@ -698,10 +706,11 @@ export default function UltimateTransactionForm({
                       border: "1px solid var(--border-color)",
                     }}
                   >
-                    <option value="Compte Principal">Compte Principal</option>
-                    <option value="Compte Épargne">Compte Épargne</option>
-                    <option value="Espèces">Espèces</option>
-                    <option value="Carte de Crédit">Carte de Crédit</option>
+                    {accounts.map((account) => (
+                      <option key={account.id} value={account.name}>
+                        {account.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

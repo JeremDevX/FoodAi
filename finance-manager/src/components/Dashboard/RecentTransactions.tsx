@@ -8,27 +8,74 @@ import {
   normalizeDate,
 } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import {
+  ArrowUpRight,
+  ArrowDownLeft,
+  ArrowDownRight,
+  ArrowRightLeft,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function RecentTransactions() {
-  const { transactions } = useFinanceStore();
+  const { transactions, selectedAccount } = useFinanceStore();
   const formatCurrency = useFormatCurrency();
-  const recentTransactions = transactions.slice(0, 5);
+  const recentTransactions = transactions
+    .filter(
+      (t) =>
+        t.account === selectedAccount ||
+        (t.type === "transfer" &&
+          (t.fromAccount === selectedAccount ||
+            t.toAccount === selectedAccount))
+    )
+    .slice(0, 5);
 
-  const getTransactionIcon = (type: "income" | "expense") => {
-    if (type === "income") {
-      return (
-        <ArrowUpRight className="h-4 w-4 text-success" aria-hidden="true" />
-      );
+  const getTransactionIcon = (type: "income" | "expense" | "transfer") => {
+    switch (type) {
+      case "income":
+        return <ArrowUpRight className="h-4 w-4 text-success" />;
+      case "expense":
+        return <ArrowDownRight className="h-4 w-4 text-danger" />;
+      case "transfer":
+        return <ArrowRightLeft className="h-4 w-4 text-blue-500" />;
     }
-    return <ArrowDownLeft className="h-4 w-4 text-danger" aria-hidden="true" />;
+  };
+
+  const getTransactionColor = (
+    type: "income" | "expense" | "transfer",
+    transaction: any
+  ) => {
+    if (type === "transfer") {
+      return transaction.toAccount === selectedAccount
+        ? "text-success"
+        : "text-danger";
+    }
+    switch (type) {
+      case "income":
+        return "text-success";
+      case "expense":
+        return "text-danger";
+      default:
+        return "text-primary";
+    }
+  };
+
+  const getAmountPrefix = (
+    type: "income" | "expense" | "transfer",
+    transaction: any
+  ) => {
+    if (type === "transfer") {
+      return transaction.toAccount === selectedAccount ? "+" : "-";
+    }
+    return type === "income" ? "+" : "-";
   };
 
   return (
     <div className="glass-card rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
+        <h2
+          className="text-xl font-semibold"
+          style={{ color: "var(--text-primary)" }}
+        >
           Transactions Récentes
         </h2>
         <Link
@@ -36,7 +83,8 @@ export default function RecentTransactions() {
           onClick={() =>
             useFinanceStore.getState().setCurrentView("transactions")
           }
-          className="text-sm" style={{ color: "var(--text-accent)" }}
+          className="text-sm"
+          style={{ color: "var(--text-accent)" }}
         >
           Voir tout
         </Link>
@@ -78,25 +126,31 @@ export default function RecentTransactions() {
                     {getTransactionIcon(transaction.type)}
                   </motion.div>
                   <div>
-                    <div className="font-medium text-base" style={{ color: "var(--text-primary)" }}>
+                    <div
+                      className="font-medium text-base"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {transaction.description}
                     </div>
-                    <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                    <div
+                      className="text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {transaction.category} •{" "}
                       {formatShortDate(new Date(transaction.date))}
                     </div>
                   </div>
                 </div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className={`font-semibold text-lg ${getFinancialColor(
-                    transaction.type === "income"
-                      ? transaction.amount
-                      : -transaction.amount
-                  )}`}
-                >
-                  {transaction.type === "income" ? "+" : "-"}
-                  {formatCurrency(Math.abs(transaction.amount))}
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <div
+                    className={`font-medium ${getTransactionColor(
+                      transaction.type,
+                      transaction
+                    )}`}
+                  >
+                    {getAmountPrefix(transaction.type, transaction)}
+                    {formatCurrency(transaction.amount)}
+                  </div>
                 </motion.div>
               </motion.div>
             ))}
@@ -104,15 +158,18 @@ export default function RecentTransactions() {
         )}
       </div>
 
-      <div className="mt-6 pt-4" style={{ borderTop: "1px solid var(--border-primary)" }}>
+      <div
+        className="mt-6 pt-4"
+        style={{ borderTop: "1px solid var(--border-primary)" }}
+      >
         <button
           onClick={() =>
             useFinanceStore.getState().setCurrentView("transactions")
           }
           className="w-full px-4 py-2 rounded-lg transition-colors font-medium"
-          style={{ 
-            background: "var(--bg-secondary)", 
-            color: "var(--text-accent)"
+          style={{
+            background: "var(--bg-secondary)",
+            color: "var(--text-accent)",
           }}
           aria-label="Gérer toutes les transactions"
         >
