@@ -220,13 +220,12 @@ export async function addTransaction(
   });
 }
 
-export async function getTransactions(limit = 100, offset = 0) {
-  return await db.transactions
-    .orderBy("date")
-    .reverse()
-    .offset(offset)
-    .limit(limit)
-    .toArray();
+export async function getTransactions(limit?: number, offset = 0) {
+  let collection = db.transactions.orderBy("date").reverse().offset(offset);
+  if (limit !== undefined) {
+    collection = collection.limit(limit);
+  }
+  return await collection.toArray();
 }
 
 export async function getTransactionsByDateRange(

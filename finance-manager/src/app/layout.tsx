@@ -4,6 +4,7 @@ import "./globals.css";
 import "./themes.css";
 import { ThemeProvider } from "@/components/Theme/ThemeProvider";
 import { ErrorBoundary } from "@/components/Layout/ErrorBoundary";
+import ClientLayout from "@/components/Layout/ClientLayout";
 
 export default function RootLayout({
   children,
@@ -46,7 +47,7 @@ export default function RootLayout({
       <body className="font-['Inter',_sans-serif] antialiased">
         <ThemeProvider>
           <ErrorBoundary>
-            {children}
+            <ClientLayout>{children}</ClientLayout>
           </ErrorBoundary>
         </ThemeProvider>
       </body>

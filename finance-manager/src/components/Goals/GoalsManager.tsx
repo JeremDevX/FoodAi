@@ -59,7 +59,7 @@ export default function GoalsManager() {
               Gestion des Objectifs
             </h2>
             <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
-              Suivez vos projets d'épargne
+              Suivez vos projets d&apos;épargne
             </p>
           </div>
           <button
@@ -225,7 +225,7 @@ export default function GoalsManager() {
                   ? "Créez votre premier objectif pour commencer à épargner !"
                   : filterStatus === "completed"
                   ? "Vos objectifs terminés apparaîtront ici."
-                  : "Commencez par créer un objectif d'épargne."}
+                  : "Commencez par créer un objectif d&apos;épargne."}
               </div>
             </div>
           ) : (

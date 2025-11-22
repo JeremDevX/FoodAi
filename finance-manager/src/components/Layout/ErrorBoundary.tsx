@@ -1,7 +1,7 @@
 "use client";
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertCircle, RefreshCw, X } from 'lucide-react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { AlertCircle, RefreshCw, X } from "lucide-react";
 
 interface Props {
   children: ReactNode;
@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
+    console.error("Error caught by boundary:", error, errorInfo);
     this.setState({
       error,
       errorInfo,
@@ -73,21 +73,22 @@ export class ErrorBoundary extends Component<Props, State> {
 
             <div className="bg-gray-50 rounded-lg p-4 mb-4">
               <p className="text-sm text-gray-800 font-medium mb-2">
-                Détails de l'erreur :
+                Détails de l&apos;erreur :
               </p>
               <p className="text-xs text-gray-600 font-mono break-all">
-                {this.state.error?.message || 'Erreur inconnue'}
+                {this.state.error?.message || "Erreur inconnue"}
               </p>
-              {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
-                <details className="mt-2">
-                  <summary className="text-xs text-gray-500 cursor-pointer">
-                    Plus de détails (mode développement)
-                  </summary>
-                  <pre className="text-xs text-gray-400 mt-2 overflow-auto max-h-32">
-                    {this.state.errorInfo.componentStack}
-                  </pre>
-                </details>
-              )}
+              {process.env.NODE_ENV === "development" &&
+                this.state.errorInfo && (
+                  <details className="mt-2">
+                    <summary className="text-xs text-gray-500 cursor-pointer">
+                      Plus de détails (mode développement)
+                    </summary>
+                    <pre className="text-xs text-gray-400 mt-2 overflow-auto max-h-32">
+                      {this.state.errorInfo.componentStack}
+                    </pre>
+                  </details>
+                )}
             </div>
 
             <div className="flex space-x-3">
@@ -115,12 +116,12 @@ export class ErrorBoundary extends Component<Props, State> {
 }
 
 // Composant de notification d'erreur simple
-export function ErrorNotification({ 
-  message, 
+export function ErrorNotification({
+  message,
   onClose,
-  duration = 5000 
-}: { 
-  message: string; 
+  duration = 5000,
+}: {
+  message: string;
   onClose: () => void;
   duration?: number;
 }) {

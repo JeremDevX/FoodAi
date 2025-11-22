@@ -469,7 +469,7 @@ export default function AnalyticsDashboard() {
         {viewType === "trends" && (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Tendances d'Évolution
+              Tendances d&apos;Évolution
             </h3>
             {trendsData.length > 1 ? (
               <ResponsiveContainer width="100%" height={400}>
@@ -506,7 +506,7 @@ export default function AnalyticsDashboard() {
               </ResponsiveContainer>
             ) : (
               <div className="text-center py-12 text-gray-500">
-                Données insuffisantes pour l'analyse des tendances
+                Données insuffisantes pour l&apos;analyse des tendances
               </div>
             )}
           </div>
@@ -612,7 +612,7 @@ export default function AnalyticsDashboard() {
                 Épargne recommandée
               </div>
               <div className="text-xs text-financial-600 mt-1">
-                Essayez d'épargner au moins 20% de vos revenus mensuels.
+                Essayez d&apos;épargner au moins 20% de vos revenus mensuels.
               </div>
             </div>
           </div>

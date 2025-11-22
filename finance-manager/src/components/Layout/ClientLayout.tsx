@@ -1,0 +1,54 @@
+"use client";
+
+import { useEffect } from "react";
+import { useFinanceStore } from "@/lib/store";
+import { initializeDatabase } from "@/lib/database";
+import { useAutoBackup } from "@/hooks/useAutoBackup";
+import { useLocalStorageSync } from "@/hooks/useLocalStorageSync";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
+import UltimateSidebar from "@/components/Layout/UltimateSidebar";
+import UltimateHeader from "@/components/Layout/UltimateHeader";
+
+export default function ClientLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { loadData } = useFinanceStore();
+
+  // Initialize hooks
+  useErrorHandler();
+  useAutoBackup();
+  useLocalStorageSync();
+
+  useEffect(() => {
+    // Initialize database and load data (only once on client)
+    initializeDatabase()
+      .then(() => {
+        loadData();
+      })
+      .catch((error) => {
+        console.error("Failed to initialize app:", error);
+      });
+  }, [loadData]);
+
+  return (
+    <div className="flex h-screen" style={{ background: "var(--bg-primary)" }}>
+      {/* Ultimate Sidebar */}
+      <div className="flex-shrink-0">
+        <UltimateSidebar />
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Ultimate Header */}
+        <UltimateHeader />
+
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-6" role="main">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}

@@ -367,7 +367,7 @@ export default function UltimateFinancialPulse() {
               className="text-sm font-medium"
               style={{ color: "var(--text-tertiary)" }}
             >
-              jours jusqu'au prochain revenu
+              jours jusqu&apos;au prochain revenu
             </div>
           </div>
         </motion.div>

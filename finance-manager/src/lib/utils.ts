@@ -12,14 +12,10 @@ export function formatCurrency(amount: number, currency = "EUR"): string {
   }).format(amount);
 }
 
+import { useFinanceStore } from "@/lib/store";
+
 // Hook pour formater avec la devise des settings
 export function useFormatCurrency() {
-  if (typeof window === "undefined") {
-    return (amount: number) => formatCurrency(amount, "EUR");
-  }
-
-  // Dynamically import to avoid issues during SSR
-  const { useFinanceStore } = require("@/lib/store");
   const { settings } = useFinanceStore();
   const currency = settings?.currency || "EUR";
 
@@ -36,15 +32,6 @@ export function normalizeDate(date: Date | string): Date {
 
 // Helper pour formater les dates avec les settings
 export function useDateFormatter() {
-  if (typeof window === "undefined") {
-    return {
-      formatDate: (date: Date | string) => formatDate(normalizeDate(date)),
-      formatShortDate: (date: Date | string) =>
-        formatShortDate(normalizeDate(date)),
-    };
-  }
-
-  const { useFinanceStore } = require("@/lib/store");
   const { settings } = useFinanceStore();
 
   return {

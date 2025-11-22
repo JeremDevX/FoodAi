@@ -14,15 +14,18 @@ export default function GoalsOverview() {
   return (
     <div className="glass-card rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
+        <h2
+          className="text-xl font-semibold"
+          style={{ color: "var(--text-primary)" }}
+        >
           Objectifs en Cours
         </h2>
         <button
           onClick={() => useFinanceStore.getState().setCurrentView("goals")}
           className="p-2 rounded-lg transition-colors"
-          style={{ 
+          style={{
             color: "var(--text-accent)",
-            background: "var(--bg-secondary)"
+            background: "var(--bg-secondary)",
           }}
           aria-label="Ajouter un nouvel objectif"
         >
@@ -48,7 +51,7 @@ export default function GoalsOverview() {
               Aucun objectif actif
             </div>
             <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Créez votre premier objectif d'épargne
+              Créez votre premier objectif d&apos;épargne
             </div>
           </motion.div>
         ) : (
@@ -73,33 +76,49 @@ export default function GoalsOverview() {
                   style={{ background: "var(--bg-secondary)" }}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="font-medium text-lg" style={{ color: "var(--text-primary)" }}>
+                    <div
+                      className="font-medium text-lg"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {goal.name}
                     </div>
-                    <div className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {daysLeft > 0 ? `${daysLeft} jours restants` : "Terminé"}
                     </div>
                   </div>
 
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="font-medium" style={{ color: "var(--text-secondary)" }}>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         {formatCurrency(goal.currentAmount)}
                       </span>
-                      <span className="font-medium" style={{ color: "var(--text-primary)" }}>
+                      <span
+                        className="font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {formatCurrency(goal.targetAmount)}
                       </span>
                     </div>
 
-                    <div className="w-full rounded-full h-3 overflow-hidden" style={{ background: "var(--bg-tertiary)" }}>
+                    <div
+                      className="w-full rounded-full h-3 overflow-hidden"
+                      style={{ background: "var(--bg-tertiary)" }}
+                    >
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.min(progress, 100)}%` }}
                         transition={{ duration: 1, delay: index * 0.1 }}
                         className="h-3 rounded-full transition-all duration-300"
-                        style={{ 
+                        style={{
                           width: `${Math.min(progress, 100)}%`,
-                          background: "linear-gradient(to right, var(--color-financial), var(--color-financial-light))"
+                          background:
+                            "linear-gradient(to right, var(--color-financial), var(--color-financial-light))",
                         }}
                         role="progressbar"
                         aria-valuenow={Math.min(progress, 100)}
@@ -115,9 +134,9 @@ export default function GoalsOverview() {
                         animate={{ scale: 1 }}
                         transition={{ duration: 0.5, delay: index * 0.1 + 0.5 }}
                         className="text-sm font-bold inline-block px-3 py-1 rounded-full"
-                        style={{ 
+                        style={{
                           color: "var(--text-accent)",
-                          background: "var(--bg-secondary)"
+                          background: "var(--bg-secondary)",
                         }}
                       >
                         {progress}%
@@ -132,13 +151,16 @@ export default function GoalsOverview() {
       </div>
 
       {activeGoals.length > 0 && (
-        <div className="mt-6 pt-4" style={{ borderTop: "1px solid var(--border-primary)" }}>
+        <div
+          className="mt-6 pt-4"
+          style={{ borderTop: "1px solid var(--border-primary)" }}
+        >
           <button
             onClick={() => useFinanceStore.getState().setCurrentView("goals")}
             className="w-full px-4 py-2 rounded-lg transition-colors font-medium"
             style={{
               background: "var(--bg-secondary)",
-              color: "var(--text-accent)"
+              color: "var(--text-accent)",
             }}
             aria-label="Voir tous les objectifs"
           >

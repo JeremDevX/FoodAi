@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Goal } from '@/types';
-import { formatCurrency } from '@/lib/utils';
-import { X, Target, Calendar, DollarSign, FileText, Image } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Goal } from "@/types";
+import { formatCurrency } from "@/lib/utils";
+import { X, Target, Calendar, DollarSign, FileText, Image } from "lucide-react";
 
 interface GoalFormProps {
   goal?: Goal | null;
@@ -13,13 +13,13 @@ interface GoalFormProps {
 
 export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
   const [formData, setFormData] = useState({
-    name: '',
-    targetAmount: '',
-    currentAmount: '0',
-    deadline: '',
-    description: '',
-    category: '',
-    image: ''
+    name: "",
+    targetAmount: "",
+    currentAmount: "0",
+    deadline: "",
+    description: "",
+    category: "",
+    image: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -30,31 +30,31 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
         name: goal.name,
         targetAmount: goal.targetAmount.toString(),
         currentAmount: goal.currentAmount.toString(),
-        deadline: new Date(goal.deadline).toISOString().split('T')[0],
-        description: goal.description || '',
-        category: goal.category || '',
-        image: goal.image || ''
+        deadline: new Date(goal.deadline).toISOString().split("T")[0],
+        description: goal.description || "",
+        category: goal.category || "",
+        image: goal.image || "",
       });
     }
   }, [goal]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) {
-      newErrors.name = 'Le nom est requis';
+      newErrors.name = "Le nom est requis";
     }
-    
+
     if (!formData.targetAmount || parseFloat(formData.targetAmount) <= 0) {
-      newErrors.targetAmount = 'Le montant cible doit être supérieur à 0';
+      newErrors.targetAmount = "Le montant cible doit être supérieur à 0";
     }
-    
+
     if (!formData.deadline) {
-      newErrors.deadline = 'La date limite est requise';
+      newErrors.deadline = "La date limite est requise";
     } else {
       const deadlineDate = new Date(formData.deadline);
       if (deadlineDate <= new Date()) {
-        newErrors.deadline = 'La date limite doit être dans le futur';
+        newErrors.deadline = "La date limite doit être dans le futur";
       }
     }
 
@@ -64,22 +64,22 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     try {
-      const { addGoal, updateGoal } = await import('@/lib/database');
-      
+      const { addGoal, updateGoal } = await import("@/lib/database");
+
       const goalData = {
         name: formData.name.trim(),
         targetAmount: parseFloat(formData.targetAmount),
         currentAmount: parseFloat(formData.currentAmount) || 0,
         deadline: new Date(formData.deadline),
         description: formData.description.trim(),
-        category: formData.category || 'Autre',
-        image: formData.image.trim()
+        category: formData.category || "Autre",
+        image: formData.image.trim(),
       };
 
       if (goal?.id) {
@@ -90,8 +90,8 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
 
       onSave();
     } catch (error) {
-      console.error('Error saving goal:', error);
-      alert('Erreur lors de la sauvegarde de l\'objectif');
+      console.error("Error saving goal:", error);
+      alert("Erreur lors de la sauvegarde de l'objectif");
     }
   };
 
@@ -100,20 +100,31 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setFormData({...formData, image: e.target?.result as string});
+        setFormData({ ...formData, image: e.target?.result as string });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const goalCategories = [
-    'Vacances', 'Voyage', 'Voiture', 'Maison', 'Études', 
-    'Mariage', 'Retraite', 'Urgence', 'Investissement', 'Autre'
+    "Vacances",
+    "Voyage",
+    "Voiture",
+    "Maison",
+    "Études",
+    "Mariage",
+    "Retraite",
+    "Urgence",
+    "Investissement",
+    "Autre",
   ];
 
-  const progress = parseFloat(formData.targetAmount) > 0 
-    ? (parseFloat(formData.currentAmount) / parseFloat(formData.targetAmount)) * 100 
-    : 0;
+  const progress =
+    parseFloat(formData.targetAmount) > 0
+      ? (parseFloat(formData.currentAmount) /
+          parseFloat(formData.targetAmount)) *
+        100
+      : 0;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -121,7 +132,7 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">
-              {goal ? 'Modifier l\'objectif' : 'Nouvel objectif'}
+              {goal ? "Modifier l'objectif" : "Nouvel objectif"}
             </h2>
             <button
               onClick={onClose}
@@ -136,14 +147,14 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
           {/* Goal Image */}
           {formData.image && (
             <div className="relative">
-              <img 
-                src={formData.image} 
-                alt="Goal" 
+              <img
+                src={formData.image}
+                alt="Goal"
                 className="w-full h-48 object-cover rounded-lg"
               />
               <button
                 type="button"
-                onClick={() => setFormData({...formData, image: ''})}
+                onClick={() => setFormData({ ...formData, image: "" })}
                 className="absolute top-2 right-2 p-2 bg-black bg-opacity-50 text-white rounded-lg hover:bg-opacity-70"
               >
                 <X className="h-4 w-4" />
@@ -154,16 +165,18 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nom de l'objectif
+              Nom de l&apos;objectif
             </label>
             <div className="relative">
               <Target className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent ${
-                  errors.name ? 'border-danger' : 'border-gray-300'
+                  errors.name ? "border-danger" : "border-gray-300"
                 }`}
                 placeholder="Ex: Voyage au Japon"
                 required
@@ -187,16 +200,20 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
                   step="0.01"
                   min="0.01"
                   value={formData.targetAmount}
-                  onChange={(e) => setFormData({...formData, targetAmount: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, targetAmount: e.target.value })
+                  }
                   className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent ${
-                    errors.targetAmount ? 'border-danger' : 'border-gray-300'
+                    errors.targetAmount ? "border-danger" : "border-gray-300"
                   }`}
                   placeholder="1000.00"
                   required
                 />
               </div>
               {errors.targetAmount && (
-                <p className="mt-1 text-sm text-danger">{errors.targetAmount}</p>
+                <p className="mt-1 text-sm text-danger">
+                  {errors.targetAmount}
+                </p>
               )}
             </div>
 
@@ -211,7 +228,9 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
                   step="0.01"
                   min="0"
                   value={formData.currentAmount}
-                  onChange={(e) => setFormData({...formData, currentAmount: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, currentAmount: e.target.value })
+                  }
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent"
                   placeholder="0.00"
                 />
@@ -230,7 +249,7 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
                 <span className="font-medium">{progress.toFixed(1)}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
+                <div
                   className="bg-financial-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${Math.min(progress, 100)}%` }}
                 />
@@ -248,9 +267,11 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
               <input
                 type="date"
                 value={formData.deadline}
-                onChange={(e) => setFormData({...formData, deadline: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, deadline: e.target.value })
+                }
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent ${
-                  errors.deadline ? 'border-danger' : 'border-gray-300'
+                  errors.deadline ? "border-danger" : "border-gray-300"
                 }`}
                 required
               />
@@ -267,7 +288,9 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
             </label>
             <select
               value={formData.category}
-              onChange={(e) => setFormData({...formData, category: e.target.value})}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent"
             >
               <option value="">Sélectionner une catégorie</option>
@@ -297,12 +320,14 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
                 className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors cursor-pointer"
               >
                 <Image className="h-4 w-4" />
-                <span>{formData.image ? 'Changer l\'image' : 'Ajouter une image'}</span>
+                <span>
+                  {formData.image ? "Changer l'image" : "Ajouter une image"}
+                </span>
               </label>
               {formData.image && (
                 <button
                   type="button"
-                  onClick={() => setFormData({...formData, image: ''})}
+                  onClick={() => setFormData({ ...formData, image: "" })}
                   className="text-sm text-danger hover:text-danger/80"
                 >
                   Supprimer
@@ -320,7 +345,9 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
               <FileText className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent"
                 rows={3}
                 placeholder="Décrivez votre objectif..."
@@ -341,7 +368,7 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
               type="submit"
               className="px-6 py-3 bg-financial-600 hover:bg-financial-700 text-white rounded-lg transition-colors font-medium"
             >
-              {goal ? 'Modifier' : 'Créer'}
+              {goal ? "Modifier" : "Créer"}
             </button>
           </div>
         </form>

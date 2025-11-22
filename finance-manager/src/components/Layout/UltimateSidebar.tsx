@@ -1,7 +1,8 @@
 "use client";
 
-import { useFinanceStore } from "@/lib/store";
 import { useTheme } from "@/components/Theme/ThemeProvider";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -52,7 +53,7 @@ const menuItems = [
 ];
 
 export default function UltimateSidebar() {
-  const { currentView, setCurrentView } = useFinanceStore();
+  const pathname = usePathname();
   const { theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -122,9 +123,11 @@ export default function UltimateSidebar() {
             className="p-6"
             style={{ borderBottom: "1px solid var(--border-primary)" }}
           >
-            <div className={`flex items-center mb-4 ${
-              isExpanded ? "space-x-3" : "justify-center"
-            }`}>
+            <div
+              className={`flex items-center mb-4 ${
+                isExpanded ? "space-x-3" : "justify-center"
+              }`}
+            >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-financial-500 to-blue-500 rounded-full blur-lg opacity-75" />
                 <div
@@ -171,14 +174,14 @@ export default function UltimateSidebar() {
           <nav className="flex-1 px-4 py-6 space-y-2">
             {menuItems.map((item, index) => {
               const Icon = item.icon;
-              const isActive = currentView === item.id;
+              const isActive =
+                pathname === `/${item.id}` ||
+                (item.id === "dashboard" && pathname === "/");
 
               return (
-                <motion.button
+                <Link
                   key={item.id}
-                  variants={itemVariants}
-                  custom={index + 1}
-                  onClick={() => setCurrentView(item.id as any)}
+                  href={`/${item.id}`}
                   className="relative w-full flex items-center p-3 rounded-xl transition-all duration-200 group"
                   style={{
                     background: isActive ? "var(--bg-glass)" : "transparent",
@@ -231,7 +234,7 @@ export default function UltimateSidebar() {
                       <ChevronRight className="h-4 w-4" />
                     </motion.div>
                   )}
-                </motion.button>
+                </Link>
               );
             })}
           </nav>
@@ -249,9 +252,6 @@ export default function UltimateSidebar() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    if (currentView !== "transactions") {
-                      setCurrentView("transactions");
-                    }
                     setShowTransactionForm(true);
                   }}
                   className="w-full flex items-center justify-center p-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
@@ -285,9 +285,6 @@ export default function UltimateSidebar() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => {
-                    if (currentView !== "transactions") {
-                      setCurrentView("transactions");
-                    }
                     setShowTransactionForm(true);
                   }}
                   className="p-3 rounded-xl shadow-lg"
@@ -409,7 +406,7 @@ export default function UltimateSidebar() {
                     style={{ color: "var(--text-tertiary)" }}
                   >
                     <Sparkles className="h-3 w-3" />
-                    <span>100% local & privé</span>
+                    <span>100% local &amp; privé</span>
                   </div>
                 </motion.div>
               </motion.div>
