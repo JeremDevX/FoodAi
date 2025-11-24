@@ -569,8 +569,8 @@ export default function UltimateMonthlyOverview() {
             className="text-sm leading-relaxed"
             style={{ color: "var(--text-secondary)", opacity: 0.8 }}
           >
-            Maintenez un ratio épargne/revenus de 20% pour une santé financière
-            optimale.
+            Un ratio épargne/revenus de 20% constitue une référence pour la
+            santé financière.
           </p>
         </motion.div>
 
@@ -606,8 +606,8 @@ export default function UltimateMonthlyOverview() {
             style={{ color: "var(--text-secondary)", opacity: 0.8 }}
           >
             {stats.balance > 0
-              ? "Excellent ! Vous épargnez plus que vous ne dépensez. Continuez ainsi !"
-              : "Attention à vos dépenses. Essayez de réduire les achats non essentiels."}
+              ? "Situation positive : les revenus excèdent les dépenses."
+              : "Vigilance recommandée : les dépenses dépassent les revenus."}
           </p>
         </motion.div>
       </motion.div>

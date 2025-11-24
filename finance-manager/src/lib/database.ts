@@ -131,7 +131,6 @@ export async function initializeDatabase() {
       .first();
     if (principalAccount && principalAccount.id) {
       await db.accounts.update(principalAccount.id, { name: "Compte Courant" });
-      console.log('Migrated account "Compte Principal" to "Compte Courant"');
     }
 
     // Migration: Update transactions
@@ -144,9 +143,6 @@ export async function initializeDatabase() {
         .where("account")
         .equals("Compte Principal")
         .modify({ account: "Compte Courant" });
-      console.log(
-        `Migrated ${transactionsToUpdate} transactions from "Compte Principal" to "Compte Courant"`
-      );
     }
 
     // Check if "Compte Courant" exists
@@ -196,16 +192,8 @@ export async function initializeDatabase() {
         autoBackup: true,
       });
     }
-
-    console.log("Database initialized successfully");
   } catch (error) {
-    console.error("Error initializing database:", error);
-    // Don't throw in production, just log the error
-    if (typeof window !== "undefined") {
-      console.warn(
-        "Database initialization failed, app will run with limited functionality"
-      );
-    }
+    // Error handling silencieux en production
   }
 }
 

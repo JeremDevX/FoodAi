@@ -40,7 +40,7 @@ const menuItems = [
   },
   {
     id: "analytics",
-    label: "Analyses",
+    label: "Analytics",
     icon: BarChart3,
     color: "from-orange-500 to-red-500",
   },
@@ -193,13 +193,13 @@ export default function UltimateSidebar() {
                       className="text-2xl font-bold tracking-tight"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      Finance
+                      Wealth Nexus
                     </h2>
                     <p
                       className="text-xs"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      Gestionnaire Financier
+                      Gestion Patrimoniale
                     </p>
                   </motion.div>
                 )}
@@ -312,7 +312,7 @@ export default function UltimateSidebar() {
                     exit={{ opacity: 0, width: 0 }}
                     className="ml-2 text-sm font-medium overflow-hidden"
                   >
-                    Ajouter une opération
+                    Nouvelle transaction
                   </motion.span>
                 </motion.button>
               </motion.div>
@@ -448,7 +448,7 @@ export default function UltimateSidebar() {
                     style={{ color: "var(--text-tertiary)" }}
                   >
                     <Sparkles className="h-3 w-3" />
-                    <span>100% local &amp; privé</span>
+                    <span>100% privé & local</span>
                   </div>
                 </motion.div>
               </motion.div>

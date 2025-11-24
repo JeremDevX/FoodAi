@@ -51,13 +51,13 @@ export default function UltimateSettings() {
       await refreshData();
       setMessage({
         type: "success",
-        text: "Paramètres sauvegardés avec succès !",
+        text: "Paramètres sauvegardés",
       });
     } catch (error) {
       console.error("Error saving settings:", error);
       setMessage({
         type: "error",
-        text: "Erreur lors de la sauvegarde des paramètres.",
+        text: "Erreur lors de la sauvegarde",
       });
     } finally {
       setIsLoading(false);
@@ -467,10 +467,10 @@ export default function UltimateSettings() {
           </motion.div>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[var(--text-primary)] to-[var(--text-secondary)] bg-clip-text text-transparent">
-              Paramètres avancés
+              Paramètres
             </h1>
             <p className="text-[var(--text-secondary)]">
-              Personnalisez votre expérience
+              Configuration de l'application
             </p>
           </div>
         </div>
@@ -592,7 +592,7 @@ export default function UltimateSettings() {
                 Exporter les données
               </div>
               <div className="text-sm text-[var(--text-secondary)]">
-                Téléchargez une copie complète de vos données
+                Télécharger une copie de vos données
               </div>
             </div>
             <motion.button
@@ -612,7 +612,7 @@ export default function UltimateSettings() {
                 Importer des données
               </div>
               <div className="text-sm text-[var(--text-secondary)]">
-                Restaurez vos données depuis un fichier JSON
+                Restaurer depuis un fichier de sauvegarde
               </div>
             </div>
             <label className="flex items-center space-x-2 px-4 py-2 bg-financial-500 hover:bg-financial-600 text-white rounded-lg transition-all duration-200 cursor-pointer">
@@ -647,8 +647,7 @@ export default function UltimateSettings() {
                   className="text-sm"
                   style={{ color: "var(--color-danger)", opacity: 0.8 }}
                 >
-                  ⚠️ Cette action est irréversible et supprimera toutes vos
-                  données
+                  ⚠️ Action irréversible
                 </div>
               </div>
               <motion.button
@@ -694,7 +693,7 @@ export default function UltimateSettings() {
           ) : (
             <>
               <CheckCircle className="h-4 w-4" />
-              <span>Sauvegarder les paramètres</span>
+              <span>Sauvegarder</span>
             </>
           )}
         </motion.button>

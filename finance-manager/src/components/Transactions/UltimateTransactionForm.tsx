@@ -329,14 +329,16 @@ export default function UltimateTransactionForm({
                     style={{ color: "var(--text-primary)" }}
                   >
                     {transaction
-                      ? "Modifier la Transaction"
-                      : "Nouvelle Transaction"}
+                      ? "Modifier la transaction"
+                      : "Nouvelle transaction"}
                   </h2>
                   <p
                     className="text-sm"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    Remplissez les détails de la transaction
+                    {transaction
+                      ? "Modifier les informations"
+                      : "Saisir les détails"}
                   </p>
                 </div>
               </div>

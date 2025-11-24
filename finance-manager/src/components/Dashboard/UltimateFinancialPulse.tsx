@@ -102,10 +102,10 @@ export default function UltimateFinancialPulse() {
               className="text-2xl font-bold"
               style={{ color: "var(--text-primary)" }}
             >
-              Pouls Financier
+              Synthèse Financière
             </h2>
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Votre santé financière en temps réel
+              Vue d'ensemble de votre patrimoine
             </p>
           </div>
         </div>
@@ -138,9 +138,9 @@ export default function UltimateFinancialPulse() {
             {getPulseIcon()}
             <span>
               {pulse.status === "healthy"
-                ? "Excellent"
+                ? "Positif"
                 : pulse.status === "warning"
-                ? "Attention"
+                ? "Vigilance"
                 : "Alerte"}
             </span>
           </div>
@@ -227,9 +227,9 @@ export default function UltimateFinancialPulse() {
               }}
             >
               {pulse.status === "healthy"
-                ? "Excellent"
+                ? "Positif"
                 : pulse.status === "warning"
-                ? "Prudent"
+                ? "Vigilance"
                 : "Alerte"}
             </span>
           </div>
@@ -318,7 +318,7 @@ export default function UltimateFinancialPulse() {
                 className="text-base font-medium"
                 style={{ color: "var(--text-secondary)" }}
               >
-                Budget restant
+                Allocation Disponible
               </div>
               <Zap
                 className="h-5 w-5"
@@ -340,7 +340,9 @@ export default function UltimateFinancialPulse() {
               className="text-sm font-medium"
               style={{ color: "var(--text-tertiary)" }}
             >
-              {pulse.remainingBudget >= 0 ? "Excédent" : "Déficit"}
+              {pulse.remainingBudget >= 0
+                ? "Surplus Stratégique"
+                : "Réajustement Requis"}
             </div>
           </div>
 
@@ -390,7 +392,9 @@ export default function UltimateFinancialPulse() {
               if (saveAmount > 0) {
                 if (
                   confirm(
-                    `Transférer ${formatCurrency(saveAmount)} vers l'épargne ?`
+                    `Optimiser ${formatCurrency(
+                      saveAmount
+                    )} de votre allocation stratégique ?`
                   )
                 ) {
                   try {
@@ -402,40 +406,26 @@ export default function UltimateFinancialPulse() {
                       amount: saveAmount,
                       type: "transfer",
                       category: "Transfert",
-                      description: "Épargne mensuelle automatique",
+                      description: "Optimisation mensuelle du capital",
                       date: dateString,
                       account: "Compte Courant",
                       fromAccount: "Compte Courant",
                       toAccount: "Compte Épargne",
                     });
                     alert(
-                      `Transfert de ${formatCurrency(
+                      `Optimisation de ${formatCurrency(
                         saveAmount
-                      )} effectué avec succès vers le Compte Épargne !\n\nLe montant a été débité du Compte Courant et crédité sur le Compte Épargne.`
+                      )} effectuée avec succès vers votre Réserve Stratégique !\n\nLe montant a été transféré depuis votre Compte Courant.`
                     );
 
                     // Rafraîchir les données pour que la transaction apparaisse
                     await refreshData();
-
-                    // Message de débogage
-                    console.log("Transaction épargne créée:", {
-                      amount: saveAmount,
-                      category: "Épargne",
-                      date: dateString,
-                      type: "expense",
-                    });
-
-                    // Message pour aider l'utilisateur à trouver sa transaction
-                    console.log(
-                      '💡 Lépargne apparaîtra dans : 1) Transactions Récentes sur le dashboard, 2) Gestion des transactions, 3) Recherchez "Épargne" dans la barre de recherche'
-                    );
                   } catch (error) {
-                    console.error("Erreur lors de lépargne:", error);
-                    alert("Erreur lors de lenregistrement de lépargne");
+                    alert("Une erreur est survenue lors de l'optimisation");
                   }
                 }
               } else {
-                alert("Aucun budget disponible pour épargner");
+                alert("Aucune allocation disponible pour optimisation");
               }
             }}
             className="px-6 py-3 rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
@@ -462,7 +452,7 @@ export default function UltimateFinancialPulse() {
             }}
             className="px-6 py-3 bg-gradient-to-r from-financial-500 to-blue-600 text-white rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
           >
-            Voir le détail
+            Voir les détails
           </motion.button>
         </div>
       </motion.div>

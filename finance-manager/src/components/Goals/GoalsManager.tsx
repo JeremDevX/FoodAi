@@ -56,10 +56,10 @@ export default function GoalsManager() {
               className="text-2xl font-bold"
               style={{ color: "var(--text-primary)" }}
             >
-              Gestion des Objectifs
+              Objectifs d'Épargne
             </h2>
             <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
-              Suivez vos projets d&apos;épargne
+              Suivez et planifiez vos projets
             </p>
           </div>
           <button
@@ -89,7 +89,7 @@ export default function GoalsManager() {
                 className="text-sm mb-1"
                 style={{ color: "var(--text-accent)" }}
               >
-                Total épargné
+                Montant épargné
               </div>
               <div
                 className="text-2xl font-bold"
@@ -222,10 +222,10 @@ export default function GoalsManager() {
                 style={{ color: "var(--text-tertiary)" }}
               >
                 {filterStatus === "active"
-                  ? "Créez votre premier objectif pour commencer à épargner !"
+                  ? "Définissez un objectif d'épargne"
                   : filterStatus === "completed"
                   ? "Vos objectifs terminés apparaîtront ici."
-                  : "Commencez par créer un objectif d'épargne."}
+                  : "Aucun objectif défini"}
               </div>
             </div>
           ) : (

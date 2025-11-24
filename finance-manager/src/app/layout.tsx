@@ -38,10 +38,10 @@ export default function RootLayout({
           content="#f8fafc"
           media="(prefers-color-scheme: light)"
         />
-        <title>Finance Manager - Gestion financière personnelle</title>
+        <title>Wealth Nexus - Gestion Patrimoniale</title>
         <meta
           name="description"
-          content="Gestionnaire financier personnel avec une interface utilisateur spectaculaire. Toutes vos données restent locales sur votre appareil."
+          content="Plateforme de gestion patrimoniale avancée. Analyse financière, confidentialité totale, expérience premium."
         />
         <script
           dangerouslySetInnerHTML={{

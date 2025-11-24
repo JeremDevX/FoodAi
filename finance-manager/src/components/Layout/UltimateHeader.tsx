@@ -184,7 +184,7 @@ export default function UltimateHeader() {
                     className="text-lg font-bold tracking-tight"
                     style={{ color: "var(--text-primary)" }}
                   >
-                    Finance Manager
+                    Wealth Nexus
                   </div>
                   <div
                     className="text-xs font-medium"

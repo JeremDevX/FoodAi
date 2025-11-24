@@ -104,7 +104,7 @@ export default function TransactionManager() {
             className="text-2xl font-bold"
             style={{ color: "var(--text-primary)" }}
           >
-            Gestion des Transactions
+            Transactions
           </h2>
           <div className="flex items-center space-x-3">
             <Button
