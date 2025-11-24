@@ -162,6 +162,11 @@ export default function UltimateHeader() {
                     background: "var(--bg-glass)",
                     border: "1px solid var(--border-primary)",
                   }}
+                  aria-label={`Sélecteur de compte: ${selectedAccount}, solde ${formatCurrency(
+                    getAccountBalance(selectedAccount)
+                  )}`}
+                  aria-expanded={showAccountDropdown}
+                  aria-haspopup="true"
                 >
                   {selectedAccount === "Compte Courant" ? (
                     <Wallet
@@ -308,6 +313,9 @@ export default function UltimateHeader() {
                     border: "1px solid var(--border-primary)",
                     color: "var(--text-primary)",
                   }}
+                  aria-label="Notifications (2 nouvelles)"
+                  aria-expanded={showNotifications}
+                  aria-haspopup="true"
                 >
                   <Bell className="h-5 w-5" />
                   <div

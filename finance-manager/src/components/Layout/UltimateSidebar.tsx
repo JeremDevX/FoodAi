@@ -171,7 +171,10 @@ export default function UltimateSidebar() {
           </motion.div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
+          <nav
+            className="flex-1 px-4 py-6 space-y-2"
+            aria-label="Navigation principale"
+          >
             {menuItems.map((item, index) => {
               const Icon = item.icon;
               const isActive =
@@ -192,6 +195,8 @@ export default function UltimateSidebar() {
                       ? "1px solid var(--border-primary)"
                       : "none",
                   }}
+                  aria-label={item.label}
+                  aria-current={isActive ? "page" : undefined}
                 >
                   {/* Active indicator */}
                   {isActive && (

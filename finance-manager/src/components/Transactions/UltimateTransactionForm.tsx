@@ -455,20 +455,26 @@ export default function UltimateTransactionForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label
+                  htmlFor="transaction-amount"
                   className="text-sm font-medium flex items-center"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  Montant (€)
+                  <DollarSign className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Montant (€){" "}
+                  <span className="text-red-500 ml-1" aria-label="requis">
+                    *
+                  </span>
                 </label>
                 <div className="relative">
                   <div
                     className="absolute left-3 top-1/2 transform -translate-y-1/2"
                     style={{ color: "var(--text-accent)" }}
+                    aria-hidden="true"
                   >
                     <DollarSign className="h-5 w-5" />
                   </div>
                   <input
+                    id="transaction-amount"
                     type="number"
                     step="0.01"
                     min="0.01"
@@ -488,12 +494,19 @@ export default function UltimateTransactionForm({
                     }}
                     placeholder="0.00"
                     required
+                    aria-required="true"
+                    aria-invalid={!!errors.amount}
+                    aria-describedby={
+                      errors.amount ? "amount-error" : undefined
+                    }
                   />
                 </div>
                 {errors.amount && (
                   <p
+                    id="amount-error"
                     className="text-sm"
                     style={{ color: "var(--color-danger)" }}
+                    role="alert"
                   >
                     {errors.amount}
                   </p>
@@ -502,13 +515,18 @@ export default function UltimateTransactionForm({
 
               <div className="space-y-2">
                 <label
+                  htmlFor="transaction-date"
                   className="text-sm font-medium flex items-center"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Date
+                  <Calendar className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Date{" "}
+                  <span className="text-red-500 ml-1" aria-label="requis">
+                    *
+                  </span>
                 </label>
                 <input
+                  id="transaction-date"
                   type="date"
                   value={formData.date}
                   onChange={(e) =>
@@ -521,6 +539,7 @@ export default function UltimateTransactionForm({
                     border: "1px solid var(--border-color)",
                   }}
                   required
+                  aria-required="true"
                 />
               </div>
             </div>
@@ -528,13 +547,18 @@ export default function UltimateTransactionForm({
             {/* Description */}
             <div className="space-y-2">
               <label
+                htmlFor="transaction-description"
                 className="text-sm font-medium flex items-center"
                 style={{ color: "var(--text-secondary)" }}
               >
-                <Tag className="h-4 w-4 mr-2" />
-                Description
+                <Tag className="h-4 w-4 mr-2" aria-hidden="true" />
+                Description{" "}
+                <span className="text-red-500 ml-1" aria-label="requis">
+                  *
+                </span>
               </label>
               <textarea
+                id="transaction-description"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -552,9 +576,19 @@ export default function UltimateTransactionForm({
                 placeholder="Décrivez la transaction..."
                 rows={3}
                 required
+                aria-required="true"
+                aria-invalid={!!errors.description}
+                aria-describedby={
+                  errors.description ? "description-error" : undefined
+                }
               />
               {errors.description && (
-                <p className="text-sm" style={{ color: "var(--color-danger)" }}>
+                <p
+                  id="description-error"
+                  className="text-sm"
+                  style={{ color: "var(--color-danger)" }}
+                  role="alert"
+                >
                   {errors.description}
                 </p>
               )}

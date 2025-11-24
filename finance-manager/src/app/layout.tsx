@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -43,8 +43,24 @@ export default function RootLayout({
           name="description"
           content="Gestionnaire financier personnel avec une interface utilisateur spectaculaire. Toutes vos données restent locales sur votre appareil."
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const savedTheme = localStorage.getItem('finance-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+              })();
+            `,
+          }}
+        />
       </head>
-      <body className="font-['Inter',_sans-serif] antialiased">
+      <body
+        className="font-sans antialiased"
+        style={{
+          background: "var(--bg-primary)",
+          color: "var(--text-primary)",
+        }}
+      >
         <ThemeProvider>
           <ErrorBoundary>
             <ClientLayout>{children}</ClientLayout>

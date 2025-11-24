@@ -438,7 +438,12 @@ export default function UltimateFinancialPulse() {
                 alert("Aucun budget disponible pour épargner");
               }
             }}
-            className="px-6 py-3 bg-gradient-to-r from-success to-emerald-500 text-white rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
+            className="px-6 py-3 rounded-xl transition-all duration-200 shadow-lg font-medium hover:shadow-xl"
+            style={{
+              background:
+                "linear-gradient(to right, var(--color-success), #10b981)",
+              color: "#ffffff",
+            }}
           >
             <Sparkles className="h-4 w-4 inline mr-2" />
             Épargner{" "}

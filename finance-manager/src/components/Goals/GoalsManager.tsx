@@ -225,7 +225,7 @@ export default function GoalsManager() {
                   ? "Créez votre premier objectif pour commencer à épargner !"
                   : filterStatus === "completed"
                   ? "Vos objectifs terminés apparaîtront ici."
-                  : "Commencez par créer un objectif d&apos;épargne."}
+                  : "Commencez par créer un objectif d'épargne."}
               </div>
             </div>
           ) : (

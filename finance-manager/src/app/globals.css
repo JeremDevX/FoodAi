@@ -1,36 +1,10 @@
-@import "tailwindcss";
-@config "../../tailwind.config.js";
-
-@theme {
-  --color-primary: var(--bg-primary);
-  --color-secondary: var(--bg-secondary);
-  --color-tertiary: var(--bg-tertiary);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-tertiary: var(--text-tertiary);
-  --color-border-primary: var(--border-primary);
-  --color-border-secondary: var(--border-secondary);
-  --color-success: var(--color-success);
-  --color-danger: var(--color-danger);
-  --color-warning: var(--color-warning);
-
-  --color-wcag-primary: var(--wcag-primary-text);
-  --color-wcag-secondary: var(--wcag-secondary-text);
-  --color-wcag-tertiary: var(--wcag-tertiary-text);
-  --color-wcag-success: var(--wcag-success);
-  --color-wcag-warning: var(--wcag-warning);
-  --color-wcag-error: var(--wcag-error);
-  --color-wcag-info: var(--wcag-info);
-  --color-wcag-background: var(--wcag-background);
-  --color-wcag-surface: var(--wcag-surface);
-  --color-wcag-surface-hover: var(--wcag-surface-hover);
-  --color-wcag-border: var(--wcag-border);
-  --color-wcag-focus: var(--wcag-focus);
-  --color-wcag-nav-active: var(--wcag-nav-active);
-  --color-wcag-nav-inactive: var(--wcag-nav-inactive);
-}
-
+/* Import theme variables FIRST before Tailwind */
+@import "./themes.css";
 @import "../styles/wcag-theme.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Reset et styles de base */
 * {
@@ -44,8 +18,8 @@ html {
 }
 
 body {
-  color: var(--wcag-primary-text);
-  background: var(--wcag-background);
+  color: var(--text-primary);
+  background: var(--bg-primary);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
     sans-serif;
   font-size: var(--wcag-font-size-base);
@@ -428,5 +402,122 @@ body {
 
   .border-contrast {
     border-color: var(--border-primary);
+  }
+
+  /* Classes utilitaires pour financial */
+  .text-financial-400 {
+    color: var(--color-financial-light);
+  }
+
+  .text-financial-600 {
+    color: var(--color-financial);
+  }
+
+  .text-financial-900 {
+    color: var(--color-financial);
+    font-weight: 700;
+  }
+
+  .bg-financial-50 {
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+
+  .bg-financial-100 {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  .bg-financial-500 {
+    background-color: var(--color-financial);
+  }
+
+  .bg-financial-600 {
+    background-color: var(--color-financial);
+  }
+
+  .hover\:bg-financial-600:hover {
+    background-color: var(--color-financial);
+    filter: brightness(0.9);
+  }
+
+  .hover\:bg-financial-700:hover {
+    background-color: var(--color-financial);
+    filter: brightness(0.8);
+  }
+
+  .border-financial-500 {
+    border-color: var(--color-financial);
+  }
+
+  .hover\:border-financial-400:hover {
+    border-color: var(--color-financial-light);
+  }
+
+  .bg-financial-500\/20 {
+    background-color: rgba(59, 130, 246, 0.2);
+  }
+
+  /* Classes de gradient pour financial */
+  .from-financial-500 {
+    --tw-gradient-from: var(--color-financial);
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(59, 130, 246, 0));
+  }
+
+  .to-financial-600 {
+    --tw-gradient-to: var(--color-financial);
+  }
+
+  .to-blue-500 {
+    --tw-gradient-to: #3b82f6;
+  }
+
+  .from-blue-500 {
+    --tw-gradient-from: #3b82f6;
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(59, 130, 246, 0));
+  }
+
+  .to-cyan-500 {
+    --tw-gradient-to: #06b6d4;
+  }
+
+  .from-green-500 {
+    --tw-gradient-from: #10b981;
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(16, 185, 129, 0));
+  }
+
+  .to-emerald-500 {
+    --tw-gradient-to: #10b981;
+  }
+
+  .from-purple-500 {
+    --tw-gradient-from: #a855f7;
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(168, 85, 247, 0));
+  }
+
+  .to-pink-500 {
+    --tw-gradient-to: #ec4899;
+  }
+
+  .from-orange-500 {
+    --tw-gradient-from: #f97316;
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(249, 115, 22, 0));
+  }
+
+  .to-red-500 {
+    --tw-gradient-to: #ef4444;
+  }
+
+  .from-gray-500 {
+    --tw-gradient-from: #6b7280;
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(107, 114, 128, 0));
+  }
+
+  .to-slate-600 {
+    --tw-gradient-to: #475569;
   }
 }

@@ -4,7 +4,7 @@
   "description": "Gestionnaire financier personnel 100% local et privé",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "node scripts/build.js",
     "build:next": "next build",
     "start": "next start",
@@ -13,7 +13,6 @@
     "serve": "next build && next start"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.1.17",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dexie": "^4.2.1",
@@ -36,6 +35,6 @@
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.3",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "^3.4.18"
   }
 }
