@@ -8,6 +8,8 @@ const nextConfig = {
       },
     ],
   },
+  // Configuration Turbopack pour Next.js 16
+  turbopack: {},
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,

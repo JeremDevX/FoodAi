@@ -29,6 +29,18 @@ export default function UltimateHeader() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
 
+  // Dédupliquer les comptes basé sur le nom
+  const uniqueAccounts = useMemo(() => {
+    const seen = new Set<string>();
+    return accounts.filter((account) => {
+      if (seen.has(account.name)) {
+        return false;
+      }
+      seen.add(account.name);
+      return true;
+    });
+  }, [accounts]);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -112,25 +124,70 @@ export default function UltimateHeader() {
             {/* Left: Brand & Time */}
             <div className="flex items-center space-x-6">
               {/* Brand */}
-              <div className="flex items-center space-x-3">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, var(--color-accent), var(--text-accent))",
-                  }}
-                >
-                  <Wallet className="h-5 w-5 text-white" />
+              <div className="flex items-center space-x-3" role="banner">
+                {/* Premium Logo with Layered Design */}
+                <div className="relative group">
+                  {/* Outer glow ring */}
+                  <div
+                    className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, var(--color-accent), var(--color-financial-light))",
+                      filter: "blur(12px)",
+                    }}
+                  />
+
+                  {/* Main logo container */}
+                  <div
+                    className="relative w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:scale-105"
+                    style={{
+                      background: "var(--bg-tertiary)",
+                      border: "2px solid var(--border-primary)",
+                      boxShadow:
+                        "inset 0 2px 8px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05)",
+                    }}
+                    aria-hidden="true"
+                  >
+                    {/* Gradient overlay */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1))",
+                      }}
+                    />
+
+                    {/* Icon with subtle shadow */}
+                    <div className="relative z-10">
+                      <Wallet
+                        className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12"
+                        style={{
+                          color: "var(--text-accent)",
+                          filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.2))",
+                        }}
+                      />
+                    </div>
+
+                    {/* Shine effect on hover */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)",
+                      }}
+                    />
+                  </div>
                 </div>
+
                 <div>
                   <div
-                    className="text-lg font-bold"
+                    className="text-lg font-bold tracking-tight"
                     style={{ color: "var(--text-primary)" }}
                   >
                     Finance Manager
                   </div>
                   <div
-                    className="text-xs"
+                    className="text-xs font-medium"
                     style={{ color: "var(--text-tertiary)" }}
                   >
                     {currentTime.toLocaleDateString("fr-FR", {
@@ -233,7 +290,7 @@ export default function UltimateHeader() {
                         }}
                       >
                         <div className="space-y-2">
-                          {accounts.map((account) => (
+                          {uniqueAccounts.map((account) => (
                             <button
                               key={account.id}
                               onClick={() => {

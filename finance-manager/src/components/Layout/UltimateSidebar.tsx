@@ -128,18 +128,55 @@ export default function UltimateSidebar() {
                 isExpanded ? "space-x-3" : "justify-center"
               }`}
             >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-financial-500 to-blue-500 rounded-full blur-lg opacity-75" />
+              {/* Premium Logo Design */}
+              <div className="relative group">
+                {/* Outer glow - subtle */}
                 <div
-                  className="relative p-3 rounded-full"
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
-                    background: "var(--bg-secondary)",
-                    border: "1px solid var(--border-primary)",
+                    background:
+                      "linear-gradient(135deg, var(--color-financial), var(--color-financial-light))",
+                    filter: "blur(16px)",
+                  }}
+                />
+
+                {/* Main container with premium styling */}
+                <div
+                  className="relative rounded-2xl overflow-hidden transition-all duration-300 group-hover:scale-105"
+                  style={{
+                    background: "var(--bg-tertiary)",
+                    border: "2px solid var(--border-primary)",
+                    boxShadow:
+                      "inset 0 2px 12px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.08)",
                   }}
                 >
-                  <PiggyBank
-                    className="h-8 w-8"
-                    style={{ color: "var(--text-accent)" }}
+                  {/* Gradient overlay for depth */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(139, 92, 246, 0.12))",
+                    }}
+                  />
+
+                  {/* Icon container */}
+                  <div className="relative p-3">
+                    <PiggyBank
+                      className="h-8 w-8 transition-transform duration-300 group-hover:rotate-12"
+                      style={{
+                        color: "var(--text-accent)",
+                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
+                      }}
+                    />
+                  </div>
+
+                  {/* Shine effect on hover */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%)",
+                    }}
                   />
                 </div>
               </div>
@@ -153,7 +190,7 @@ export default function UltimateSidebar() {
                     className="overflow-hidden"
                   >
                     <h2
-                      className="text-2xl font-bold"
+                      className="text-2xl font-bold tracking-tight"
                       style={{ color: "var(--text-primary)" }}
                     >
                       Finance

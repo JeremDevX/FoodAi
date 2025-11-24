@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useFinanceStore } from "@/lib/store";
 import { Transaction } from "@/types";
 import {
   formatCurrency,
   formatShortDate,
   getFinancialColor,
-  parseCSV,
   downloadFile,
 } from "@/lib/utils";
 import {
@@ -15,8 +14,6 @@ import {
   Upload,
   Search,
   Filter,
-  Edit,
-  Trash2,
   Download,
   TrendingUp,
   TrendingDown,
@@ -24,6 +21,8 @@ import {
 } from "lucide-react";
 import UltimateTransactionForm from "./UltimateTransactionForm";
 import ImportModal from "./ImportModal";
+import { Button, Input, Card } from "@/components/atoms";
+import { StatCard, TransactionItem } from "@/components/molecules";
 
 export default function TransactionManager() {
   const { transactions, categories, selectedAccount, refreshData } =
@@ -99,7 +98,7 @@ export default function TransactionManager() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="glass-card p-6">
+      <Card variant="glass" className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2
             className="text-2xl font-bold"
@@ -108,71 +107,42 @@ export default function TransactionManager() {
             Gestion des Transactions
           </h2>
           <div className="flex items-center space-x-3">
-            <button
+            <Button
+              variant="secondary"
+              icon={Upload}
               onClick={() => setShowImport(true)}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
-              style={{
-                background: "var(--bg-secondary)",
-                color: "var(--text-primary)",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              <Upload className="h-4 w-4" />
-              <span>Importer</span>
-            </button>
-            <button
+              Importer
+            </Button>
+            <Button
+              variant="secondary"
+              icon={Download}
               onClick={handleExportCSV}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
-              style={{
-                background: "var(--bg-secondary)",
-                color: "var(--text-primary)",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              <Download className="h-4 w-4" />
-              <span>Exporter</span>
-            </button>
-            <button
+              Exporter
+            </Button>
+            <Button
+              variant="primary"
+              icon={Plus}
               onClick={() => {
                 setEditingTransaction(null);
                 setShowForm(true);
               }}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
-              style={{
-                background: "var(--color-accent)",
-                color: "var(--text-on-accent)",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              <Plus className="h-4 w-4" />
-              <span>Nouvelle transaction</span>
-            </button>
+              Nouvelle transaction
+            </Button>
           </div>
         </div>
 
         {/* Filters */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="relative">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4"
-              style={{ color: "var(--text-secondary)" }}
-            />
-            <input
-              type="text"
-              placeholder="Rechercher..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-lg transition-colors"
-              style={{
-                background: "var(--bg-secondary)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-color)",
-              }}
-            />
-          </div>
+          <Input
+            type="text"
+            placeholder="Rechercher..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            icon={<Search className="h-4 w-4" />}
+          />
 
           <select
             value={filterType}
@@ -181,7 +151,7 @@ export default function TransactionManager() {
             style={{
               background: "var(--bg-secondary)",
               color: "var(--text-primary)",
-              border: "1px solid var(--border-color)",
+              border: "1px solid var(--border-primary)",
             }}
           >
             <option value="all">Tous les types</option>
@@ -196,7 +166,7 @@ export default function TransactionManager() {
             style={{
               background: "var(--bg-secondary)",
               color: "var(--text-primary)",
-              border: "1px solid var(--border-color)",
+              border: "1px solid var(--border-primary)",
             }}
           >
             <option value="all">Toutes les catégories</option>
@@ -224,126 +194,57 @@ export default function TransactionManager() {
 
         {/* Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Total Revenus */}
-          <div className="glass-card p-6 relative overflow-hidden transition-all duration-200">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 opacity-5" />
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div
-                  className="p-3 rounded-lg"
-                  style={{ background: "var(--bg-glass)" }}
-                >
-                  <TrendingUp
-                    className="h-6 w-6"
-                    style={{ color: "var(--color-success)" }}
-                  />
-                </div>
-              </div>
-              <div>
-                <div
-                  className="text-base font-medium mb-2"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Total Revenus
-                </div>
-                <div
-                  className="text-3xl font-bold"
-                  style={{ color: "var(--color-success)" }}
-                >
-                  {formatCurrency(
-                    filteredTransactions
-                      .filter((t) => t.type === "income")
-                      .reduce((sum, t) => sum + t.amount, 0)
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            title="Total Revenus"
+            value={formatCurrency(
+              filteredTransactions
+                .filter((t) => t.type === "income")
+                .reduce((sum, t) => sum + t.amount, 0)
+            )}
+            icon={TrendingUp}
+            color="var(--color-success)"
+            gradient="from-green-500 to-emerald-600"
+          />
 
-          {/* Total Dépenses */}
-          <div className="glass-card p-6 relative overflow-hidden transition-all duration-200">
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-rose-600 opacity-5" />
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div
-                  className="p-3 rounded-lg"
-                  style={{ background: "var(--bg-glass)" }}
-                >
-                  <TrendingDown
-                    className="h-6 w-6"
-                    style={{ color: "var(--color-danger)" }}
-                  />
-                </div>
-              </div>
-              <div>
-                <div
-                  className="text-base font-medium mb-2"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Total Dépenses
-                </div>
-                <div
-                  className="text-3xl font-bold"
-                  style={{ color: "var(--color-danger)" }}
-                >
-                  {formatCurrency(
-                    filteredTransactions
-                      .filter((t) => t.type === "expense")
-                      .reduce((sum, t) => sum + t.amount, 0)
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            title="Total Dépenses"
+            value={formatCurrency(
+              filteredTransactions
+                .filter((t) => t.type === "expense")
+                .reduce((sum, t) => sum + t.amount, 0)
+            )}
+            icon={TrendingDown}
+            color="var(--color-danger)"
+            gradient="from-red-500 to-rose-600"
+          />
 
-          {/* Solde */}
-          <div className="glass-card p-6 relative overflow-hidden transition-all duration-200">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 opacity-5" />
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div
-                  className="p-3 rounded-lg"
-                  style={{ background: "var(--bg-glass)" }}
-                >
-                  <DollarSign
-                    className="h-6 w-6"
-                    style={{ color: "var(--text-accent)" }}
-                  />
-                </div>
-              </div>
-              <div>
-                <div
-                  className="text-base font-medium mb-2"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Solde
-                </div>
-                <div
-                  className={`text-3xl font-bold ${getFinancialColor(
-                    filteredTransactions.reduce(
-                      (sum, t) =>
-                        sum + (t.type === "income" ? t.amount : -t.amount),
-                      0
-                    )
-                  )}`}
-                >
-                  {formatCurrency(
-                    filteredTransactions.reduce(
-                      (sum, t) =>
-                        sum + (t.type === "income" ? t.amount : -t.amount),
-                      0
-                    )
-                  )}
-                </div>
-              </div>
-            </div>
+          <div className="relative">
+            <StatCard
+              title="Solde"
+              value={formatCurrency(
+                filteredTransactions.reduce(
+                  (sum, t) =>
+                    sum + (t.type === "income" ? t.amount : -t.amount),
+                  0
+                )
+              )}
+              icon={DollarSign}
+              color={getFinancialColor(
+                filteredTransactions.reduce(
+                  (sum, t) =>
+                    sum + (t.type === "income" ? t.amount : -t.amount),
+                  0
+                )
+              ).replace("text-", "var(--color-")}
+              gradient="from-blue-500 to-indigo-600"
+            />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Transactions List */}
-      <div className="glass-card rounded-xl">
-        <div className="p-6">
+      <Card variant="glass">
+        <div>
           <div className="flex items-center justify-between mb-6">
             <h3
               className="text-lg font-semibold"
@@ -378,115 +279,21 @@ export default function TransactionManager() {
           ) : (
             <div className="space-y-2">
               {filteredTransactions.map((transaction) => (
-                <div
+                <TransactionItem
                   key={transaction.id}
-                  className="flex items-center justify-between p-4 rounded-lg transition-colors"
-                  style={{
-                    background: "var(--bg-secondary)",
-                    border: "1px solid var(--border-color)",
+                  transaction={transaction}
+                  categories={categories}
+                  onEdit={() => {
+                    setEditingTransaction(transaction);
+                    setShowForm(true);
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{
-                        background:
-                          transaction.type === "income"
-                            ? "var(--color-success)20"
-                            : "var(--color-danger)20",
-                      }}
-                    >
-                      <span className="text-lg">
-                        {categories.find(
-                          (cat) => cat.name === transaction.category
-                        )?.icon || "📝"}
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <div
-                        className="font-medium"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {transaction.description}
-                      </div>
-                      <div
-                        className="text-sm"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        {transaction.category} •{" "}
-                        {formatShortDate(new Date(transaction.date))} •{" "}
-                        {transaction.account}
-                      </div>
-                      {transaction.notes && (
-                        <div
-                          className="text-xs mt-1"
-                          style={{ color: "var(--text-tertiary)" }}
-                        >
-                          {transaction.notes}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div
-                      className={`text-lg font-semibold ${getFinancialColor(
-                        transaction.type === "income"
-                          ? transaction.amount
-                          : -transaction.amount
-                      )}`}
-                    >
-                      {transaction.type === "income" ? "+" : "-"}
-                      {formatCurrency(Math.abs(transaction.amount))}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => {
-                          setEditingTransaction(transaction);
-                          setShowForm(true);
-                        }}
-                        className="p-2 rounded-lg transition-colors"
-                        style={{ color: "var(--text-secondary)" }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "var(--color-accent)";
-                          e.currentTarget.style.background =
-                            "var(--color-accent)20";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "var(--text-secondary)";
-                          e.currentTarget.style.background = "transparent";
-                        }}
-                        title="Modifier"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(transaction.id!)}
-                        className="p-2 rounded-lg transition-colors"
-                        style={{ color: "var(--text-secondary)" }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "var(--color-danger)";
-                          e.currentTarget.style.background =
-                            "var(--color-danger)20";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "var(--text-secondary)";
-                          e.currentTarget.style.background = "transparent";
-                        }}
-                        title="Supprimer"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  onDelete={() => handleDelete(transaction.id!)}
+                />
               ))}
             </div>
           )}
         </div>
-      </div>
+      </Card>
 
       {/* Modals */}
       {showForm && (

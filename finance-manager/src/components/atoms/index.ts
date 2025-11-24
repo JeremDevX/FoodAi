@@ -1,12 +1,12 @@
-// Atomic Design - Atoms (Composants de base réutilisables)
-export { Button } from "./Button/Button";
-export type { ButtonProps } from "./Button/Button";
+// Atomic Design - Atoms (Composants de base réutilisables premium)
+export { Button } from "./Button";
+export type { ButtonProps } from "./Button";
 
-export { Input } from "./Input/Input";
-export type { InputProps } from "./Input/Input";
+export { Input } from "./Input";
+export type { InputProps } from "./Input";
 
-export { Card } from "./Card/Card";
-export type { CardProps } from "./Card/Card";
+export { Card } from "./Card";
+export type { CardProps } from "./Card";
 
-export { Modal } from "./Modal/Modal";
-export type { ModalProps } from "./Modal/Modal";
+export { Modal } from "./Modal";
+export type { ModalProps } from "./Modal";
