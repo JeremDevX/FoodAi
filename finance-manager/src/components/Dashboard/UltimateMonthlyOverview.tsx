@@ -80,9 +80,9 @@ export default function UltimateMonthlyOverview() {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { 
+      transition: {
         duration: 0.3,
-        ease: "easeOut"
+        ease: "easeOut" as const,
       },
     },
     hover: {
@@ -90,9 +90,9 @@ export default function UltimateMonthlyOverview() {
       boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut" as const,
+      },
+    },
   };
 
   const cardVariants = {
@@ -100,9 +100,9 @@ export default function UltimateMonthlyOverview() {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { 
+      transition: {
         duration: 0.3,
-        ease: "easeOut"
+        ease: "easeOut" as const,
       },
     },
     hover: {
@@ -110,9 +110,9 @@ export default function UltimateMonthlyOverview() {
       boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut" as const,
+      },
+    },
   };
 
   // Prepare data for charts
@@ -382,8 +382,8 @@ export default function UltimateMonthlyOverview() {
                     outerRadius={100}
                     paddingAngle={5}
                     dataKey="amount"
-                    label={({ name, percentage }) =>
-                      `${name} (${percentage.toFixed(1)}%)`
+                    label={({ name, percent }) =>
+                      `${name} (${((percent || 0) * 100).toFixed(1)}%)`
                     }
                   >
                     {chartData.map((entry, index) => (

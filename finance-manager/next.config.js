@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+    ],
   },
   webpack: (config) => {
     config.resolve.fallback = {
@@ -10,6 +15,7 @@ const nextConfig = {
     };
     return config;
   },
-}
+  turbopack: {},
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

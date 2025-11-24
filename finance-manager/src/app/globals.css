@@ -1,9 +1,36 @@
-/* 🎯 Thème WCAG AA Optimisé pour Finance Manager */
-@import "../styles/wcag-theme.css";
+@import "tailwindcss";
+@config "../../tailwind.config.js";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --color-primary: var(--bg-primary);
+  --color-secondary: var(--bg-secondary);
+  --color-tertiary: var(--bg-tertiary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-border-primary: var(--border-primary);
+  --color-border-secondary: var(--border-secondary);
+  --color-success: var(--color-success);
+  --color-danger: var(--color-danger);
+  --color-warning: var(--color-warning);
+
+  --color-wcag-primary: var(--wcag-primary-text);
+  --color-wcag-secondary: var(--wcag-secondary-text);
+  --color-wcag-tertiary: var(--wcag-tertiary-text);
+  --color-wcag-success: var(--wcag-success);
+  --color-wcag-warning: var(--wcag-warning);
+  --color-wcag-error: var(--wcag-error);
+  --color-wcag-info: var(--wcag-info);
+  --color-wcag-background: var(--wcag-background);
+  --color-wcag-surface: var(--wcag-surface);
+  --color-wcag-surface-hover: var(--wcag-surface-hover);
+  --color-wcag-border: var(--wcag-border);
+  --color-wcag-focus: var(--wcag-focus);
+  --color-wcag-nav-active: var(--wcag-nav-active);
+  --color-wcag-nav-inactive: var(--wcag-nav-inactive);
+}
+
+@import "../styles/wcag-theme.css";
 
 /* Reset et styles de base */
 * {
@@ -382,12 +409,12 @@ body {
 /* Classes utilitaires pour les thèmes */
 @layer components {
   .glass-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-glass);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-primary);
     border-radius: 1rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    box-shadow: var(--shadow-primary);
   }
 
   .text-contrast-high {

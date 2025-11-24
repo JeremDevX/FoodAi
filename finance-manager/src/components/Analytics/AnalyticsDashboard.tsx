@@ -405,8 +405,8 @@ export default function AnalyticsDashboard() {
                       cy="50%"
                       outerRadius={100}
                       dataKey="amount"
-                      label={({ name, percentage }) =>
-                        `${name} (${percentage.toFixed(1)}%)`
+                      label={({ name, percent }) =>
+                        `${name} (${((percent || 0) * 100).toFixed(1)}%)`
                       }
                     >
                       {categoryData.map((entry, index) => (

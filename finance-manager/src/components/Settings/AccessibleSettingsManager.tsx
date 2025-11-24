@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useFinanceStore } from '@/lib/store';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Settings as SettingsIcon, 
-  Download, 
-  Upload, 
+import { useState, useEffect } from "react";
+import { useFinanceStore } from "@/lib/store";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Settings as SettingsIcon,
+  Download,
+  Upload,
   RefreshCw,
   CheckCircle,
   AlertCircle,
@@ -15,17 +15,20 @@ import {
   Bell,
   Shield,
   User,
-  Clock
-} from 'lucide-react';
-import { downloadFile } from '@/lib/utils';
-import { AccessibleThemeManager } from '@/components/Theme/AccessibleThemeManager';
+  Clock,
+} from "lucide-react";
+import { downloadFile } from "@/lib/utils";
+import { AccessibleThemeManager } from "@/components/Theme/AccessibleThemeManager";
 
 export default function AccessibleSettingsManager() {
   const { settings, refreshData } = useFinanceStore();
   const [formData, setFormData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [activeSection, setActiveSection] = useState('general');
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+  const [activeSection, setActiveSection] = useState("general");
 
   useEffect(() => {
     if (settings) {
@@ -38,13 +41,19 @@ export default function AccessibleSettingsManager() {
 
     setIsLoading(true);
     try {
-      const { updateSettings } = await import('@/lib/database');
+      const { updateSettings } = await import("@/lib/database");
       await updateSettings(formData);
       await refreshData();
-      setMessage({ type: 'success', text: 'Paramètres sauvegardés avec succès !' });
+      setMessage({
+        type: "success",
+        text: "Paramètres sauvegardés avec succès !",
+      });
     } catch (error) {
-      console.error('Error saving settings:', error);
-      setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde des paramètres.' });
+      console.error("Error saving settings:", error);
+      setMessage({
+        type: "error",
+        text: "Erreur lors de la sauvegarde des paramètres.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -54,68 +63,97 @@ export default function AccessibleSettingsManager() {
 
   const handleExportData = async () => {
     try {
-      const { exportData } = await import('@/lib/database');
+      const { exportData } = await import("@/lib/database");
       const data = await exportData();
       const jsonString = JSON.stringify(data, null, 2);
-      
+
       downloadFile(
         jsonString,
-        `finance-backup-${new Date().toISOString().split('T')[0]}.json`,
-        'application/json'
+        `finance-backup-${new Date().toISOString().split("T")[0]}.json`,
+        "application/json"
       );
-      
-      setMessage({ type: 'success', text: 'Données exportées avec succès !' });
+
+      setMessage({ type: "success", text: "Données exportées avec succès !" });
     } catch (error) {
-      console.error('Error exporting data:', error);
-      setMessage({ type: 'error', text: 'Erreur lors de l\'export des données.' });
+      console.error("Error exporting data:", error);
+      setMessage({
+        type: "error",
+        text: "Erreur lors de l'export des données.",
+      });
     }
 
     setTimeout(() => setMessage(null), 3000);
   };
 
-  const handleImportData = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportData = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     try {
       const text = await file.text();
       const data = JSON.parse(text);
-      
-      if (confirm('Cette action remplacera toutes vos données actuelles. Êtes-vous sûr ?')) {
-        const { importData } = await import('@/lib/database');
+
+      if (
+        confirm(
+          "Cette action remplacera toutes vos données actuelles. Êtes-vous sûr ?"
+        )
+      ) {
+        const { importData } = await import("@/lib/database");
         await importData(data);
         await refreshData();
-        setMessage({ type: 'success', text: 'Données importées avec succès !' });
+        setMessage({
+          type: "success",
+          text: "Données importées avec succès !",
+        });
       }
     } catch (error) {
-      console.error('Error importing data:', error);
-      setMessage({ type: 'error', text: 'Erreur lors de l\'import des données.' });
+      console.error("Error importing data:", error);
+      setMessage({
+        type: "error",
+        text: "Erreur lors de l'import des données.",
+      });
     }
 
-    event.target.value = '';
+    event.target.value = "";
     setTimeout(() => setMessage(null), 3000);
   };
 
   const handleClearData = async () => {
-    if (confirm('⚠️ Cette action supprimera TOUTES vos données de façon permanente. Êtes-vous absolument sûr ?')) {
-      if (confirm('⚠️ Dernière confirmation : Toutes vos transactions, objectifs et paramètres seront supprimés. Continuer ?')) {
+    if (
+      confirm(
+        "⚠️ Cette action supprimera TOUTES vos données de façon permanente. Êtes-vous absolument sûr ?"
+      )
+    ) {
+      if (
+        confirm(
+          "⚠️ Dernière confirmation : Toutes vos transactions, objectifs et paramètres seront supprimés. Continuer ?"
+        )
+      ) {
         try {
-          const { db } = await import('@/lib/database');
+          const { db } = await import("@/lib/database");
           await db.transactions.clear();
           await db.categories.clear();
           await db.goals.clear();
           await db.accounts.clear();
           await db.budgets.clear();
           await db.settings.clear();
-          
-          const { initializeDatabase } = await import('@/lib/database');
+
+          const { initializeDatabase } = await import("@/lib/database");
           await initializeDatabase();
           await refreshData();
-          
-          setMessage({ type: 'success', text: 'Toutes les données ont été supprimées.' });
+
+          setMessage({
+            type: "success",
+            text: "Toutes les données ont été supprimées.",
+          });
         } catch (error) {
-          console.error('Error clearing data:', error);
-          setMessage({ type: 'error', text: 'Erreur lors de la suppression des données.' });
+          console.error("Error clearing data:", error);
+          setMessage({
+            type: "error",
+            text: "Erreur lors de la suppression des données.",
+          });
         }
       }
     }
@@ -128,14 +166,16 @@ export default function AccessibleSettingsManager() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
+      transition: { duration: 0.6, ease: "easeOut" as const },
+    },
   };
 
   if (!formData) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-wcag-secondary-text">Chargement des paramètres...</div>
+        <div className="text-wcag-secondary-text">
+          Chargement des paramètres...
+        </div>
       </div>
     );
   }
@@ -147,17 +187,16 @@ export default function AccessibleSettingsManager() {
       className="space-y-8"
     >
       {/* Header */}
-      <motion.div
-        variants={sectionVariants}
-        className="text-center mb-8"
-      >
+      <motion.div variants={sectionVariants} className="text-center mb-8">
         <div className="flex items-center justify-center space-x-3 mb-4">
           <SettingsIcon className="h-8 w-8 text-wcag-nav-active" />
           <div>
             <h1 className="text-3xl font-bold text-wcag-primary-text">
               Paramètres
             </h1>
-            <p className="text-wcag-secondary-text">Configurez votre application</p>
+            <p className="text-wcag-secondary-text">
+              Configurez votre application
+            </p>
           </div>
         </div>
 
@@ -169,9 +208,9 @@ export default function AccessibleSettingsManager() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.9 }}
               className={`p-4 rounded-lg mb-6 ${
-                message.type === 'success' 
-                  ? 'bg-success/10 border border-success/20 text-success' 
-                  : 'bg-danger/10 border border-danger/20 text-danger'
+                message.type === "success"
+                  ? "bg-success/10 border border-success/20 text-success"
+                  : "bg-danger/10 border border-danger/20 text-danger"
               }`}
             >
               {message.text}
@@ -181,10 +220,7 @@ export default function AccessibleSettingsManager() {
       </motion.div>
 
       {/* Thème et apparence */}
-      <motion.div
-        variants={sectionVariants}
-        className="wcag-card"
-      >
+      <motion.div variants={sectionVariants} className="wcag-card">
         <h3 className="text-xl font-bold text-wcag-primary-text mb-4">
           Apparence et accessibilité
         </h3>
@@ -192,17 +228,16 @@ export default function AccessibleSettingsManager() {
       </motion.div>
 
       {/* Gestion des données */}
-      <motion.div
-        variants={sectionVariants}
-        className="wcag-card"
-      >
+      <motion.div variants={sectionVariants} className="wcag-card">
         <h3 className="text-xl font-bold text-wcag-primary-text mb-4">
           Gestion des données
         </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-wcag-surface rounded-lg border border-wcag-border">
             <div>
-              <div className="font-medium text-wcag-primary-text">Exporter les données</div>
+              <div className="font-medium text-wcag-primary-text">
+                Exporter les données
+              </div>
               <div className="text-sm text-wcag-secondary-text">
                 Téléchargez une copie complète de vos données au format JSON
               </div>
@@ -221,7 +256,9 @@ export default function AccessibleSettingsManager() {
 
           <div className="flex items-center justify-between p-4 bg-wcag-surface rounded-lg border border-wcag-border">
             <div>
-              <div className="font-medium text-wcag-primary-text">Importer des données</div>
+              <div className="font-medium text-wcag-primary-text">
+                Importer des données
+              </div>
               <div className="text-sm text-wcag-secondary-text">
                 Restaurez vos données depuis un fichier JSON
               </div>
@@ -247,7 +284,8 @@ export default function AccessibleSettingsManager() {
                   Supprimer toutes les données
                 </div>
                 <div className="text-sm text-danger/80">
-                  ⚠️ Cette action est irréversible et supprimera toutes vos données
+                  ⚠️ Cette action est irréversible et supprimera toutes vos
+                  données
                 </div>
               </div>
               <motion.button
@@ -265,10 +303,7 @@ export default function AccessibleSettingsManager() {
       </motion.div>
 
       {/* Bouton de sauvegarde */}
-      <motion.div
-        variants={sectionVariants}
-        className="flex justify-center"
-      >
+      <motion.div variants={sectionVariants} className="flex justify-center">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

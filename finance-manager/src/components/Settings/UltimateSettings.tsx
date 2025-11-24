@@ -171,7 +171,7 @@ export default function UltimateSettings() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6, ease: "easeOut" as const },
     },
   };
 
@@ -215,7 +215,9 @@ export default function UltimateSettings() {
       <div className="space-y-6">
         {/* Theme Selection */}
         <div>
-          <h4 className="text-lg font-semibold text-white mb-4">Thème</h4>
+          <h4 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
+            Thème
+          </h4>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {themes.map((themeOption) => {
               const Icon = themeOption.icon;
@@ -230,7 +232,7 @@ export default function UltimateSettings() {
                   ${
                     isSelected
                       ? "border-financial-500 bg-financial-500/20 scale-105"
-                      : "border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10"
+                      : "border-[var(--border-primary)] bg-[var(--bg-secondary)] hover:border-[var(--border-secondary)] hover:bg-[var(--bg-tertiary)]"
                   }
                   group overflow-hidden
                 `}
@@ -248,7 +250,9 @@ export default function UltimateSettings() {
                     />
                     <div
                       className={`text-sm font-medium ${
-                        isSelected ? "text-white" : "text-gray-200"
+                        isSelected
+                          ? "text-[var(--text-primary)]"
+                          : "text-[var(--text-secondary)]"
                       }`}
                     >
                       {themeOption.name}
@@ -283,16 +287,22 @@ export default function UltimateSettings() {
         <div className="flex items-center justify-center space-x-3 mb-4">
           <motion.div
             animate={{ rotate: [0, 360] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "linear" as const,
+            }}
             className="p-3 bg-gradient-to-r from-financial-500 to-blue-500 rounded-full"
           >
             <SettingsIcon className="h-6 w-6 text-white" />
           </motion.div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[var(--text-primary)] to-[var(--text-secondary)] bg-clip-text text-transparent">
               Paramètres avancés
             </h1>
-            <p className="text-gray-400">Personnalisez votre expérience</p>
+            <p className="text-[var(--text-secondary)]">
+              Personnalisez votre expérience
+            </p>
           </div>
         </div>
 
@@ -317,7 +327,7 @@ export default function UltimateSettings() {
 
       {/* Theme Selector */}
       <motion.div variants={sectionVariants} className="glass-card p-6">
-        <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+        <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center">
           <Palette className="h-5 w-5 mr-2 text-financial-400" />
           Thème & Apparence
         </h3>
@@ -326,14 +336,14 @@ export default function UltimateSettings() {
 
       {/* General Settings */}
       <motion.div variants={sectionVariants} className="glass-card p-6">
-        <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+        <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center">
           <Globe className="h-5 w-5 mr-2 text-financial-400" />
           Paramètres Généraux
         </h3>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                 Devise
               </label>
               <select
@@ -341,25 +351,37 @@ export default function UltimateSettings() {
                 onChange={(e) =>
                   setFormData({ ...formData, currency: e.target.value })
                 }
-                className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-financial-500 backdrop-blur-sm"
-                style={{ colorScheme: "dark" }}
+                className="w-full px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-financial-500 backdrop-blur-sm"
+                style={{ colorScheme: "normal" }}
               >
-                <option value="EUR" className="bg-slate-800 text-white">
+                <option
+                  value="EUR"
+                  className="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                >
                   € Euro (EUR)
                 </option>
-                <option value="USD" className="bg-slate-800 text-white">
+                <option
+                  value="USD"
+                  className="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                >
                   $ Dollar (USD)
                 </option>
-                <option value="GBP" className="bg-slate-800 text-white">
+                <option
+                  value="GBP"
+                  className="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                >
                   £ Livre (GBP)
                 </option>
-                <option value="CHF" className="bg-slate-800 text-white">
+                <option
+                  value="CHF"
+                  className="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                >
                   Fr Franc (CHF)
                 </option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                 Langue
               </label>
               <select
@@ -367,13 +389,19 @@ export default function UltimateSettings() {
                 onChange={(e) =>
                   setFormData({ ...formData, language: e.target.value })
                 }
-                className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-financial-500 backdrop-blur-sm"
-                style={{ colorScheme: "dark" }}
+                className="w-full px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-financial-500 backdrop-blur-sm"
+                style={{ colorScheme: "normal" }}
               >
-                <option value="fr" className="bg-slate-800 text-white">
+                <option
+                  value="fr"
+                  className="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                >
                   Français
                 </option>
-                <option value="en" className="bg-slate-800 text-white">
+                <option
+                  value="en"
+                  className="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                >
                   English
                 </option>
               </select>
@@ -384,15 +412,17 @@ export default function UltimateSettings() {
 
       {/* Data Management */}
       <motion.div variants={sectionVariants} className="glass-card p-6">
-        <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+        <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center">
           <RefreshCw className="h-5 w-5 mr-2 text-financial-400" />
           Gestion des Données
         </h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg border border-white/20">
+          <div className="flex items-center justify-between p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-primary)]">
             <div>
-              <div className="font-medium text-white">Exporter les données</div>
-              <div className="text-sm text-gray-400">
+              <div className="font-medium text-[var(--text-primary)]">
+                Exporter les données
+              </div>
+              <div className="text-sm text-[var(--text-secondary)]">
                 Téléchargez une copie complète de vos données
               </div>
             </div>
@@ -407,10 +437,12 @@ export default function UltimateSettings() {
             </motion.button>
           </div>
 
-          <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg border border-white/20">
+          <div className="flex items-center justify-between p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-primary)]">
             <div>
-              <div className="font-medium text-white">Importer des données</div>
-              <div className="text-sm text-gray-400">
+              <div className="font-medium text-[var(--text-primary)]">
+                Importer des données
+              </div>
+              <div className="text-sm text-[var(--text-secondary)]">
                 Restaurez vos données depuis un fichier JSON
               </div>
             </div>
@@ -464,7 +496,11 @@ export default function UltimateSettings() {
             <>
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: "linear" as const,
+                }}
                 className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
               />
               <span>Sauvegarde...</span>
