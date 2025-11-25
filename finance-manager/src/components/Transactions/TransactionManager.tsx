@@ -224,19 +224,11 @@ export default function TransactionManager() {
             <StatCard
               title="Solde"
               value={formatCurrency(
-                filteredTransactions.reduce(
-                  (sum, t) =>
-                    sum + (t.type === "income" ? t.amount : -t.amount),
-                  0
-                )
+                filteredTransactions.reduce((sum, t) => sum + t.amount, 0)
               )}
               icon={DollarSign}
               color={getFinancialColor(
-                filteredTransactions.reduce(
-                  (sum, t) =>
-                    sum + (t.type === "income" ? t.amount : -t.amount),
-                  0
-                )
+                filteredTransactions.reduce((sum, t) => sum + t.amount, 0)
               ).replace("text-", "var(--color-")}
               gradient="from-blue-500 to-indigo-600"
             />
