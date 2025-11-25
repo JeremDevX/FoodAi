@@ -249,6 +249,14 @@ export async function addCategory(category: Omit<Category, "id">) {
   return await db.categories.add(category);
 }
 
+export async function updateCategory(id: number, updates: Partial<Category>) {
+  return await db.categories.update(id, updates);
+}
+
+export async function deleteCategory(id: number) {
+  return await db.categories.delete(id);
+}
+
 // Goal operations
 export async function getGoals() {
   return await db.goals.toArray();

@@ -30,7 +30,12 @@ export default function UltimateTransactionForm({
   onClose,
   onSave,
 }: UltimateTransactionFormProps) {
-  const { accounts, addTransaction, updateTransaction } = useFinanceStore();
+  const {
+    accounts,
+    categories: storeCategories,
+    addTransaction,
+    updateTransaction,
+  } = useFinanceStore();
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
     amount: "",
@@ -49,119 +54,10 @@ export default function UltimateTransactionForm({
   const [showSuccess, setShowSuccess] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
-  const categories = [
-    // Income categories
-    {
-      name: "Salaire",
-      type: "income",
-      icon: "💰",
-      gradientStart: "#10b981",
-      gradientEnd: "#059669",
-    },
-    {
-      name: "Investissement",
-      type: "income",
-      icon: "📈",
-      gradientStart: "#3b82f6",
-      gradientEnd: "#06b6d4",
-    },
-    {
-      name: "Remboursement",
-      type: "income",
-      icon: "💳",
-      gradientStart: "#8b5cf6",
-      gradientEnd: "#7c3aed",
-    },
-    {
-      name: "Cadeau",
-      type: "income",
-      icon: "🎁",
-      gradientStart: "#a855f7",
-      gradientEnd: "#ec4899",
-    },
-    {
-      name: "Autre",
-      type: "income",
-      icon: "📝",
-      gradientStart: "#6b7280",
-      gradientEnd: "#64748b",
-    },
-    // Expense categories
-    {
-      name: "Alimentation",
-      type: "expense",
-      icon: "🍎",
-      gradientStart: "#ef4444",
-      gradientEnd: "#f43f5e",
-    },
-    {
-      name: "Transport",
-      type: "expense",
-      icon: "🚗",
-      gradientStart: "#0ea5e9",
-      gradientEnd: "#2563eb",
-    },
-    {
-      name: "Logement",
-      type: "expense",
-      icon: "🏠",
-      gradientStart: "#f59e0b",
-      gradientEnd: "#ea580c",
-    },
-    {
-      name: "Santé",
-      type: "expense",
-      icon: "🏥",
-      gradientStart: "#ec4899",
-      gradientEnd: "#c026d3",
-    },
-    {
-      name: "Animaux",
-      type: "expense",
-      icon: "🐾",
-      gradientStart: "#fb923c",
-      gradientEnd: "#f97316",
-    },
-    {
-      name: "Loisirs",
-      type: "expense",
-      icon: "🎮",
-      gradientStart: "#8b5cf6",
-      gradientEnd: "#7c3aed",
-    },
-    {
-      name: "Shopping",
-      type: "expense",
-      icon: "🛍️",
-      gradientStart: "#6366f1",
-      gradientEnd: "#1d4ed8",
-    },
-    {
-      name: "Restaurant",
-      type: "expense",
-      icon: "🍽️",
-      gradientStart: "#f97316",
-      gradientEnd: "#dc2626",
-    },
-    {
-      name: "Services",
-      type: "expense",
-      icon: "⚡",
-      gradientStart: "#06b6d4",
-      gradientEnd: "#0d9488",
-    },
-    {
-      name: "Autre",
-      type: "expense",
-      icon: "📝",
-      gradientStart: "#64748b",
-      gradientEnd: "#475569",
-    },
-  ];
-
-  const filteredCategories = categories.filter(
-    (cat) => cat.type === formData.type && formData.type !== "transfer"
-  );
+  const filteredCategories = storeCategories.filter((cat) => {
+    if (formData.type === "transfer") return false;
+    return cat.type === formData.type || cat.type === "both";
+  });
 
   useEffect(() => {
     if (transaction) {
@@ -702,7 +598,7 @@ export default function UltimateTransactionForm({
                       <div
                         className="absolute inset-0 transition-opacity duration-200"
                         style={{
-                          background: `linear-gradient(to bottom right, ${category.gradientStart}, ${category.gradientEnd})`,
+                          background: `linear-gradient(to bottom right, ${category.color}, ${category.color}dd)`,
                           opacity:
                             formData.category === category.name ? 0.5 : 0.25,
                         }}

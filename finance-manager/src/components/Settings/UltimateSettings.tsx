@@ -24,6 +24,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
+import CategoryManager from "./CategoryManager";
 
 export default function UltimateSettings() {
   const { settings, refreshData } = useFinanceStore();
@@ -501,6 +502,11 @@ export default function UltimateSettings() {
           Thème & Apparence
         </h3>
         <ThemeSelector />
+      </motion.div>
+
+      {/* Category Manager */}
+      <motion.div variants={sectionVariants} className="glass-card p-6">
+        <CategoryManager />
       </motion.div>
 
       {/* General Settings */}

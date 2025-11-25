@@ -18,6 +18,9 @@ import {
   addTransaction as addTransactionToDb,
   updateTransaction as updateTransactionInDb,
   deleteTransaction as deleteTransactionFromDb,
+  addCategory as addCategoryToDb,
+  updateCategory as updateCategoryInDb,
+  deleteCategory as deleteCategoryFromDb,
 } from "@/lib/database";
 import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 
@@ -55,6 +58,9 @@ interface FinanceStore {
     updates: Partial<Transaction>
   ) => Promise<void>;
   deleteTransaction: (id: number) => Promise<void>;
+  addCategory: (category: Omit<Category, "id">) => Promise<void>;
+  updateCategory: (id: number, updates: Partial<Category>) => Promise<void>;
+  deleteCategory: (id: number) => Promise<void>;
   refreshData: () => Promise<void>;
 
   // Computed values
@@ -153,6 +159,36 @@ export const useFinanceStore = create<FinanceStore>()(
         await get().refreshData();
       } catch (error) {
         console.error("Error deleting transaction:", error);
+        throw error;
+      }
+    },
+
+    addCategory: async (category) => {
+      try {
+        await addCategoryToDb(category);
+        await get().refreshData();
+      } catch (error) {
+        console.error("Error adding category:", error);
+        throw error;
+      }
+    },
+
+    updateCategory: async (id, updates) => {
+      try {
+        await updateCategoryInDb(id, updates);
+        await get().refreshData();
+      } catch (error) {
+        console.error("Error updating category:", error);
+        throw error;
+      }
+    },
+
+    deleteCategory: async (id) => {
+      try {
+        await deleteCategoryFromDb(id);
+        await get().refreshData();
+      } catch (error) {
+        console.error("Error deleting category:", error);
         throw error;
       }
     },
