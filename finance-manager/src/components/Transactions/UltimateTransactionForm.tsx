@@ -30,7 +30,7 @@ export default function UltimateTransactionForm({
   onClose,
   onSave,
 }: UltimateTransactionFormProps) {
-  const { accounts } = useFinanceStore();
+  const { accounts, addTransaction, updateTransaction } = useFinanceStore();
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
     amount: "",
@@ -64,6 +64,13 @@ export default function UltimateTransactionForm({
       icon: "📈",
       gradientStart: "#3b82f6",
       gradientEnd: "#06b6d4",
+    },
+    {
+      name: "Remboursement",
+      type: "income",
+      icon: "💳",
+      gradientStart: "#8b5cf6",
+      gradientEnd: "#7c3aed",
     },
     {
       name: "Cadeau",
@@ -107,6 +114,13 @@ export default function UltimateTransactionForm({
       icon: "🏥",
       gradientStart: "#ec4899",
       gradientEnd: "#c026d3",
+    },
+    {
+      name: "Animaux",
+      type: "expense",
+      icon: "🐾",
+      gradientStart: "#fb923c",
+      gradientEnd: "#f97316",
     },
     {
       name: "Loisirs",
@@ -207,10 +221,6 @@ export default function UltimateTransactionForm({
     setIsSubmitting(true);
 
     try {
-      const { addTransaction, updateTransaction } = await import(
-        "@/lib/database"
-      );
-
       const transactionData = {
         date: new Date(formData.date),
         amount:
@@ -246,7 +256,7 @@ export default function UltimateTransactionForm({
       setTimeout(() => {
         setShowSuccess(false);
         onSave();
-      }, 2000);
+      }, 1500);
     } catch (error) {
       console.error("Error saving transaction:", error);
       alert("Erreur lors de la sauvegarde de la transaction");

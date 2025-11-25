@@ -209,9 +209,11 @@ export default function TransactionManager() {
           <StatCard
             title="Total Dépenses"
             value={formatCurrency(
-              filteredTransactions
-                .filter((t) => t.type === "expense")
-                .reduce((sum, t) => sum + t.amount, 0)
+              Math.abs(
+                filteredTransactions
+                  .filter((t) => t.type === "expense")
+                  .reduce((sum, t) => sum + t.amount, 0)
+              )
             )}
             icon={TrendingDown}
             color="var(--color-danger)"

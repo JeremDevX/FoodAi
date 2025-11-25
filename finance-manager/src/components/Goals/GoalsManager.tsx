@@ -28,12 +28,17 @@ export default function GoalsManager() {
     "all" | "active" | "completed"
   >("all");
 
-  const filteredGoals = goals.filter((goal) => {
-    const isCompleted = goal.currentAmount >= goal.targetAmount;
-    if (filterStatus === "active") return !isCompleted;
-    if (filterStatus === "completed") return isCompleted;
-    return true;
-  });
+  const filteredGoals = goals
+    .filter((goal) => {
+      const isCompleted = goal.currentAmount >= goal.targetAmount;
+      if (filterStatus === "active") return !isCompleted;
+      if (filterStatus === "completed") return isCompleted;
+      return true;
+    })
+    .sort((a, b) => {
+      // Trier par date de deadline (plus proche en premier)
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+    });
 
   const activeGoals = goals.filter(
     (goal) => goal.currentAmount < goal.targetAmount
