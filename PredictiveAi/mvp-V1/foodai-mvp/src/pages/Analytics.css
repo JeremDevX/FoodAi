@@ -1,0 +1,116 @@
+.analytics-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.analytics-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.kpi-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.kpi-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.kpi-value {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.kpi-value.green {
+  color: var(--color-optimal);
+}
+.kpi-value.red {
+  color: var(--color-urgent);
+}
+
+.trend-pill {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+.trend-pill.positive {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.trend-pill.negative {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.chart-wrapper {
+  margin-top: var(--spacing-md);
+}
+
+.product-perf-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.product-perf-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+.product-perf-item:last-child {
+  border-bottom: none;
+}
+
+.accuracy-bar-bg {
+  width: 100px;
+  height: 6px;
+  background-color: var(--color-bg);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.accuracy-bar-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: 3px;
+}
+
+.savings-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+}
+
+.big-saving {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--color-optimal);
+  margin: var(--spacing-md) 0;
+}
+
+.roi-badge {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}

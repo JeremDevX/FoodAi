@@ -1,0 +1,109 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--spacing-xl);
+  align-items: start;
+}
+
+.settings-nav-card {
+  padding: var(--spacing-xs);
+}
+
+.settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-tab:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+.nav-tab.active {
+  background-color: rgba(33, 128, 141, 0.1);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  gap: var(--spacing-md);
+  color: var(--color-text-secondary);
+}
+
+.integration-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.int-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+.int-icon {
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+.status.connected {
+  color: var(--color-optimal);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.status.connected::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-optimal);
+  border-radius: 50%;
+}

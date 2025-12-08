@@ -1,0 +1,99 @@
+import React from "react";
+import Notifications from "./Notifications";
+import "../../styles/index.css";
+
+const TopNav: React.FC = () => {
+  return (
+    <header className="top-nav">
+      <div className="breadcrumbs">
+        <span className="current-page">Dashboard</span>
+      </div>
+
+      <div className="top-nav-actions">
+        <Notifications />
+        <div className="user-profile">
+          <div className="avatar">JM</div>
+          <span className="username">Jean Martin</span>
+        </div>
+      </div>
+
+      <style>{`
+                .top-nav {
+                    height: 64px;
+                    background-color: var(--color-surface);
+                    border-bottom: 1px solid var(--color-border);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 0 var(--spacing-xl);
+                    position: sticky;
+                    top: 0;
+                    z-index: 5;
+                }
+
+                .breadcrumbs {
+                    font-size: var(--font-size-lg);
+                    font-weight: 600;
+                    color: var(--color-text-primary);
+                }
+
+                .top-nav-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--spacing-lg);
+                }
+
+                .icon-btn {
+                    background: none;
+                    border: none;
+                    color: var(--color-text-secondary);
+                    position: relative;
+                    padding: 4px;
+                }
+                
+                .icon-btn:hover {
+                    color: var(--color-primary);
+                }
+
+                .notification-dot {
+                    position: absolute;
+                    top: 2px;
+                    right: 4px;
+                    width: 8px;
+                    height: 8px;
+                    background-color: var(--color-urgent);
+                    border-radius: 50%;
+                    border: 1px solid var(--color-surface);
+                }
+
+                .user-profile {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--spacing-sm);
+                    cursor: pointer;
+                }
+
+                .avatar {
+                    width: 32px;
+                    height: 32px;
+                    background-color: var(--color-primary);
+                    color: var(--color-text-inverse);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                }
+
+                .username {
+                    font-size: var(--font-size-base);
+                    font-weight: 500;
+                    color: var(--color-text-primary);
+                }
+            `}</style>
+    </header>
+  );
+};
+
+export default TopNav;

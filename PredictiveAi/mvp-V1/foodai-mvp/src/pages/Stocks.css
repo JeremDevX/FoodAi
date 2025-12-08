@@ -1,0 +1,132 @@
+.stocks-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.toolbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-wrapper {
+  width: 300px;
+}
+
+.filters-wrapper {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.category-select {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.stocks-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.stocks-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stocks-table th {
+  text-align: left;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-bg);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stocks-table td {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+.stocks-table tr:last-child td {
+  border-bottom: none;
+}
+
+.product-cell {
+  display: flex;
+  flex-direction: column;
+}
+.product-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.product-category {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.stock-value {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.unit {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.threshold-value {
+  color: var(--color-text-secondary);
+}
+
+.status-note {
+  display: block;
+  font-size: 11px;
+  color: var(--color-urgent);
+  margin-top: 2px;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.stock-adjust {
+  display: flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.adjust-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+}
+.adjust-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-primary);
+}
+.adjust-btn:first-child {
+  border-right: 1px solid var(--color-border);
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+.clickable-row:hover {
+  background-color: var(--color-surface-hover);
+}
