@@ -1,36 +1,51 @@
 /* Système de thèmes modernisé pour Finance Manager */
 
-:root {
-  /* Thème Clair - Glassmorphism */
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f1f5f9;
-  --bg-glass: rgba(255, 255, 255, 0.7);
-  --bg-glass-hover: rgba(255, 255, 255, 0.85);
+/* Thème Clair par défaut - Ultra Soft Premium Palette (WCAG AAA) */
+/* Palette ultra-douce inspirée du papier premium et des tons naturels */
+:root,
+[data-theme="light"] {
+  /* Arrière-plans - Palette beige/sable avec contraste marqué */
+  --bg-primary: #ebe6dd;
+  --bg-secondary: #f5f2ed;
+  --bg-tertiary: #e0dbd2;
+  --bg-glass: rgba(245, 242, 237, 0.9);
+  --bg-glass-hover: rgba(245, 242, 237, 0.98);
 
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-tertiary: #64748b;
-  --text-accent: #1e40af;
+  /* Textes - Tons sépia chauds et doux */
+  --text-primary: #2d2822;
+  --text-secondary: #5a5248;
+  --text-tertiary: #8a8074;
+  --text-accent: #1565c0;
 
-  --border-primary: rgba(0, 0, 0, 0.1);
-  --border-secondary: rgba(0, 0, 0, 0.05);
-  --shadow-primary: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-  --shadow-secondary: 0 4px 16px 0 rgba(0, 0, 0, 0.05);
+  /* Bordures - Ultra-subtiles avec tons chauds */
+  --border-primary: rgba(138, 128, 116, 0.18);
+  --border-secondary: rgba(138, 128, 116, 0.08);
+  --shadow-primary: 0 2px 8px 0 rgba(45, 40, 34, 0.06);
+  --shadow-secondary: 0 1px 4px 0 rgba(45, 40, 34, 0.03);
+  --shadow-hover: 0 4px 12px 0 rgba(45, 40, 34, 0.08);
 
-  /* Couleurs fonctionnelles */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
-  --color-accent: #3b82f6;
+  /* Couleurs fonctionnelles - Boost maximal avec WCAG AAA */
+  --color-success: #00a86b; /* Jade éclatant */
+  --color-warning: #ed6c02; /* Orange brûlé */
+  --color-danger: #d32f2f; /* Rouge profond */
+  --color-info: #1565c0; /* Bleu royal */
+  --color-accent: #1565c0;
   --text-on-accent: #ffffff;
 
-  /* Couleurs financières */
-  --color-income: #10b981;
-  --color-expense: #ef4444;
-  --color-budget: #3b82f6;
-  --color-goal: #8b5cf6;
+  /* Couleurs financières - Palette vibrante */
+  --color-income: #00a86b;
+  --color-expense: #d32f2f;
+  --color-budget: #1565c0;
+  --color-goal: #7b1fa2; /* Violet impérial */
+  --color-financial: #1565c0;
+  --color-financial-light: #1976d2;
+
+  /* Couleurs secondaires - Tons pastels pour graphiques */
+  --color-purple: #7c5295; /* Violet lavande */
+  --color-teal: #16a085; /* Turquoise doux */
+  --color-indigo: #5865a3; /* Indigo pastel */
+  --color-pink: #d66d92; /* Rose poudré */
+  --color-amber: #d88e27; /* Ambre chaud */
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -52,130 +67,126 @@
   --radius-full: 9999px;
 }
 
-/* Thème Sombre - Néon Tech */
+/* Thème Sombre - Néon Tech Premium */
 [data-theme="dark"] {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --bg-glass: rgba(30, 41, 59, 0.25);
-  --bg-glass-hover: rgba(30, 41, 59, 0.4);
+  --bg-primary: #0a0e17;
+  --bg-secondary: #151924;
+  --bg-tertiary: #1f2937;
+  --bg-glass: rgba(21, 25, 36, 0.5);
+  --bg-glass-hover: rgba(21, 25, 36, 0.7);
 
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
   --text-tertiary: #94a3b8;
-  --text-accent: #60a5fa;
+  --text-accent: #3b82f6;
 
-  --border-primary: rgba(148, 163, 184, 0.18);
-  --border-secondary: rgba(148, 163, 184, 0.1);
-  --shadow-primary: 0 8px 32px 0 rgba(2, 8, 20, 0.5);
-  --shadow-secondary: 0 4px 16px 0 rgba(2, 8, 20, 0.3);
+  --border-primary: rgba(59, 130, 246, 0.15);
+  --border-secondary: rgba(59, 130, 246, 0.08);
+  --shadow-primary: 0 2px 12px 0 rgba(59, 130, 246, 0.12);
+  --shadow-secondary: 0 1px 6px 0 rgba(59, 130, 246, 0.08);
+  --shadow-hover: 0 4px 16px 0 rgba(59, 130, 246, 0.18);
 
-  /* Couleurs Néon */
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
-  --color-danger: #f87171;
-  --color-info: #60a5fa;
-  --color-accent: #60a5fa;
-  --text-on-accent: #0f172a;
+  /* Couleurs Néon Boost */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626; /* Rouge amplifié */
+  --color-info: #3b82f6;
+  --color-accent: #3b82f6;
+  --text-on-accent: #ffffff;
+
+  /* Couleurs financières */
+  --color-income: #10b981;
+  --color-expense: #dc2626; /* Rouge amplifié */
+  --color-budget: #3b82f6;
+  --color-goal: #8b5cf6;
+  --color-financial: #3b82f6;
+  --color-financial-light: #60a5fa;
 
   /* Gradients Néon */
-  --gradient-primary: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-  --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  --gradient-danger: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
-/* Thème Océan - Bleu profond */
+/* Thème Océan - Deep Tech Blue Ultra Premium */
 [data-theme="ocean"] {
-  --bg-primary: #0c1e2e;
-  --bg-secondary: #143447;
-  --bg-tertiary: #1e4a61;
-  --bg-glass: rgba(20, 52, 71, 0.3);
-  --bg-glass-hover: rgba(20, 52, 71, 0.5);
+  --bg-primary: #030712;
+  --bg-secondary: #0a1929;
+  --bg-tertiary: #0d2137;
+  --bg-glass: rgba(10, 25, 41, 0.6);
+  --bg-glass-hover: rgba(10, 25, 41, 0.8);
 
-  --text-primary: #e0f2fe;
+  --text-primary: #f0f9ff;
   --text-secondary: #bae6fd;
   --text-tertiary: #7dd3fc;
-  --text-accent: #38bdf8;
+  --text-accent: #00d9ff;
 
-  --border-primary: rgba(125, 211, 252, 0.2);
-  --border-secondary: rgba(125, 211, 252, 0.1);
-  --shadow-primary: 0 8px 32px 0 rgba(14, 165, 233, 0.3);
-  --shadow-secondary: 0 4px 16px 0 rgba(14, 165, 233, 0.2);
+  --border-primary: rgba(0, 217, 255, 0.18);
+  --border-secondary: rgba(0, 217, 255, 0.1);
+  --shadow-primary: 0 2px 12px 0 rgba(0, 217, 255, 0.15);
+  --shadow-secondary: 0 1px 6px 0 rgba(0, 217, 255, 0.1);
+  --shadow-hover: 0 4px 16px 0 rgba(0, 217, 255, 0.22);
 
-  --color-success: #2dd4bf;
-  --color-warning: #fbbf24;
-  --color-danger: #fb7185;
-  --color-info: #38bdf8;
-  --color-accent: #38bdf8;
-  --text-on-accent: #0c1e2e;
+  --color-success: #00ff9d;
+  --color-warning: #ffc107;
+  --color-danger: #ff0844; /* Rouge néon amplifié */
+  --color-info: #00d9ff;
+  --color-accent: #00d9ff;
+  --text-on-accent: #030712;
 
-  --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-  --gradient-success: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --gradient-danger: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  /* Couleurs financières électriques */
+  --color-income: #00ff9d;
+  --color-expense: #ff0844; /* Rouge néon amplifié */
+  --color-budget: #00d9ff;
+  --color-goal: #82e9ff;
+  --color-financial: #00d9ff;
+  --color-financial-light: #3df0ff;
+
+  --gradient-primary: linear-gradient(135deg, #00d9ff 0%, #0099cc 100%);
+  --gradient-success: linear-gradient(135deg, #00ff9d 0%, #00cc7a 100%);
+  --gradient-warning: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  --gradient-danger: linear-gradient(135deg, #ff1744 0%, #d50000 100%);
 }
 
-/* Thème Forêt - Vert nature */
-[data-theme="forest"] {
-  --bg-primary: #0a1f0f;
-  --bg-secondary: #0f2e1a;
-  --bg-tertiary: #14432a;
-  --bg-glass: rgba(15, 46, 26, 0.3);
-  --bg-glass-hover: rgba(15, 46, 26, 0.5);
-
-  --text-primary: #d1fae5;
-  --text-secondary: #a7f3d0;
-  --text-tertiary: #6ee7b7;
-  --text-accent: #34d399;
-
-  --border-primary: rgba(110, 231, 183, 0.2);
-  --border-secondary: rgba(110, 231, 183, 0.1);
-  --shadow-primary: 0 8px 32px 0 rgba(16, 185, 129, 0.3);
-  --shadow-secondary: 0 4px 16px 0 rgba(16, 185, 129, 0.2);
-
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
-  --color-danger: #fb7185;
-  --color-info: #5eead4;
-  --color-accent: #34d399;
-  --text-on-accent: #0a1f0f;
-
-  --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  --gradient-danger: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
-}
-
-/* Thème Cosmique - Violet mystique */
+/* Thème Cosmique - Royal Purple Galaxy Ultra Premium */
 [data-theme="cosmic"] {
-  --bg-primary: #1a0a2e;
-  --bg-secondary: #2a1747;
-  --bg-tertiary: #3b2561;
-  --bg-glass: rgba(42, 23, 71, 0.3);
-  --bg-glass-hover: rgba(42, 23, 71, 0.5);
+  --bg-primary: #0d0221;
+  --bg-secondary: #1a0a2e;
+  --bg-tertiary: #2d1b4e;
+  --bg-glass: rgba(26, 10, 46, 0.6);
+  --bg-glass-hover: rgba(26, 10, 46, 0.8);
 
-  --text-primary: #f3e8ff;
-  --text-secondary: #e9d5ff;
-  --text-tertiary: #d8b4fe;
-  --text-accent: #c084fc;
+  --text-primary: #fef7ff;
+  --text-secondary: #f3e8ff;
+  --text-tertiary: #e9d5ff;
+  --text-accent: #c77dff;
 
-  --border-primary: rgba(216, 180, 254, 0.2);
-  --border-secondary: rgba(216, 180, 254, 0.1);
-  --shadow-primary: 0 8px 32px 0 rgba(168, 85, 247, 0.3);
-  --shadow-secondary: 0 4px 16px 0 rgba(168, 85, 247, 0.2);
+  --border-primary: rgba(199, 125, 255, 0.2);
+  --border-secondary: rgba(199, 125, 255, 0.12);
+  --shadow-primary: 0 2px 12px 0 rgba(199, 125, 255, 0.18);
+  --shadow-secondary: 0 1px 6px 0 rgba(199, 125, 255, 0.12);
+  --shadow-hover: 0 4px 16px 0 rgba(199, 125, 255, 0.25);
 
-  --color-success: #a78bfa;
-  --color-warning: #fbbf24;
-  --color-danger: #f472b6;
-  --color-info: #c084fc;
-  --color-accent: #c084fc;
-  --text-on-accent: #1a0a2e;
+  --color-success: #72f2a7;
+  --color-warning: #ffd60a;
+  --color-danger: #ff0054; /* Magenta néon amplifié */
+  --color-info: #c77dff;
+  --color-accent: #c77dff;
+  --text-on-accent: #0d0221;
 
-  --gradient-primary: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-  --gradient-success: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-  --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  --gradient-danger: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  /* Couleurs financières galactiques */
+  --color-income: #72f2a7;
+  --color-expense: #ff0054; /* Magenta néon amplifié */
+  --color-budget: #c77dff;
+  --color-goal: #e0aaff;
+  --color-financial: #c77dff;
+  --color-financial-light: #d8b4fe;
+
+  --gradient-primary: linear-gradient(135deg, #c77dff 0%, #9d4edd 100%);
+  --gradient-success: linear-gradient(135deg, #72f2a7 0%, #52b788 100%);
+  --gradient-warning: linear-gradient(135deg, #ffd60a 0%, #ffa900 100%);
+  --gradient-danger: linear-gradient(135deg, #ff006e 0%, #d90056 100%);
 }
 
 /* Animations */
@@ -192,10 +203,10 @@
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
   }
   50% {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
   }
 }
 
@@ -241,12 +252,12 @@
 
 .glass-effect-hover:hover {
   background: var(--bg-glass-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover);
 }
 
 .neon-glow {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
   animation: pulse-glow 2s ease-in-out infinite;
 }
 

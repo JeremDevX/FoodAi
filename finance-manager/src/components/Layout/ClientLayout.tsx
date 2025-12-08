@@ -34,6 +34,26 @@ export default function ClientLayout({
 
   return (
     <div className="flex h-screen" style={{ background: "var(--bg-primary)" }}>
+      {/* Skip Links for keyboard navigation */}
+      <a
+        href="#main-content"
+        className="wcag-skip-link"
+        style={{
+          position: "absolute",
+          top: "-40px",
+          left: "6px",
+          background: "var(--wcag-focus)",
+          color: "white",
+          padding: "8px 16px",
+          borderRadius: "4px",
+          textDecoration: "none",
+          fontWeight: "bold",
+          zIndex: 10000,
+        }}
+      >
+        Aller au contenu principal
+      </a>
+
       {/* Ultimate Sidebar */}
       <div className="flex-shrink-0">
         <UltimateSidebar />
@@ -45,7 +65,12 @@ export default function ClientLayout({
         <UltimateHeader />
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto p-6" role="main">
+        <main
+          id="main-content"
+          className="flex-1 overflow-y-auto p-6"
+          role="main"
+          tabIndex={-1}
+        >
           {children}
         </main>
       </div>

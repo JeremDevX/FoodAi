@@ -24,6 +24,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
+import CategoryManager from "./CategoryManager";
 
 export default function UltimateSettings() {
   const { settings, refreshData } = useFinanceStore();
@@ -51,13 +52,13 @@ export default function UltimateSettings() {
       await refreshData();
       setMessage({
         type: "success",
-        text: "Paramètres sauvegardés avec succès !",
+        text: "Paramètres sauvegardés",
       });
     } catch (error) {
       console.error("Error saving settings:", error);
       setMessage({
         type: "error",
-        text: "Erreur lors de la sauvegarde des paramètres.",
+        text: "Erreur lors de la sauvegarde",
       });
     } finally {
       setIsLoading(false);
@@ -182,43 +183,144 @@ export default function UltimateSettings() {
       {
         id: "light",
         name: "Clair",
+        description: "Doux et naturel",
         icon: Sun,
-        color: "from-yellow-400 to-orange-500",
+        colors: {
+          bg: "#ebe6dd",
+          surface: "#f5f2ed",
+          accent: "#1565c0",
+          success: "#00a86b",
+          danger: "#c62828",
+        },
       },
       {
         id: "dark",
         name: "Sombre",
+        description: "Élégant et moderne",
         icon: Moon,
-        color: "from-gray-700 to-gray-900",
+        colors: {
+          bg: "#0a0e17",
+          surface: "#151924",
+          accent: "#3b82f6",
+          success: "#10b981",
+          danger: "#dc2626",
+        },
       },
       {
         id: "ocean",
         name: "Océan",
+        description: "Deep tech premium",
         icon: Palette,
-        color: "from-cyan-500 to-blue-600",
-      },
-      {
-        id: "forest",
-        name: "Forêt",
-        icon: Sparkles,
-        color: "from-green-500 to-emerald-600",
+        colors: {
+          bg: "#030712",
+          surface: "#0a1929",
+          accent: "#00d9ff",
+          success: "#00ff9d",
+          danger: "#ff0844",
+        },
       },
       {
         id: "cosmic",
         name: "Cosmique",
+        description: "Royal galaxy ultra",
         icon: Sparkles,
-        color: "from-purple-500 to-pink-600",
+        colors: {
+          bg: "#0d0221",
+          surface: "#1a0a2e",
+          accent: "#c77dff",
+          success: "#72f2a7",
+          danger: "#ff0054",
+        },
       },
     ];
 
     return (
       <div className="space-y-6">
-        {/* Theme Selection */}
+        {/* Current Theme Display - Apple Style */}
+        <div
+          className="p-6 rounded-2xl transition-all duration-200"
+          style={{
+            backgroundColor: "var(--bg-secondary)",
+            border: "1px solid var(--border-primary)",
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: "var(--bg-tertiary)",
+                }}
+              >
+                {themes.find((t) => t.id === theme)?.icon &&
+                  (() => {
+                    const Icon = themes.find((t) => t.id === theme)!.icon;
+                    return (
+                      <Icon
+                        className="w-6 h-6"
+                        style={{ color: "var(--color-accent)" }}
+                      />
+                    );
+                  })()}
+              </div>
+              <div>
+                <div
+                  className="text-xs font-medium uppercase tracking-wide mb-0.5"
+                  style={{ color: "var(--text-tertiary)" }}
+                >
+                  Thème actif
+                </div>
+                <div
+                  className="text-xl font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {themes.find((t) => t.id === theme)?.name}
+                </div>
+              </div>
+            </div>
+
+            {/* Color Palette Preview - Apple Style avec bordures */}
+            <div className="flex items-center gap-2">
+              <div
+                className="w-10 h-10 rounded-lg transition-transform hover:scale-110"
+                style={{
+                  backgroundColor: "var(--color-accent)",
+                  border: "2px solid var(--border-primary)",
+                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                }}
+                title="Accent"
+              />
+              <div
+                className="w-10 h-10 rounded-lg transition-transform hover:scale-110"
+                style={{
+                  backgroundColor: "var(--color-success)",
+                  border: "2px solid var(--border-primary)",
+                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                }}
+                title="Succès"
+              />
+              <div
+                className="w-10 h-10 rounded-lg transition-transform hover:scale-110"
+                style={{
+                  backgroundColor: "var(--color-danger)",
+                  border: "2px solid var(--border-primary)",
+                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                }}
+                title="Danger"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Theme Grid - Apple Minimalist Style */}
         <div>
-          <h4 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-            Thème
+          <h4
+            className="text-xs font-semibold uppercase tracking-wider mb-3"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            Apparence
           </h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {themes.map((themeOption) => {
               const Icon = themeOption.icon;
               const isSelected = theme === themeOption.id;
@@ -227,46 +329,114 @@ export default function UltimateSettings() {
                 <motion.button
                   key={themeOption.id}
                   onClick={() => setTheme(themeOption.id as any)}
-                  className={`
-                  relative p-4 rounded-xl border-2 transition-all duration-300
-                  ${
-                    isSelected
-                      ? "border-financial-500 bg-financial-500/20 scale-105"
-                      : "border-[var(--border-primary)] bg-[var(--bg-secondary)] hover:border-[var(--border-secondary)] hover:bg-[var(--bg-tertiary)]"
-                  }
-                  group overflow-hidden
-                `}
-                  whileHover={{ scale: isSelected ? 1.05 : 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="relative group text-left"
+                  whileHover={{ y: -1 }}
+                  whileTap={{ scale: 0.99 }}
                 >
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br ${themeOption.color} opacity-20 group-hover:opacity-30 transition-opacity`}
-                  />
-                  <div className="relative z-10 text-center">
-                    <Icon
-                      className={`h-8 w-8 mx-auto mb-2 ${
-                        isSelected ? "text-financial-400" : "text-gray-300"
-                      }`}
-                    />
-                    <div
-                      className={`text-sm font-medium ${
-                        isSelected
-                          ? "text-[var(--text-primary)]"
-                          : "text-[var(--text-secondary)]"
-                      }`}
-                    >
-                      {themeOption.name}
+                    className={`
+                    relative p-5 rounded-xl transition-all duration-200
+                    ${
+                      isSelected
+                        ? "ring-2 ring-[var(--color-accent)] shadow-md"
+                        : "hover:shadow-sm"
+                    }
+                  `}
+                    style={{
+                      backgroundColor: "var(--bg-secondary)",
+                      border: "1px solid var(--border-primary)",
+                    }}
+                  >
+                    {/* Theme Preview - Apple Minimalist */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-12 h-12 rounded-lg flex items-center justify-center"
+                          style={{
+                            backgroundColor: themeOption.colors.bg,
+                          }}
+                        >
+                          <Icon
+                            className="h-5 w-5"
+                            style={{ color: themeOption.colors.accent }}
+                          />
+                        </div>
+
+                        <div>
+                          <h5
+                            className="text-base font-semibold mb-0.5"
+                            style={{ color: "var(--text-primary)" }}
+                          >
+                            {themeOption.name}
+                          </h5>
+                          <p
+                            className="text-xs"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            {themeOption.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      {isSelected && (
+                        <div
+                          className="w-6 h-6 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: "var(--color-accent)" }}
+                        >
+                          <CheckCircle className="w-4 h-4 text-white" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Color Palette - Apple Style avec bordures */}
+                    <div className="flex gap-1.5">
+                      <div
+                        className="flex-1 h-10 rounded-md"
+                        style={{
+                          backgroundColor: themeOption.colors.bg,
+                          border: "1.5px solid var(--border-primary)",
+                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                        }}
+                        title="Fond"
+                      />
+                      <div
+                        className="flex-1 h-10 rounded-md"
+                        style={{
+                          backgroundColor: themeOption.colors.surface,
+                          border: "1.5px solid var(--border-primary)",
+                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                        }}
+                        title="Surface"
+                      />
+                      <div
+                        className="flex-1 h-10 rounded-md"
+                        style={{
+                          backgroundColor: themeOption.colors.accent,
+                          border: "1.5px solid var(--border-primary)",
+                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                        }}
+                        title="Accent"
+                      />
+                      <div
+                        className="flex-1 h-10 rounded-md"
+                        style={{
+                          backgroundColor: themeOption.colors.success,
+                          border: "1.5px solid var(--border-primary)",
+                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                        }}
+                        title="Succès"
+                      />
+                      <div
+                        className="flex-1 h-10 rounded-md"
+                        style={{
+                          backgroundColor: themeOption.colors.danger,
+                          border: "1.5px solid var(--border-primary)",
+                          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                        }}
+                        title="Danger"
+                      />
                     </div>
                   </div>
-                  {isSelected && (
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className="absolute top-2 right-2 w-5 h-5 bg-financial-500 rounded-full flex items-center justify-center shadow-lg"
-                    >
-                      <CheckCircle className="w-3 h-3 text-white" />
-                    </motion.div>
-                  )}
                 </motion.button>
               );
             })}
@@ -298,10 +468,10 @@ export default function UltimateSettings() {
           </motion.div>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[var(--text-primary)] to-[var(--text-secondary)] bg-clip-text text-transparent">
-              Paramètres avancés
+              Paramètres
             </h1>
             <p className="text-[var(--text-secondary)]">
-              Personnalisez votre expérience
+              Configuration de l'application
             </p>
           </div>
         </div>
@@ -334,6 +504,11 @@ export default function UltimateSettings() {
         <ThemeSelector />
       </motion.div>
 
+      {/* Category Manager */}
+      <motion.div variants={sectionVariants} className="glass-card p-6">
+        <CategoryManager />
+      </motion.div>
+
       {/* General Settings */}
       <motion.div variants={sectionVariants} className="glass-card p-6">
         <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center">
@@ -351,7 +526,7 @@ export default function UltimateSettings() {
                 onChange={(e) =>
                   setFormData({ ...formData, currency: e.target.value })
                 }
-                className="w-full px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-financial-500 backdrop-blur-sm"
+                className="w-full px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-financial)] backdrop-blur-sm"
                 style={{ colorScheme: "normal" }}
               >
                 <option
@@ -389,7 +564,7 @@ export default function UltimateSettings() {
                 onChange={(e) =>
                   setFormData({ ...formData, language: e.target.value })
                 }
-                className="w-full px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-financial-500 backdrop-blur-sm"
+                className="w-full px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-financial)] backdrop-blur-sm"
                 style={{ colorScheme: "normal" }}
               >
                 <option
@@ -423,7 +598,7 @@ export default function UltimateSettings() {
                 Exporter les données
               </div>
               <div className="text-sm text-[var(--text-secondary)]">
-                Téléchargez une copie complète de vos données
+                Télécharger une copie de vos données
               </div>
             </div>
             <motion.button
@@ -443,7 +618,7 @@ export default function UltimateSettings() {
                 Importer des données
               </div>
               <div className="text-sm text-[var(--text-secondary)]">
-                Restaurez vos données depuis un fichier JSON
+                Restaurer depuis un fichier de sauvegarde
               </div>
             </div>
             <label className="flex items-center space-x-2 px-4 py-2 bg-financial-500 hover:bg-financial-600 text-white rounded-lg transition-all duration-200 cursor-pointer">
@@ -458,23 +633,39 @@ export default function UltimateSettings() {
             </label>
           </div>
 
-          <div className="p-4 bg-danger/10 rounded-lg border border-danger/20">
+          <div
+            className="p-4 rounded-lg border-2"
+            style={{
+              backgroundColor: "rgba(196, 71, 65, 0.1)",
+              borderColor: "var(--color-danger)",
+            }}
+          >
             <div className="flex items-center justify-between">
               <div>
-                <div className="font-medium text-danger flex items-center">
+                <div
+                  className="font-medium flex items-center"
+                  style={{ color: "var(--color-danger)" }}
+                >
                   <AlertCircle className="h-4 w-4 mr-2" />
                   Supprimer toutes les données
                 </div>
-                <div className="text-sm text-danger/80">
-                  ⚠️ Cette action est irréversible et supprimera toutes vos
-                  données
+                <div
+                  className="text-sm"
+                  style={{ color: "var(--color-danger)", opacity: 0.8 }}
+                >
+                  ⚠️ Action irréversible
                 </div>
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleClearData}
-                className="px-4 py-2 bg-danger hover:bg-danger/90 text-white rounded-lg transition-all duration-200"
+                className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium"
+                style={{
+                  backgroundColor: "var(--color-danger)",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               >
                 Supprimer
               </motion.button>
@@ -508,7 +699,7 @@ export default function UltimateSettings() {
           ) : (
             <>
               <CheckCircle className="h-4 w-4" />
-              <span>Sauvegarder les paramètres</span>
+              <span>Sauvegarder</span>
             </>
           )}
         </motion.button>

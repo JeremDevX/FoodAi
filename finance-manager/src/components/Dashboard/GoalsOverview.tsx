@@ -48,10 +48,10 @@ export default function GoalsOverview() {
               />
             </motion.div>
             <div className="mb-2" style={{ color: "var(--text-tertiary)" }}>
-              Aucun objectif actif
+              Aucun objectif en cours
             </div>
             <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Créez votre premier objectif d&apos;épargne
+              Définissez un objectif d&apos;épargne
             </div>
           </motion.div>
         ) : (

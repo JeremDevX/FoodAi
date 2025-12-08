@@ -127,16 +127,34 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
       : 0;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200">
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50"
+      style={{ background: "rgba(0, 0, 0, 0.7)", backdropFilter: "blur(4px)" }}
+    >
+      <div className="glass-card rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div
+          className="p-6"
+          style={{ borderBottom: "1px solid var(--border-color)" }}
+        >
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2
+              className="text-xl font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
               {goal ? "Modifier l'objectif" : "Nouvel objectif"}
             </h2>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 rounded-lg transition-colors"
+              style={{ color: "var(--text-secondary)" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--bg-secondary)";
+                e.currentTarget.style.color = "var(--text-primary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "var(--text-secondary)";
+              }}
             >
               <X className="h-5 w-5" />
             </button>
@@ -164,37 +182,59 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
 
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              className="block text-sm font-medium mb-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Nom de l&apos;objectif
             </label>
             <div className="relative">
-              <Target className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Target
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5"
+                style={{ color: "var(--text-tertiary)" }}
+              />
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent ${
-                  errors.name ? "border-danger" : "border-gray-300"
-                }`}
+                className="w-full pl-10 pr-4 py-3 rounded-lg focus:ring-2 transition-colors"
+                style={{
+                  background: "var(--bg-secondary)",
+                  color: "var(--text-primary)",
+                  border: `1px solid ${
+                    errors.name ? "var(--color-danger)" : "var(--border-color)"
+                  }`,
+                }}
                 placeholder="Ex: Voyage au Japon"
                 required
               />
             </div>
             {errors.name && (
-              <p className="mt-1 text-sm text-danger">{errors.name}</p>
+              <p
+                className="mt-1 text-sm"
+                style={{ color: "var(--color-danger)" }}
+              >
+                {errors.name}
+              </p>
             )}
           </div>
 
           {/* Target Amount and Current Amount */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Montant cible
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <DollarSign
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5"
+                  style={{ color: "var(--text-tertiary)" }}
+                />
                 <input
                   type="number"
                   step="0.01"
@@ -203,26 +243,42 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
                   onChange={(e) =>
                     setFormData({ ...formData, targetAmount: e.target.value })
                   }
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent ${
-                    errors.targetAmount ? "border-danger" : "border-gray-300"
-                  }`}
+                  className="w-full pl-10 pr-4 py-3 rounded-lg focus:ring-2 transition-colors"
+                  style={{
+                    background: "var(--bg-secondary)",
+                    color: "var(--text-primary)",
+                    border: `1px solid ${
+                      errors.targetAmount
+                        ? "var(--color-danger)"
+                        : "var(--border-color)"
+                    }`,
+                  }}
                   placeholder="1000.00"
                   required
                 />
               </div>
               {errors.targetAmount && (
-                <p className="mt-1 text-sm text-danger">
+                <p
+                  className="mt-1 text-sm"
+                  style={{ color: "var(--color-danger)" }}
+                >
                   {errors.targetAmount}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Montant actuel
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <DollarSign
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5"
+                  style={{ color: "var(--text-tertiary)" }}
+                />
                 <input
                   type="number"
                   step="0.01"
@@ -231,11 +287,19 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
                   onChange={(e) =>
                     setFormData({ ...formData, currentAmount: e.target.value })
                   }
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg transition-colors"
+                  style={{
+                    background: "var(--bg-secondary)",
+                    color: "var(--text-primary)",
+                    border: "1px solid var(--border-color)",
+                  }}
                   placeholder="0.00"
                 />
               </div>
-              <div className="mt-1 text-xs text-gray-500">
+              <div
+                className="mt-1 text-xs"
+                style={{ color: "var(--text-tertiary)" }}
+              >
                 Progression: {progress.toFixed(1)}%
               </div>
             </div>
@@ -245,13 +309,26 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
           {progress > 0 && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Progression</span>
-                <span className="font-medium">{progress.toFixed(1)}%</span>
+                <span style={{ color: "var(--text-secondary)" }}>
+                  Progression
+                </span>
+                <span
+                  className="font-medium"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {progress.toFixed(1)}%
+                </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="w-full rounded-full h-2"
+                style={{ background: "var(--bg-tertiary)" }}
+              >
                 <div
-                  className="bg-financial-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min(progress, 100)}%` }}
+                  className="h-2 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(progress, 100)}%`,
+                    background: "var(--color-accent)",
+                  }}
                 />
               </div>
             </div>
@@ -259,31 +336,52 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
 
           {/* Deadline */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              className="block text-sm font-medium mb-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Date limite
             </label>
             <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Calendar
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5"
+                style={{ color: "var(--text-tertiary)" }}
+              />
               <input
                 type="date"
                 value={formData.deadline}
                 onChange={(e) =>
                   setFormData({ ...formData, deadline: e.target.value })
                 }
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent ${
-                  errors.deadline ? "border-danger" : "border-gray-300"
-                }`}
+                className="w-full pl-10 pr-4 py-3 rounded-lg focus:ring-2 transition-colors"
+                style={{
+                  background: "var(--bg-secondary)",
+                  color: "var(--text-primary)",
+                  border: `1px solid ${
+                    errors.deadline
+                      ? "var(--color-danger)"
+                      : "var(--border-color)"
+                  }`,
+                }}
                 required
               />
             </div>
             {errors.deadline && (
-              <p className="mt-1 text-sm text-danger">{errors.deadline}</p>
+              <p
+                className="mt-1 text-sm"
+                style={{ color: "var(--color-danger)" }}
+              >
+                {errors.deadline}
+              </p>
             )}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              className="block text-sm font-medium mb-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Catégorie
             </label>
             <select
@@ -291,7 +389,12 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
               }
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent"
+              className="w-full px-4 py-3 rounded-lg focus:ring-2 transition-colors"
+              style={{
+                background: "var(--bg-secondary)",
+                color: "var(--text-primary)",
+                border: "1px solid var(--border-color)",
+              }}
             >
               <option value="">Sélectionner une catégorie</option>
               {goalCategories.map((category) => (
@@ -304,7 +407,10 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
 
           {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              className="block text-sm font-medium mb-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Image (optionnel)
             </label>
             <div className="flex items-center space-x-4">
@@ -317,7 +423,13 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
               />
               <label
                 htmlFor="goal-image"
-                className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors cursor-pointer"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                style={{
+                  background: "var(--bg-secondary)",
+                  color: "var(--text-primary)",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               >
                 <Image className="h-4 w-4" />
                 <span>
@@ -328,7 +440,10 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, image: "" })}
-                  className="text-sm text-danger hover:text-danger/80"
+                  className="text-sm transition-colors"
+                  style={{ color: "var(--color-danger)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
                 >
                   Supprimer
                 </button>
@@ -338,17 +453,28 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              className="block text-sm font-medium mb-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Description (optionnel)
             </label>
             <div className="relative">
-              <FileText className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <FileText
+                className="absolute left-3 top-3 h-5 w-5"
+                style={{ color: "var(--text-tertiary)" }}
+              />
               <textarea
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-financial-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 rounded-lg focus:ring-2 transition-colors"
+                style={{
+                  background: "var(--bg-secondary)",
+                  color: "var(--text-primary)",
+                  border: "1px solid var(--border-color)",
+                }}
                 rows={3}
                 placeholder="Décrivez votre objectif..."
               />
@@ -360,13 +486,26 @@ export default function GoalForm({ goal, onClose, onSave }: GoalFormProps) {
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-gray-700 hover:text-gray-900 font-medium"
+              className="px-6 py-3 font-medium transition-colors"
+              style={{ color: "var(--text-secondary)" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = "var(--text-primary)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--text-secondary)")
+              }
             >
               Annuler
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-financial-600 hover:bg-financial-700 text-white rounded-lg transition-colors font-medium"
+              className="px-6 py-3 rounded-lg transition-colors font-medium"
+              style={{
+                background: "var(--color-accent)",
+                color: "var(--text-on-accent)",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
               {goal ? "Modifier" : "Créer"}
             </button>

@@ -28,12 +28,17 @@ export default function GoalsManager() {
     "all" | "active" | "completed"
   >("all");
 
-  const filteredGoals = goals.filter((goal) => {
-    const isCompleted = goal.currentAmount >= goal.targetAmount;
-    if (filterStatus === "active") return !isCompleted;
-    if (filterStatus === "completed") return isCompleted;
-    return true;
-  });
+  const filteredGoals = goals
+    .filter((goal) => {
+      const isCompleted = goal.currentAmount >= goal.targetAmount;
+      if (filterStatus === "active") return !isCompleted;
+      if (filterStatus === "completed") return isCompleted;
+      return true;
+    })
+    .sort((a, b) => {
+      // Trier par date de deadline (plus proche en premier)
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+    });
 
   const activeGoals = goals.filter(
     (goal) => goal.currentAmount < goal.targetAmount
@@ -56,10 +61,10 @@ export default function GoalsManager() {
               className="text-2xl font-bold"
               style={{ color: "var(--text-primary)" }}
             >
-              Gestion des Objectifs
+              Objectifs d'Épargne
             </h2>
             <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
-              Suivez vos projets d&apos;épargne
+              Suivez et planifiez vos projets
             </p>
           </div>
           <button
@@ -89,7 +94,7 @@ export default function GoalsManager() {
                 className="text-sm mb-1"
                 style={{ color: "var(--text-accent)" }}
               >
-                Total épargné
+                Montant épargné
               </div>
               <div
                 className="text-2xl font-bold"
@@ -222,10 +227,10 @@ export default function GoalsManager() {
                 style={{ color: "var(--text-tertiary)" }}
               >
                 {filterStatus === "active"
-                  ? "Créez votre premier objectif pour commencer à épargner !"
+                  ? "Définissez un objectif d'épargne"
                   : filterStatus === "completed"
                   ? "Vos objectifs terminés apparaîtront ici."
-                  : "Commencez par créer un objectif d&apos;épargne."}
+                  : "Aucun objectif défini"}
               </div>
             </div>
           ) : (

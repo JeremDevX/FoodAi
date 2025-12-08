@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Palette, Sun, Moon, Sparkles } from "lucide-react";
 
-type Theme = "light" | "dark" | "ocean" | "forest" | "cosmic";
+type Theme = "light" | "dark" | "ocean" | "cosmic";
 
 interface ThemeContextType {
   theme: Theme;
@@ -14,7 +14,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -86,11 +86,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const isDark =
-    theme === "dark" ||
-    theme === "ocean" ||
-    theme === "forest" ||
-    theme === "cosmic";
+  const isDark = theme === "dark" || theme === "ocean" || theme === "cosmic";
 
   return (
     <ThemeContext.Provider

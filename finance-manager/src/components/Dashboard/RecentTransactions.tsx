@@ -76,7 +76,7 @@ export default function RecentTransactions() {
           className="text-xl font-semibold"
           style={{ color: "var(--text-primary)" }}
         >
-          Transactions Récentes
+          Dernières Transactions
         </h2>
         <Link
           href="#"
@@ -101,7 +101,7 @@ export default function RecentTransactions() {
               Aucune transaction
             </div>
             <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Commencez par ajouter une transaction
+              Ajoutez votre première opération
             </div>
           </motion.div>
         ) : (
@@ -171,9 +171,9 @@ export default function RecentTransactions() {
             background: "var(--bg-secondary)",
             color: "var(--text-accent)",
           }}
-          aria-label="Gérer toutes les transactions"
+          aria-label="Voir toutes les transactions"
         >
-          Gérer les transactions
+          Voir toutes les transactions
         </button>
       </div>
     </div>

@@ -18,6 +18,9 @@ import {
   addTransaction as addTransactionToDb,
   updateTransaction as updateTransactionInDb,
   deleteTransaction as deleteTransactionFromDb,
+  addCategory as addCategoryToDb,
+  updateCategory as updateCategoryInDb,
+  deleteCategory as deleteCategoryFromDb,
 } from "@/lib/database";
 import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 
@@ -55,6 +58,9 @@ interface FinanceStore {
     updates: Partial<Transaction>
   ) => Promise<void>;
   deleteTransaction: (id: number) => Promise<void>;
+  addCategory: (category: Omit<Category, "id">) => Promise<void>;
+  updateCategory: (id: number, updates: Partial<Category>) => Promise<void>;
+  deleteCategory: (id: number) => Promise<void>;
   refreshData: () => Promise<void>;
 
   // Computed values
@@ -157,6 +163,36 @@ export const useFinanceStore = create<FinanceStore>()(
       }
     },
 
+    addCategory: async (category) => {
+      try {
+        await addCategoryToDb(category);
+        await get().refreshData();
+      } catch (error) {
+        console.error("Error adding category:", error);
+        throw error;
+      }
+    },
+
+    updateCategory: async (id, updates) => {
+      try {
+        await updateCategoryInDb(id, updates);
+        await get().refreshData();
+      } catch (error) {
+        console.error("Error updating category:", error);
+        throw error;
+      }
+    },
+
+    deleteCategory: async (id) => {
+      try {
+        await deleteCategoryFromDb(id);
+        await get().refreshData();
+      } catch (error) {
+        console.error("Error deleting category:", error);
+        throw error;
+      }
+    },
+
     refreshData: async () => {
       const { loadData } = get();
       await loadData();
@@ -191,7 +227,7 @@ export const useFinanceStore = create<FinanceStore>()(
             t.type === "expense" ||
             (t.type === "transfer" && t.fromAccount === selectedAccount)
         )
-        .reduce((sum, t) => sum + t.amount, 0);
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
       const balance = income - expenses;
       const remainingDays = Math.max(
@@ -257,7 +293,7 @@ export const useFinanceStore = create<FinanceStore>()(
             t.type === "expense" ||
             (t.type === "transfer" && t.fromAccount === selectedAccount)
         )
-        .reduce((sum, t) => sum + t.amount, 0);
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
       return {
         income,
@@ -289,7 +325,7 @@ export const useFinanceStore = create<FinanceStore>()(
             transaction.fromAccount === selectedAccount)
         ) {
           const category = transaction.category || "Autre";
-          acc[category] = (acc[category] || 0) + transaction.amount;
+          acc[category] = (acc[category] || 0) + Math.abs(transaction.amount);
         }
         return acc;
       }, {} as Record<string, number>);
@@ -318,12 +354,12 @@ export const useFinanceStore = create<FinanceStore>()(
         ) {
           return acc + t.amount;
         }
-        // Expense for the account
+        // Expense for the account (amount is already negative)
         if (
           (t.type === "expense" && t.account === accountName) ||
           (t.type === "transfer" && t.fromAccount === accountName)
         ) {
-          return acc - t.amount;
+          return acc + t.amount;
         }
         return acc;
       }, 0);

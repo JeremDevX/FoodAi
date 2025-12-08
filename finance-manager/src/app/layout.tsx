@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -38,13 +38,29 @@ export default function RootLayout({
           content="#f8fafc"
           media="(prefers-color-scheme: light)"
         />
-        <title>Finance Manager - Gestion financière personnelle</title>
+        <title>Wealth Nexus - Gestion Patrimoniale</title>
         <meta
           name="description"
-          content="Gestionnaire financier personnel avec une interface utilisateur spectaculaire. Toutes vos données restent locales sur votre appareil."
+          content="Plateforme de gestion patrimoniale avancée. Analyse financière, confidentialité totale, expérience premium."
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const savedTheme = localStorage.getItem('finance-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+              })();
+            `,
+          }}
         />
       </head>
-      <body className="font-['Inter',_sans-serif] antialiased">
+      <body
+        className="font-sans antialiased"
+        style={{
+          background: "var(--bg-primary)",
+          color: "var(--text-primary)",
+        }}
+      >
         <ThemeProvider>
           <ErrorBoundary>
             <ClientLayout>{children}</ClientLayout>

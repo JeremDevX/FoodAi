@@ -8,6 +8,8 @@ const nextConfig = {
       },
     ],
   },
+  // Configuration Turbopack pour Next.js 16
+  turbopack: {},
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -15,7 +17,6 @@ const nextConfig = {
     };
     return config;
   },
-  turbopack: {},
 };
 
 module.exports = nextConfig;

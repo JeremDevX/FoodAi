@@ -1,57 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
-    extend: {
-      colors: {
-        // Variables CSS pour le thème
-        primary: 'var(--bg-primary)',
-        secondary: 'var(--bg-secondary)',
-        tertiary: 'var(--bg-tertiary)',
-        'text-primary': 'var(--text-primary)',
-        'text-secondary': 'var(--text-secondary)',
-        'text-tertiary': 'var(--text-tertiary)',
-        'border-primary': 'var(--border-primary)',
-        'border-secondary': 'var(--border-secondary)',
-        'color-success': 'var(--color-success)',
-        'color-danger': 'var(--color-danger)',
-        'color-warning': 'var(--color-warning)',
-        // WCAG theme colors
-        'wcag-primary': 'var(--wcag-primary-text)',
-        'wcag-secondary': 'var(--wcag-secondary-text)',
-        'wcag-tertiary': 'var(--wcag-tertiary-text)',
-        'wcag-success': 'var(--wcag-success)',
-        'wcag-warning': 'var(--wcag-warning)',
-        'wcag-error': 'var(--wcag-error)',
-        'wcag-info': 'var(--wcag-info)',
-        'wcag-background': 'var(--wcag-background)',
-        'wcag-surface': 'var(--wcag-surface)',
-        'wcag-surface-hover': 'var(--wcag-surface-hover)',
-        'wcag-border': 'var(--wcag-border)',
-        'wcag-focus': 'var(--wcag-focus)',
-        'wcag-nav-active': 'var(--wcag-nav-active)',
-        'wcag-nav-inactive': 'var(--wcag-nav-inactive)',
-        financial: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-        },
-        success: '#10b981',
-        warning: '#f59e0b',
-        danger: '#ef4444',
-      },
-    },
+    extend: {},
   },
   plugins: [],
-}
+};
