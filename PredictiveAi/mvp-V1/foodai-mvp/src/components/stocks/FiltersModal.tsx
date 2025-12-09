@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Modal from "../common/Modal";
 import Button from "../common/Button";
 import { Filter } from "lucide-react";
+import type { StockFilters } from "../../types/callbacks";
 
 interface FiltersModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onApply: (filters: any) => void;
+  onApply: (filters: StockFilters) => void;
 }
 
 const FiltersModal: React.FC<FiltersModalProps> = ({
@@ -14,7 +15,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   onClose,
   onApply,
 }) => {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<StockFilters>({
     status: "all",
     supplier: "all",
     stockLevel: "all",
@@ -26,7 +27,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   };
 
   const handleReset = () => {
-    const resetFilters = {
+    const resetFilters: StockFilters = {
       status: "all",
       supplier: "all",
       stockLevel: "all",
@@ -45,7 +46,12 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
           <select
             className="w-full px-3 py-2 border rounded-md"
             value={filters.status}
-            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                status: e.target.value as StockFilters["status"],
+              })
+            }
           >
             <option value="all">Tous les états</option>
             <option value="optimal">Optimal</option>
@@ -80,7 +86,10 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
             className="w-full px-3 py-2 border rounded-md"
             value={filters.stockLevel}
             onChange={(e) =>
-              setFilters({ ...filters, stockLevel: e.target.value })
+              setFilters({
+                ...filters,
+                stockLevel: e.target.value as StockFilters["stockLevel"],
+              })
             }
           >
             <option value="all">Tous les niveaux</option>

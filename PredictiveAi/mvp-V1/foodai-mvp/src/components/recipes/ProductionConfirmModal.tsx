@@ -31,7 +31,7 @@ const ProductionConfirmModal: React.FC<ProductionConfirmModalProps> = ({
   if (!recipe) return null;
 
   const costPerPortion =
-    recipe.ingredients.reduce((sum, _) => sum + 2.5, 0) /
+    recipe.ingredients.reduce((sum) => sum + 2.5, 0) /
     recipe.ingredients.length;
   const totalCost = costPerPortion * Number(quantity);
   const estimatedRevenue = totalCost * 4; // 300% margin

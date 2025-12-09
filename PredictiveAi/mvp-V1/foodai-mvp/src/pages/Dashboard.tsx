@@ -1,36 +1,15 @@
 import React, { useState } from "react";
-import Card from "../components/common/Card";
-import Badge from "../components/common/Badge";
 import Button from "../components/common/Button";
 import Modal from "../components/common/Modal";
 import InvoiceModal from "../components/dashboard/InvoiceModal";
 import MenuIdeasModal from "../components/dashboard/MenuIdeasModal";
-import { useToast } from "../context/ToastContext";
-import {
-  TrendingUp,
-  DollarSign,
-  Users,
-  AlertTriangle,
-  ShoppingBag,
-  Calendar,
-  FileText,
-  ChefHat,
-  Zap,
-} from "lucide-react";
-import { MOCK_PREDICTIONS, MOCK_DASHBOARD_ACTIVITY } from "../utils/mockData";
+import DashboardKPIs from "../components/dashboard/DashboardKPIs";
+import RecommendationsSection from "../components/dashboard/RecommendationsSection";
+import ActivityChart from "../components/dashboard/ActivityChart";
 import OrderGenerator from "../components/dashboard/OrderGenerator";
-import {
-  ComposedChart,
-  Line,
-  Area,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { useToast } from "../context/ToastContext";
+import { Calendar, FileText, ChefHat } from "lucide-react";
+import { MOCK_PREDICTIONS } from "../utils/mockData";
 import "./Dashboard.css";
 
 const Dashboard: React.FC = () => {
@@ -86,21 +65,57 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const handleGenerateOrders = () => {
+    if (selectedPredictionIds.length > 0) {
+      setShowOrderGenerator(true);
+    } else {
+      addToast(
+        "info",
+        "Sélectionnez des articles",
+        "Veuillez valider au moins une action."
+      );
+    }
+  };
+
   const todayDate = new Date().toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
   });
 
-  // Filter recommendations: if selection exists, pass only selected; otherwise pass all (or none? User flow usually implies checking specific things)
-  // Actually, OrderGenerator should receive EITHER the full list (if we want to bulk add) OR just the selected ones.
-  // Let's pass ONLY the selected ones to OrderGenerator.
-  const selectedPredictions = MOCK_PREDICTIONS.filter((pred) =>
-    selectedPredictionIds.includes(pred.id)
-  );
+  // Filter recommendations: pass all that are not selected (to show in list)
+  // But wait, the list usually shows pending actions.
+  // The original logic was: visiblePredictions = MOCK_PREDICTIONS.filter(pred => !selectedPredictionIds.includes(pred.id))
+  // BUT the map actually checked `isSelected` inside the map.
+  // Wait, let's look at the original code (lines 102-104 and 259-261):
+  // visiblePredictions excluded selectedIds.
+  // BUT inside the map: `const isSelected = selectedPredictionIds.includes(pred.id);`
+  // This implies visiblePredictions would NEVER be selected if we filter them out.
+  // Ah, the original code filtered them out of the list if selected?
+  // Line 102: `const visiblePredictions = MOCK_PREDICTIONS.filter((pred) => !selectedPredictionIds.includes(pred.id));`
+  // Then line 260: `visiblePredictions.map(...)`.
+  // So yes, selected items disappered from the list?
+  // BUT `handleTogglePrediction` (line 72) adds to selection.
+  // AND `OrderGenerator` (line 98) used `selectedPredictions` which are the ones in the ID list.
+  // So the workflow is: User clicks "Validate", it moves to "selected" state (and disappears from the main list?)
+  // Let's re-read the original render logic.
+  // Line 267: `${isSelected ? "border-optimal bg-green-50/10" : ""}`
+  // If `visiblePredictions` excludes selected, then `isSelected` is ALWAYS false inside the map.
+  // So the styling for "selected" state was unreachable code if the filter was active.
+  // UNLESS the intent was to show them but visually marked.
+  // However, line 102 was explicit.
+  // I will PRESERVE the `visiblePredictions` filter logic to maintain existing behavior,
+  // BUT I should check if I should pass `MOCK_PREDICTIONS` directly if I want to show selection state.
+  // Actually, if they disappear, the "Generated Orders" count updates.
+  // I think I'll pass `visiblePredictions` to `RecommendationsSection`.
 
   const visiblePredictions = MOCK_PREDICTIONS.filter(
     (pred) => !selectedPredictionIds.includes(pred.id)
+  );
+
+  // For OrderGenerator
+  const selectedPredictions = MOCK_PREDICTIONS.filter((pred) =>
+    selectedPredictionIds.includes(pred.id)
   );
 
   return (
@@ -135,206 +150,17 @@ const Dashboard: React.FC = () => {
         </div>
       </header>
 
-      {/* KPI Section 2.0 */}
-      <div className="kpi-grid">
-        <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-md">
-            <div className="kpi-icon blue">
-              <Users size={24} />
-            </div>
-            <span className="badge badge-optimal">+12% vs N-1</span>
-          </div>
-          <div className="kpi-content">
-            <span className="kpi-label">Couverts (Hier)</span>
-            <div className="kpi-value-row">
-              <span className="kpi-value">347</span>
-              <span className="text-secondary text-sm">/ 400 cap.</span>
-            </div>
-            {/* KPI Progress Bar */}
-            <div className="progress-bar">
-              <div
-                className="progress-fill blue"
-                style={{ width: "86%" }}
-              ></div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-md">
-            <div className="kpi-icon orange">
-              <DollarSign size={24} />
-            </div>
-            <Zap size={16} className="text-moderate" />
-          </div>
-          <div className="kpi-content">
-            <span className="kpi-label">Chiffre d'Affaires</span>
-            <div className="kpi-value-row">
-              <span className="kpi-value">4 892 €</span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill orange"
-                style={{ width: "65%" }}
-              ></div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-md">
-            <div className="kpi-icon green">
-              <TrendingUp size={24} />
-            </div>
-            <span className="badge badge-optimal">Prévision IA</span>
-          </div>
-          <div className="kpi-content">
-            <span className="kpi-label">Prévus Demain</span>
-            <div className="kpi-value-row">
-              <span className="kpi-value">420</span>
-              <span className="text-secondary text-sm">clients</span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill green"
-                style={{ width: "95%" }}
-              ></div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-md">
-            <div className="kpi-icon red">
-              <AlertTriangle size={24} />
-            </div>
-            <Badge label="Objectif AGEC" status="optimal" />
-          </div>
-          <div className="kpi-content">
-            <span className="kpi-label">Gaspillage Est.</span>
-            <div className="kpi-value-row">
-              <span className="kpi-value text-optimal">-2.3%</span>
-              <span className="text-secondary text-sm">cette semaine</span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill green"
-                style={{ width: "100%" }}
-              ></div>
-            </div>
-          </div>
-        </Card>
-      </div>
+      {/* KPI Section extracted */}
+      <DashboardKPIs />
 
       <div className="dashboard-main-grid">
-        {/* Left Column: Recommendations */}
-        <div className="recommendations-section">
-          <div className="flex justify-between items-center mb-md">
-            <h2 className="section-title mb-0 flex items-center gap-sm">
-              <Zap size={20} className="text-moderate" />
-              Actions Prioritaires
-            </h2>
-            <Button
-              size="sm"
-              variant={selectedPredictionIds.length > 0 ? "primary" : "outline"}
-              onClick={() => {
-                if (selectedPredictionIds.length > 0) {
-                  setShowOrderGenerator(true);
-                } else {
-                  addToast(
-                    "info",
-                    "Sélectionnez des articles",
-                    "Veuillez valider au moins une action."
-                  );
-                }
-              }}
-              icon={<ShoppingBag size={16} />}
-              className="shadow-md"
-            >
-              Générer Commandes ({selectedPredictionIds.length})
-            </Button>
-          </div>
-
-          <div className="recommendations-list">
-            {visiblePredictions.length > 0 ? (
-              visiblePredictions.map((pred) => {
-                const isSelected = selectedPredictionIds.includes(pred.id);
-                return (
-                  <Card
-                    key={pred.id}
-                    className={`recommendation-card ${
-                      pred.confidence > 0.9 ? "urgent" : "moderate"
-                    } ${isSelected ? "border-optimal bg-green-50/10" : ""}`}
-                  >
-                    <div className="rec-header">
-                      <div className="flex items-center gap-md">
-                        <div
-                          className={`status-indicator ${
-                            pred.confidence > 0.9 ? "urgent" : "moderate"
-                          }`}
-                        ></div>
-                        <div>
-                          <h3 className="rec-product-name">
-                            {pred.productName}
-                          </h3>
-                          <span className="rec-reason flex items-center gap-xs">
-                            <AlertTriangle
-                              size={12}
-                              className="text-secondary"
-                            />
-                            {pred.recommendation?.reason}
-                          </span>
-                        </div>
-                      </div>
-                      <Badge
-                        label={pred.confidence > 0.9 ? "Urgent" : "Modéré"}
-                        status={pred.confidence > 0.9 ? "urgent" : "moderate"}
-                      />
-                    </div>
-
-                    <div className="rec-details">
-                      <div className="rec-detail-item">
-                        <span className="label">Besoin</span>
-                        <span className="value text-primary">
-                          {pred.predictedConsumption} kg
-                        </span>
-                      </div>
-                      <div className="rec-detail-item">
-                        <span className="label">Fiabilité IA</span>
-                        <span className="value text-optimal">
-                          {(pred.confidence * 100).toFixed(0)}%
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="rec-action">
-                      <div className="rec-order-info">
-                        Commander{" "}
-                        <strong className="text-primary text-lg mx-1">
-                          {pred.recommendation?.quantity}
-                        </strong>{" "}
-                        unités
-                      </div>
-                      <Button
-                        size="sm"
-                        variant={isSelected ? "primary" : "outline"}
-                        onClick={() =>
-                          handleTogglePrediction(pred.id, pred.productName)
-                        }
-                      >
-                        {isSelected ? "Ajouté" : "Valider"}
-                      </Button>
-                    </div>
-                  </Card>
-                );
-              })
-            ) : (
-              <div className="p-8 text-center text-secondary border border-dashed border-gray-300 rounded-lg">
-                <p>Aucune action prioritaire en attente. Bon travail ! 🎉</p>
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Left Column: Recommendations extracted */}
+        <RecommendationsSection
+          predictions={visiblePredictions}
+          selectedIds={selectedPredictionIds}
+          onTogglePrediction={handleTogglePrediction}
+          onGenerateOrders={handleGenerateOrders}
+        />
 
         {showOrderGenerator && (
           <OrderGenerator
@@ -343,105 +169,9 @@ const Dashboard: React.FC = () => {
           />
         )}
 
-        {/* Right Column: Chart */}
+        {/* Right Column: Chart extracted */}
         <div className="chart-section">
-          <Card
-            title="📊 Activité & Prévisions"
-            className="h-full flex flex-col"
-          >
-            <div className="chart-container flex-1 min-h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={MOCK_DASHBOARD_ACTIVITY}>
-                  <defs>
-                    <linearGradient
-                      id="colorRevenue"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#218083" stopOpacity={0.1} />
-                      <stop offset="95%" stopColor="#218083" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#E6C2AD"
-                    opacity={0.5}
-                  />
-                  <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    dy={10}
-                    fontSize={12}
-                    tick={{ fill: "#627C7F" }}
-                  />
-                  <YAxis
-                    yAxisId="left"
-                    axisLine={false}
-                    tickLine={false}
-                    fontSize={12}
-                    tick={{ fill: "#627C7F" }}
-                  />
-                  <YAxis
-                    yAxisId="right"
-                    orientation="right"
-                    axisLine={false}
-                    tickLine={false}
-                    fontSize={12}
-                    tick={{ fill: "#627C7F" }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#FFFFFD",
-                      borderRadius: "8px",
-                      border: "1px solid #E6C2AD",
-                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                      color: "#134252",
-                    }}
-                  />
-                  <Legend iconType="circle" />
-                  <Area
-                    yAxisId="left"
-                    type="monotone"
-                    dataKey="revenue"
-                    fill="url(#colorRevenue)"
-                    stroke="#218083"
-                    name="CA Prévisionnel (€)"
-                  />
-                  <Bar
-                    yAxisId="right"
-                    dataKey="reservations"
-                    barSize={20}
-                    fill="#1F212F"
-                    radius={[4, 4, 0, 0]}
-                    name="Réservations"
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="consumption"
-                    stroke="#A84B2F"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    name="Sortie Stock (kg)"
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="chart-legend">
-              <h4 className="text-sm font-bold mb-2 flex items-center gap-sm">
-                <Zap size={14} className="text-moderate" /> Insight IA
-              </h4>
-              <p className="text-sm text-secondary">
-                Forte corrélation détectée : +10% de réservations entraîne{" "}
-                <strong>+8kg de sortie stock</strong>. Anticipez vos commandes
-                pour Samedi.
-              </p>
-            </div>
-          </Card>
+          <ActivityChart />
         </div>
       </div>
 

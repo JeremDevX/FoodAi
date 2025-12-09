@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Modal from "../common/Modal";
 import Button from "../common/Button";
 import { Settings, Target, TrendingUp, AlertCircle } from "lucide-react";
+import type { AnalyticsSettings } from "../../types/callbacks";
 
 interface CustomizeAnalyticsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (settings: any) => void;
+  onSave: (settings: AnalyticsSettings) => void;
 }
 
 const CustomizeAnalyticsModal: React.FC<CustomizeAnalyticsModalProps> = ({

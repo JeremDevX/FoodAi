@@ -1,51 +1,34 @@
-export type ProductStatus = "optimal" | "moderate" | "urgent" | "neutral";
-export type Unit = "kg" | "L" | "dz" | "pcs";
+// ============================================
+// Re-export types from the central types module
+// This maintains backward compatibility with existing imports
+// ============================================
+import type {
+  ProductStatus as _ProductStatus,
+  Unit as _Unit,
+  Supplier as _Supplier,
+  Product as _Product,
+  Prediction as _Prediction,
+  Recipe as _Recipe,
+  AnalyticsData as _AnalyticsData,
+  DashboardActivity as _DashboardActivity,
+} from "../types";
 
-export const getStatusColor = (status: ProductStatus) => {
-  switch (status) {
-    case "urgent":
-      return "var(--color-urgent)";
-    case "moderate":
-      return "var(--color-moderate)";
-    case "optimal":
-      return "var(--color-optimal)";
-    default:
-      return "var(--color-text-secondary)";
-  }
-};
+// Re-export types for backward compatibility
+export type ProductStatus = _ProductStatus;
+export type Unit = _Unit;
+export type Supplier = _Supplier;
+export type Product = _Product;
+export type Prediction = _Prediction;
+export type Recipe = _Recipe;
+export type AnalyticsData = _AnalyticsData;
+export type DashboardActivity = _DashboardActivity;
 
-export interface Supplier {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-}
+// Re-export utility functions
+export { getStatusColor, getProductStatus as getStatus } from "../types";
 
-export interface Product {
-  id: string;
-  name: string;
-  category: string;
-  currentStock: number;
-  unit: Unit;
-  minThreshold: number;
-  supplierId: string;
-  pricePerUnit: number;
-  lastDelivery?: string;
-}
-
-export interface Prediction {
-  id: string;
-  productId: string;
-  productName: string;
-  predictedDate: string; // ISO date
-  predictedConsumption: number;
-  confidence: number;
-  recommendation?: {
-    action: "buy" | "wait" | "reduce";
-    quantity: number;
-    reason: string;
-  };
-}
+// ============================================
+// MOCK DATA
+// ============================================
 
 // MOCK DATA
 
@@ -406,12 +389,6 @@ export const MOCK_PREDICTIONS: Prediction[] = [
   },
 ];
 
-export const getStatus = (product: Product): ProductStatus => {
-  if (product.currentStock <= product.minThreshold * 0.7) return "urgent";
-  if (product.currentStock <= product.minThreshold) return "moderate";
-  return "optimal";
-};
-
 // ANALYTICS DATA
 export const MOCK_ANALYTICS = {
   wasteStats: {
@@ -463,18 +440,6 @@ export const MOCK_DASHBOARD_ACTIVITY = [
 ];
 
 // RECIPES DATA (Anti-Waste)
-export interface Recipe {
-  id: string;
-  name: string;
-  category: "Plat" | "Dessert" | "Entrée";
-  prepTime: number; // minutes
-  ingredients: {
-    productId: string;
-    quantity: number; // amount required per portion/yield
-  }[];
-  lastMade?: string; // ISO date if made recently
-}
-
 export const MOCK_RECIPES: Recipe[] = [
   {
     id: "r1",

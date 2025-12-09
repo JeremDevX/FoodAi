@@ -9,6 +9,7 @@ import FiltersModal from "../components/stocks/FiltersModal";
 import { Search, Filter, Plus, ShoppingCart } from "lucide-react";
 import { MOCK_PRODUCTS, getStatus, type Product } from "../utils/mockData";
 import { useToast } from "../context/ToastContext";
+import type { StockFilters } from "../types/callbacks";
 import "./Stocks.css";
 
 const Stocks: React.FC = () => {
@@ -19,7 +20,7 @@ const Stocks: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
-  const [advancedFilters, setAdvancedFilters] = useState({
+  const [advancedFilters, setAdvancedFilters] = useState<StockFilters>({
     status: "all",
     supplier: "all",
     stockLevel: "all",
@@ -83,7 +84,7 @@ const Stocks: React.FC = () => {
     );
   };
 
-  const handleApplyFilters = (filters: any) => {
+  const handleApplyFilters = (filters: StockFilters) => {
     setAdvancedFilters(filters);
     const activeFiltersCount = Object.values(filters).filter(
       (v) => v !== "all"

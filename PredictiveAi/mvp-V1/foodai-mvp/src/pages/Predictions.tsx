@@ -3,6 +3,7 @@ import Card from "../components/common/Card";
 import Badge from "../components/common/Badge";
 import Button from "../components/common/Button";
 import PredictionDetailModal from "../components/predictions/PredictionDetailModal";
+import CalendarView from "../components/predictions/CalendarView";
 import {
   ShoppingCart,
   Mail,
@@ -12,8 +13,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { MOCK_PREDICTIONS, type Prediction } from "../utils/mockData";
-import { format, parseISO, startOfWeek, addDays, isSameDay } from "date-fns";
-import { fr } from "date-fns/locale";
 import { useToast } from "../context/ToastContext";
 import "./Predictions.css";
 
@@ -251,63 +250,6 @@ const Predictions: React.FC = () => {
         prediction={selectedPrediction}
         onOrder={handleOrderFromModal}
       />
-    </div>
-  );
-};
-
-// Internal Calendar Component
-
-const CalendarView: React.FC<{ predictions: Prediction[] }> = ({
-  predictions,
-}) => {
-  const today = new Date();
-  const startDate = startOfWeek(today, { weekStartsOn: 1 }); // Monday
-  const weekDays = Array.from({ length: 7 }).map((_, i) =>
-    addDays(startDate, i)
-  );
-
-  return (
-    <div className="calendar-view">
-      <div className="calendar-grid">
-        {weekDays.map((date) => {
-          const dayPreds = predictions.filter((p) =>
-            isSameDay(parseISO(p.predictedDate), date)
-          );
-          const isToday = isSameDay(date, today);
-
-          return (
-            <div
-              key={date.toISOString()}
-              className={`calendar-day ${isToday ? "today" : ""}`}
-            >
-              <div className="day-header">
-                <span className="day-name">
-                  {format(date, "EEEE", { locale: fr })}
-                </span>
-                <span className="day-number">{format(date, "d")}</span>
-              </div>
-              <div className="day-content">
-                {dayPreds.map((pred) => (
-                  <div
-                    key={pred.id}
-                    className={`cal-event ${
-                      pred.confidence > 0.9 ? "urgent" : "moderate"
-                    }`}
-                  >
-                    <span className="cal-prod truncate">
-                      {pred.productName}
-                    </span>
-                    <span className="cal-qty">
-                      {pred.recommendation?.quantity}u
-                    </span>
-                  </div>
-                ))}
-                {dayPreds.length === 0 && <span className="no-events">-</span>}
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 };

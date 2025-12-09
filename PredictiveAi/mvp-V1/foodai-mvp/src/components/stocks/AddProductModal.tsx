@@ -3,11 +3,13 @@ import Modal from "../common/Modal";
 import Button from "../common/Button";
 import Input from "../common/Input";
 import { Package, DollarSign, AlertCircle } from "lucide-react";
+import type { NewProduct } from "../../types/callbacks";
+import type { Unit } from "../../types";
 
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (product: any) => void;
+  onAdd: (product: NewProduct) => void;
 }
 
 const AddProductModal: React.FC<AddProductModalProps> = ({
@@ -19,7 +21,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
     name: "",
     category: "Légumes",
     currentStock: "",
-    unit: "kg",
+    unit: "kg" as Unit,
     minThreshold: "",
     pricePerUnit: "",
   });
@@ -92,7 +94,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
               className="w-full px-3 py-2 border rounded-md"
               value={formData.unit}
               onChange={(e) =>
-                setFormData({ ...formData, unit: e.target.value })
+                setFormData({ ...formData, unit: e.target.value as Unit })
               }
             >
               <option value="kg">kg</option>

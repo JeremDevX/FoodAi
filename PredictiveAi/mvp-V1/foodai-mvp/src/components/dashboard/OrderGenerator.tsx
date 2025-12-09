@@ -12,9 +12,22 @@ import {
 } from "lucide-react";
 import {
   type Prediction,
+  type Supplier,
   MOCK_SUPPLIERS,
   MOCK_PRODUCTS,
 } from "../../utils/mockData";
+
+interface OrderItem {
+  productName: string;
+  quantity: number;
+  unit: string;
+  price: number;
+}
+
+interface SupplierOrder {
+  supplier: Supplier | undefined;
+  items: OrderItem[];
+}
 
 interface OrderGeneratorProps {
   recommendations: Prediction[];
@@ -30,7 +43,9 @@ const OrderGenerator: React.FC<OrderGeneratorProps> = ({
   );
 
   // Group recommendations by supplier
-  const ordersBySupplier = recommendations.reduce((acc, pred) => {
+  const ordersBySupplier = recommendations.reduce<
+    Record<string, SupplierOrder>
+  >((acc, pred) => {
     if (pred.recommendation?.action !== "buy") return acc;
 
     const product = MOCK_PRODUCTS.find((p) => p.id === pred.productId);
@@ -50,7 +65,7 @@ const OrderGenerator: React.FC<OrderGeneratorProps> = ({
       price: product.pricePerUnit * pred.recommendation.quantity,
     });
     return acc;
-  }, {} as Record<string, any>);
+  }, {});
 
   const handleSend = () => {
     setStep("sending");
@@ -109,7 +124,7 @@ const OrderGenerator: React.FC<OrderGeneratorProps> = ({
               Aucune commande nécessaire pour le moment.
             </div>
           ) : (
-            Object.values(ordersBySupplier).map((order: any, idx) => (
+            Object.values(ordersBySupplier).map((order: SupplierOrder, idx) => (
               <div
                 key={idx}
                 className="border border-border rounded-lg p-4 bg-white"
@@ -130,7 +145,7 @@ const OrderGenerator: React.FC<OrderGeneratorProps> = ({
                   />
                 </div>
                 <div className="space-y-2">
-                  {order.items.map((item: any, i: number) => (
+                  {order.items.map((item: OrderItem, i: number) => (
                     <div key={i} className="flex justify-between text-sm">
                       <span>
                         {item.quantity} {item.unit} x {item.productName}
@@ -145,7 +160,7 @@ const OrderGenerator: React.FC<OrderGeneratorProps> = ({
                   <span className="font-bold text-lg">
                     Total:{" "}
                     {order.items
-                      .reduce((sum: number, i: any) => sum + i.price, 0)
+                      .reduce((sum: number, i: OrderItem) => sum + i.price, 0)
                       .toFixed(2)}
                     €
                   </span>

@@ -441,9 +441,16 @@ button {
   padding: var(--spacing-lg);
   background: var(--color-surface);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--color-border);
   margin-bottom: var(--spacing-xl);
+  position: sticky;
+  top: calc(-1 * var(--spacing-xl) + 8px);
+  z-index: 10;
+  margin-top: calc(-1 * var(--spacing-xl));
+  margin-left: calc(-1 * var(--spacing-xl));
+  margin-right: calc(-1 * var(--spacing-xl));
+  padding-top: calc(var(--spacing-xl) + var(--spacing-lg));
 }
 
 .glass-header {

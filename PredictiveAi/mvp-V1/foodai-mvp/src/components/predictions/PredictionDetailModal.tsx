@@ -18,6 +18,11 @@ const PredictionDetailModal: React.FC<PredictionDetailModalProps> = ({
   prediction,
   onOrder,
 }) => {
+  // Stable mock values for display purposes
+  // (In production, these would come from real data)
+  const historyDays = 75;
+  const currentStock = 4;
+
   if (!prediction) return null;
 
   const estimatedCost = (prediction.recommendation?.quantity || 0) * 2.4;
@@ -56,7 +61,7 @@ const PredictionDetailModal: React.FC<PredictionDetailModalProps> = ({
               </p>
               <p className="text-xs text-blue-600 mt-2">
                 Fiabilité: {(prediction.confidence * 100).toFixed(0)}% basée sur{" "}
-                {Math.floor(Math.random() * 30 + 60)} jours d'historique
+                {historyDays} jours d'historique
               </p>
             </div>
           </div>
@@ -84,9 +89,7 @@ const PredictionDetailModal: React.FC<PredictionDetailModalProps> = ({
                 Stock actuel
               </span>
             </div>
-            <p className="text-2xl font-bold text-urgent">
-              {Math.floor(Math.random() * 5 + 2)} kg
-            </p>
+            <p className="text-2xl font-bold text-urgent">{currentStock} kg</p>
             <p className="text-xs text-secondary mt-1">Rupture prévue demain</p>
           </div>
 

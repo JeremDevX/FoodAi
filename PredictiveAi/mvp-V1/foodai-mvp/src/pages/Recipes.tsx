@@ -5,10 +5,17 @@ import Badge from "../components/common/Badge";
 import RecordProductionModal from "../components/recipes/RecordProductionModal";
 import ProductionConfirmModal from "../components/recipes/ProductionConfirmModal";
 import { Clock, ChefHat, CheckCircle, Leaf, AlertTriangle } from "lucide-react";
-import { MOCK_RECIPES, MOCK_PRODUCTS, type Recipe } from "../utils/mockData";
+import { MOCK_RECIPES, type Recipe } from "../utils/mockData";
 import { format, parseISO, isSameWeek } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useToast } from "../context/ToastContext";
+import type { ProductionRecord } from "../types/callbacks";
+import {
+  getProductNameForRecipe as getProductName,
+  getProductUnitForRecipe as getProductUnit,
+  calculateMaxYield,
+  calculateIngredientCost,
+} from "../services/recipeService";
 import "./Recipes.css";
 
 const Recipes: React.FC = () => {
@@ -22,7 +29,7 @@ const Recipes: React.FC = () => {
   const [selectedMaxYield, setSelectedMaxYield] = useState(0);
   const [producedRecipes, setProducedRecipes] = useState<string[]>([]);
 
-  const handleRecordProduction = (data: any) => {
+  const handleRecordProduction = (data: ProductionRecord) => {
     addToast(
       "success",
       "Production enregistrée",
@@ -47,12 +54,6 @@ const Recipes: React.FC = () => {
     }
   };
 
-  // Helper to find product name by ID
-  const getProductName = (id: string) =>
-    MOCK_PRODUCTS.find((p) => p.id === id)?.name || "Inconnu";
-  const getProductUnit = (id: string) =>
-    MOCK_PRODUCTS.find((p) => p.id === id)?.unit || "";
-
   // 1. Filter: Recipes made this week
   const historyRecipes = MOCK_RECIPES.filter(
     (r) =>
@@ -60,19 +61,11 @@ const Recipes: React.FC = () => {
       isSameWeek(parseISO(r.lastMade), new Date(), { weekStartsOn: 1 })
   );
 
-  // 2. Logic: Calculate feasible quantity based on stock
-  const antiWasteRecipes = MOCK_RECIPES.map((recipe) => {
-    // Determine max portions possible
-    const maxPortions = Math.min(
-      ...recipe.ingredients.map((ing) => {
-        const product = MOCK_PRODUCTS.find((p) => p.id === ing.productId);
-        if (!product) return 0;
-        return Math.floor(product.currentStock / ing.quantity);
-      })
-    );
-
-    return { ...recipe, maxYield: maxPortions };
-  })
+  // 2. Logic: Calculate feasible quantity based on stock (using service)
+  const antiWasteRecipes = MOCK_RECIPES.map((recipe) => ({
+    ...recipe,
+    maxYield: calculateMaxYield(recipe),
+  }))
     .filter((r) => r.maxYield > 0) // Only show possible recipes
     .sort((a, b) => b.maxYield - a.maxYield); // Sort by quantity possible
 
@@ -204,16 +197,7 @@ const Recipes: React.FC = () => {
                     <div className="cost-col">
                       <span className="cost-label">Coût Matière</span>
                       <span className="cost-value">
-                        {recipe.ingredients
-                          .reduce((sum, ing) => {
-                            const p = MOCK_PRODUCTS.find(
-                              (p) => p.id === ing.productId
-                            );
-                            return (
-                              sum + (p ? p.pricePerUnit * ing.quantity : 0)
-                            );
-                          }, 0)
-                          .toFixed(2)}
+                        {calculateIngredientCost(recipe.ingredients).toFixed(2)}
                         €
                       </span>
                     </div>
@@ -222,14 +206,7 @@ const Recipes: React.FC = () => {
                       <span className="cost-value margin">
                         +
                         {(
-                          recipe.ingredients.reduce((sum, ing) => {
-                            const p = MOCK_PRODUCTS.find(
-                              (p) => p.id === ing.productId
-                            );
-                            return (
-                              sum + (p ? p.pricePerUnit * ing.quantity : 0)
-                            );
-                          }, 0) * 3
+                          calculateIngredientCost(recipe.ingredients) * 3
                         ).toFixed(2)}
                         €
                       </span>

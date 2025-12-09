@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
@@ -9,15 +10,7 @@ import {
 import type { ReactNode } from "react";
 import { CheckCircle, Info, X } from "lucide-react";
 import "../components/common/Toast.css";
-
-type ToastType = "success" | "info";
-
-interface Toast {
-  id: number;
-  type: ToastType;
-  title: string;
-  message: string;
-}
+import type { Toast, ToastType } from "../types";
 
 interface ToastContextType {
   addToast: (type: ToastType, title: string, message: string) => void;
@@ -29,7 +22,19 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const timeoutsRef = useRef<Map<number, number>>(new Map());
+  const timeoutsRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(
+    new Map()
+  );
+
+  const removeToast = useCallback((id: number) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+    // Check ref.current immediately
+    const timeout = timeoutsRef.current.get(id);
+    if (timeout) {
+      clearTimeout(timeout);
+      timeoutsRef.current.delete(id);
+    }
+  }, []);
 
   const addToast = useCallback(
     (type: ToastType, title: string, message: string) => {
@@ -38,6 +43,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
 
       // Auto remove after 4 seconds
       const timeout = setTimeout(() => {
+        // We use functional update, so we don't depend on 'toasts' state
         setToasts((prev) => prev.filter((t) => t.id !== id));
         timeoutsRef.current.delete(id);
       }, 4000);
@@ -47,20 +53,12 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
     []
   );
 
-  const removeToast = useCallback((id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-    const timeout = timeoutsRef.current.get(id);
-    if (timeout) {
-      clearTimeout(timeout);
-      timeoutsRef.current.delete(id);
-    }
-  }, []);
-
   // Cleanup all timeouts on unmount
   useEffect(() => {
+    const currentTimeouts = timeoutsRef.current;
     return () => {
-      timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
-      timeoutsRef.current.clear();
+      currentTimeouts.forEach((timeout) => clearTimeout(timeout));
+      currentTimeouts.clear();
     };
   }, []);
 

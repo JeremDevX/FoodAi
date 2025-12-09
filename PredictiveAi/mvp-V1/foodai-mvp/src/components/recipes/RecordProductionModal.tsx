@@ -3,11 +3,12 @@ import Modal from "../common/Modal";
 import Button from "../common/Button";
 import Input from "../common/Input";
 import { ChefHat, Clock, Users } from "lucide-react";
+import type { ProductionRecord } from "../../types/callbacks";
 
 interface RecordProductionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRecord: (data: any) => void;
+  onRecord: (data: ProductionRecord) => void;
 }
 
 const RecordProductionModal: React.FC<RecordProductionModalProps> = ({
