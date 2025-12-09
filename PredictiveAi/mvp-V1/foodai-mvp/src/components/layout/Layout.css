@@ -1,0 +1,18 @@
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.main-content-wrapper {
+  flex: 1;
+  margin-left: 260px; /* Width of sidebar */
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  padding: var(--spacing-xl);
+  flex: 1;
+  overflow-y: auto;
+}

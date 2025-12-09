@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../components/common/Card";
 import Badge from "../components/common/Badge";
 import Button from "../components/common/Button";
+import Modal from "../components/common/Modal";
+import InvoiceModal from "../components/dashboard/InvoiceModal";
+import MenuIdeasModal from "../components/dashboard/MenuIdeasModal";
 import { useToast } from "../context/ToastContext";
 import {
   TrendingUp,
@@ -14,7 +17,7 @@ import {
   ChefHat,
   Zap,
 } from "lucide-react";
-import { MOCK_PREDICTIONS } from "../utils/mockData";
+import { MOCK_PREDICTIONS, MOCK_DASHBOARD_ACTIVITY } from "../utils/mockData";
 import OrderGenerator from "../components/dashboard/OrderGenerator";
 import {
   ComposedChart,
@@ -31,42 +34,57 @@ import {
 import "./Dashboard.css";
 
 const Dashboard: React.FC = () => {
-  const [showOrderGenerator, setShowOrderGenerator] = React.useState(false);
+  const [showOrderGenerator, setShowOrderGenerator] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+  const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
+  const [selectedPredictionIds, setSelectedPredictionIds] = useState<string[]>(
+    []
+  );
+
   const { addToast } = useToast();
 
   const handleScanInvoice = () => {
+    setIsInvoiceModalOpen(true);
+  };
+
+  const handleValidateInvoice = () => {
     addToast(
-      "info",
-      "Analyse en cours...",
-      "Traitement de la facture Rungis #FAC-2024..."
+      "success",
+      "Facture Intégrée",
+      "Les stocks de Tomates et Mozzarella ont été mis à jour."
     );
-    setTimeout(() => {
-      addToast(
-        "success",
-        "Analyse Terminée",
-        "12 produits identifiés et stocks mis à jour."
-      );
-    }, 2000);
+    setIsInvoiceModalOpen(false);
   };
 
   const handleMenuGen = () => {
-    addToast(
-      "success",
-      "Menu du Jour Généré",
-      "Basé sur les stocks à date courte (Tomates, Mozza). Envoyé à l'imprimante."
-    );
+    setIsMenuModalOpen(true);
   };
 
-  // Advanced Mock Data for Composed Chart
-  const data = [
-    { name: "Lun", revenue: 4000, reservations: 120, consumption: 45 },
-    { name: "Mar", revenue: 3000, reservations: 80, consumption: 32 },
-    { name: "Mer", revenue: 5500, reservations: 160, consumption: 68 },
-    { name: "Jeu", revenue: 4500, reservations: 110, consumption: 51 },
-    { name: "Ven", revenue: 8000, reservations: 210, consumption: 85 },
-    { name: "Sam", revenue: 9500, reservations: 240, consumption: 105 },
-    { name: "Dim", revenue: 7000, reservations: 190, consumption: 78 },
-  ];
+  const handleValidateMenu = () => {
+    addToast(
+      "success",
+      "Menu Validé & Imprimé",
+      "La production a été planifiée pour demain."
+    );
+    setIsMenuModalOpen(false);
+  };
+
+  const handleTogglePrediction = (id: string, productName: string) => {
+    const isCurrentlySelected = selectedPredictionIds.includes(id);
+
+    if (isCurrentlySelected) {
+      // Remove from selection
+      setSelectedPredictionIds((prev) => prev.filter((pId) => pId !== id));
+    } else {
+      // Add to selection
+      setSelectedPredictionIds((prev) => [...prev, id]);
+      addToast(
+        "success",
+        "Ajouté à la commande",
+        `${productName} ajouté au panier.`
+      );
+    }
+  };
 
   const todayDate = new Date().toLocaleDateString("fr-FR", {
     weekday: "long",
@@ -74,18 +92,29 @@ const Dashboard: React.FC = () => {
     month: "long",
   });
 
+  // Filter recommendations: if selection exists, pass only selected; otherwise pass all (or none? User flow usually implies checking specific things)
+  // Actually, OrderGenerator should receive EITHER the full list (if we want to bulk add) OR just the selected ones.
+  // Let's pass ONLY the selected ones to OrderGenerator.
+  const selectedPredictions = MOCK_PREDICTIONS.filter((pred) =>
+    selectedPredictionIds.includes(pred.id)
+  );
+
+  const visiblePredictions = MOCK_PREDICTIONS.filter(
+    (pred) => !selectedPredictionIds.includes(pred.id)
+  );
+
   return (
     <div className="dashboard-container">
       <header className="page-header glass-header">
         <div>
-          <h1 className="page-title text-2xl">Bienvenue, Jean ! 👋</h1>
-          <p className="page-subtitle flex items-center gap-2">
+          <h1 className="page-title">Bienvenue, Jean ! 👋</h1>
+          <p className="page-subtitle flex items-center gap-sm">
             <Calendar size={14} /> {todayDate} • Paris • ☀️ 18°C
           </p>
         </div>
         <div className="header-actions">
           {/* Quick Actions Toolbar */}
-          <div className="flex gap-2">
+          <div className="flex gap-sm">
             <Button
               variant="outline"
               size="sm"
@@ -109,24 +138,22 @@ const Dashboard: React.FC = () => {
       {/* KPI Section 2.0 */}
       <div className="kpi-grid">
         <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-2">
-            <div className="kpi-icon bg-blue-100/50 p-2 rounded-lg">
-              <Users size={24} className="text-blue-600" />
+          <div className="flex justify-between items-start mb-md">
+            <div className="kpi-icon blue">
+              <Users size={24} />
             </div>
-            <span className="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-full">
-              +12% vs N-1
-            </span>
+            <span className="badge badge-optimal">+12% vs N-1</span>
           </div>
           <div className="kpi-content">
-            <span className="kpi-label text-secondary">Couverts (Hier)</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-bold text-primary">347</span>
-              <span className="text-sm text-secondary">/ 400 cap.</span>
+            <span className="kpi-label">Couverts (Hier)</span>
+            <div className="kpi-value-row">
+              <span className="kpi-value">347</span>
+              <span className="text-secondary text-sm">/ 400 cap.</span>
             </div>
             {/* KPI Progress Bar */}
-            <div className="w-full bg-gray-100 h-1.5 rounded-full mt-3 overflow-hidden">
+            <div className="progress-bar">
               <div
-                className="bg-blue-500 h-1.5 rounded-full"
+                className="progress-fill blue"
                 style={{ width: "86%" }}
               ></div>
             </div>
@@ -134,20 +161,20 @@ const Dashboard: React.FC = () => {
         </Card>
 
         <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-2">
-            <div className="kpi-icon bg-orange-100/50 p-2 rounded-lg">
-              <DollarSign size={24} className="text-orange-600" />
+          <div className="flex justify-between items-start mb-md">
+            <div className="kpi-icon orange">
+              <DollarSign size={24} />
             </div>
-            <Zap size={16} className="text-orange-400 fill-orange-400" />
+            <Zap size={16} className="text-moderate" />
           </div>
           <div className="kpi-content">
-            <span className="kpi-label text-secondary">Chiffre d'Affaires</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-bold text-primary">4 892 €</span>
+            <span className="kpi-label">Chiffre d'Affaires</span>
+            <div className="kpi-value-row">
+              <span className="kpi-value">4 892 €</span>
             </div>
-            <div className="w-full bg-gray-100 h-1.5 rounded-full mt-3 overflow-hidden">
+            <div className="progress-bar">
               <div
-                className="bg-orange-500 h-1.5 rounded-full"
+                className="progress-fill orange"
                 style={{ width: "65%" }}
               ></div>
             </div>
@@ -155,49 +182,43 @@ const Dashboard: React.FC = () => {
         </Card>
 
         <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-2">
-            <div className="kpi-icon bg-green-100/50 p-2 rounded-lg">
-              <TrendingUp size={24} className="text-green-600" />
+          <div className="flex justify-between items-start mb-md">
+            <div className="kpi-icon green">
+              <TrendingUp size={24} />
             </div>
-            <span className="text-xs font-bold px-2 py-1 bg-blue-50 text-blue-700 rounded-full">
-              Prévision IA
-            </span>
+            <span className="badge badge-optimal">Prévision IA</span>
           </div>
           <div className="kpi-content">
-            <span className="kpi-label text-secondary">Prévus Demain</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-bold text-primary">420</span>
-              <span className="text-sm text-secondary">clients</span>
+            <span className="kpi-label">Prévus Demain</span>
+            <div className="kpi-value-row">
+              <span className="kpi-value">420</span>
+              <span className="text-secondary text-sm">clients</span>
             </div>
-            <div className="w-full bg-gray-100 h-1.5 rounded-full mt-3 overflow-hidden">
+            <div className="progress-bar">
               <div
-                className="bg-green-500 h-1.5 rounded-full relative overflow-hidden"
+                className="progress-fill green"
                 style={{ width: "95%" }}
-              >
-                <div className="absolute inset-0 bg-white/30 w-full h-full animate-shimmer"></div>
-              </div>
+              ></div>
             </div>
           </div>
         </Card>
 
         <Card className="kpi-card hover-lift">
-          <div className="flex justify-between items-start mb-2">
-            <div className="kpi-icon bg-red-100/50 p-2 rounded-lg">
-              <AlertTriangle size={24} className="text-red-600" />
+          <div className="flex justify-between items-start mb-md">
+            <div className="kpi-icon red">
+              <AlertTriangle size={24} />
             </div>
             <Badge label="Objectif AGEC" status="optimal" />
           </div>
           <div className="kpi-content">
-            <span className="kpi-label text-secondary">Gaspillage Est.</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-bold text-primary text-green-600">
-                -2.3%
-              </span>
-              <span className="text-sm text-secondary">cette semaine</span>
+            <span className="kpi-label">Gaspillage Est.</span>
+            <div className="kpi-value-row">
+              <span className="kpi-value text-optimal">-2.3%</span>
+              <span className="text-secondary text-sm">cette semaine</span>
             </div>
-            <div className="w-full bg-gray-100 h-1.5 rounded-full mt-3 overflow-hidden">
+            <div className="progress-bar">
               <div
-                className="bg-green-600 h-1.5 rounded-full"
+                className="progress-fill green"
                 style={{ width: "100%" }}
               ></div>
             </div>
@@ -208,94 +229,116 @@ const Dashboard: React.FC = () => {
       <div className="dashboard-main-grid">
         {/* Left Column: Recommendations */}
         <div className="recommendations-section">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="section-title mb-0 flex items-center gap-2">
-              <Zap size={20} className="text-yellow-500 fill-yellow-500" />
+          <div className="flex justify-between items-center mb-md">
+            <h2 className="section-title mb-0 flex items-center gap-sm">
+              <Zap size={20} className="text-moderate" />
               Actions Prioritaires
             </h2>
             <Button
               size="sm"
-              variant="primary"
-              onClick={() => setShowOrderGenerator(true)}
+              variant={selectedPredictionIds.length > 0 ? "primary" : "outline"}
+              onClick={() => {
+                if (selectedPredictionIds.length > 0) {
+                  setShowOrderGenerator(true);
+                } else {
+                  addToast(
+                    "info",
+                    "Sélectionnez des articles",
+                    "Veuillez valider au moins une action."
+                  );
+                }
+              }}
               icon={<ShoppingBag size={16} />}
-              className="shadow-lg shadow-blue-500/20"
+              className="shadow-md"
             >
-              Générer Commandes
+              Générer Commandes ({selectedPredictionIds.length})
             </Button>
           </div>
 
           <div className="recommendations-list">
-            {MOCK_PREDICTIONS.map((pred) => (
-              <Card
-                key={pred.id}
-                className="recommendation-card border-l-4 border-l-blue-500"
-              >
-                <div className="rec-header">
-                  <div className="flex items-center gap-md">
-                    <div
-                      className={`status-indicator ${
-                        pred.confidence > 0.9 ? "urgent" : "moderate"
-                      }`}
-                    ></div>
-                    <div>
-                      <h3 className="rec-product-name text-lg group-hover:text-blue-600 transition-colors">
-                        {pred.productName}
-                      </h3>
-                      <span className="rec-reason flex items-center gap-1">
-                        <AlertTriangle size={12} className="text-secondary" />
-                        {pred.recommendation?.reason}
-                      </span>
-                    </div>
-                  </div>
-                  <Badge
-                    label={pred.confidence > 0.9 ? "Urgent" : "Modéré"}
-                    status={pred.confidence > 0.9 ? "urgent" : "moderate"}
-                  />
-                </div>
-
-                <div className="rec-details grid grid-cols-2 gap-4 mt-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100">
-                  <div className="rec-detail-item">
-                    <span className="label text-xs uppercase tracking-wider">
-                      Besoin
-                    </span>
-                    <span className="value font-bold text-primary">
-                      {pred.predictedConsumption} kg
-                    </span>
-                  </div>
-                  <div className="rec-detail-item">
-                    <span className="label text-xs uppercase tracking-wider">
-                      Fiabilité IA
-                    </span>
-                    <span className="value font-bold text-green-600">
-                      {(pred.confidence * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                </div>
-
-                <div className="rec-action mt-4 flex items-center justify-between">
-                  <div className="rec-order-info text-sm">
-                    Commander{" "}
-                    <strong className="text-blue-600 text-lg mx-1">
-                      {pred.recommendation?.quantity}
-                    </strong>{" "}
-                    unités
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600"
+            {visiblePredictions.length > 0 ? (
+              visiblePredictions.map((pred) => {
+                const isSelected = selectedPredictionIds.includes(pred.id);
+                return (
+                  <Card
+                    key={pred.id}
+                    className={`recommendation-card ${
+                      pred.confidence > 0.9 ? "urgent" : "moderate"
+                    } ${isSelected ? "border-optimal bg-green-50/10" : ""}`}
                   >
-                    Valider
-                  </Button>
-                </div>
-              </Card>
-            ))}
+                    <div className="rec-header">
+                      <div className="flex items-center gap-md">
+                        <div
+                          className={`status-indicator ${
+                            pred.confidence > 0.9 ? "urgent" : "moderate"
+                          }`}
+                        ></div>
+                        <div>
+                          <h3 className="rec-product-name">
+                            {pred.productName}
+                          </h3>
+                          <span className="rec-reason flex items-center gap-xs">
+                            <AlertTriangle
+                              size={12}
+                              className="text-secondary"
+                            />
+                            {pred.recommendation?.reason}
+                          </span>
+                        </div>
+                      </div>
+                      <Badge
+                        label={pred.confidence > 0.9 ? "Urgent" : "Modéré"}
+                        status={pred.confidence > 0.9 ? "urgent" : "moderate"}
+                      />
+                    </div>
+
+                    <div className="rec-details">
+                      <div className="rec-detail-item">
+                        <span className="label">Besoin</span>
+                        <span className="value text-primary">
+                          {pred.predictedConsumption} kg
+                        </span>
+                      </div>
+                      <div className="rec-detail-item">
+                        <span className="label">Fiabilité IA</span>
+                        <span className="value text-optimal">
+                          {(pred.confidence * 100).toFixed(0)}%
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="rec-action">
+                      <div className="rec-order-info">
+                        Commander{" "}
+                        <strong className="text-primary text-lg mx-1">
+                          {pred.recommendation?.quantity}
+                        </strong>{" "}
+                        unités
+                      </div>
+                      <Button
+                        size="sm"
+                        variant={isSelected ? "primary" : "outline"}
+                        onClick={() =>
+                          handleTogglePrediction(pred.id, pred.productName)
+                        }
+                      >
+                        {isSelected ? "Ajouté" : "Valider"}
+                      </Button>
+                    </div>
+                  </Card>
+                );
+              })
+            ) : (
+              <div className="p-8 text-center text-secondary border border-dashed border-gray-300 rounded-lg">
+                <p>Aucune action prioritaire en attente. Bon travail ! 🎉</p>
+              </div>
+            )}
           </div>
         </div>
 
         {showOrderGenerator && (
           <OrderGenerator
-            recommendations={MOCK_PREDICTIONS}
+            recommendations={selectedPredictions}
             onClose={() => setShowOrderGenerator(false)}
           />
         )}
@@ -308,7 +351,7 @@ const Dashboard: React.FC = () => {
           >
             <div className="chart-container flex-1 min-h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={data}>
+                <ComposedChart data={MOCK_DASHBOARD_ACTIVITY}>
                   <defs>
                     <linearGradient
                       id="colorRevenue"
@@ -317,14 +360,15 @@ const Dashboard: React.FC = () => {
                       x2="0"
                       y2="1"
                     >
-                      <stop offset="5%" stopColor="#8884d8" stopOpacity={0.1} />
-                      <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#218083" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#218083" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     vertical={false}
-                    stroke="#E2E8F0"
+                    stroke="#E6C2AD"
+                    opacity={0.5}
                   />
                   <XAxis
                     dataKey="name"
@@ -332,14 +376,14 @@ const Dashboard: React.FC = () => {
                     tickLine={false}
                     dy={10}
                     fontSize={12}
-                    tick={{ fill: "#64748B" }}
+                    tick={{ fill: "#627C7F" }}
                   />
                   <YAxis
                     yAxisId="left"
                     axisLine={false}
                     tickLine={false}
                     fontSize={12}
-                    tick={{ fill: "#64748B" }}
+                    tick={{ fill: "#627C7F" }}
                   />
                   <YAxis
                     yAxisId="right"
@@ -347,13 +391,15 @@ const Dashboard: React.FC = () => {
                     axisLine={false}
                     tickLine={false}
                     fontSize={12}
-                    tick={{ fill: "#64748B" }}
+                    tick={{ fill: "#627C7F" }}
                   />
                   <Tooltip
                     contentStyle={{
+                      backgroundColor: "#FFFFFD",
                       borderRadius: "8px",
-                      border: "none",
+                      border: "1px solid #E6C2AD",
                       boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                      color: "#134252",
                     }}
                   />
                   <Legend iconType="circle" />
@@ -362,14 +408,14 @@ const Dashboard: React.FC = () => {
                     type="monotone"
                     dataKey="revenue"
                     fill="url(#colorRevenue)"
-                    stroke="#8884d8"
+                    stroke="#218083"
                     name="CA Prévisionnel (€)"
                   />
                   <Bar
                     yAxisId="right"
                     dataKey="reservations"
                     barSize={20}
-                    fill="#413ea0"
+                    fill="#1F212F"
                     radius={[4, 4, 0, 0]}
                     name="Réservations"
                   />
@@ -377,7 +423,7 @@ const Dashboard: React.FC = () => {
                     yAxisId="right"
                     type="monotone"
                     dataKey="consumption"
-                    stroke="#ff7300"
+                    stroke="#A84B2F"
                     strokeWidth={2}
                     dot={{ r: 4 }}
                     name="Sortie Stock (kg)"
@@ -385,9 +431,9 @@ const Dashboard: React.FC = () => {
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
-            <div className="chart-legend mt-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
-              <h4 className="text-sm font-bold mb-2 flex items-center gap-2">
-                <Zap size={14} className="text-yellow-500" /> Insight IA
+            <div className="chart-legend">
+              <h4 className="text-sm font-bold mb-2 flex items-center gap-sm">
+                <Zap size={14} className="text-moderate" /> Insight IA
               </h4>
               <p className="text-sm text-secondary">
                 Forte corrélation détectée : +10% de réservations entraîne{" "}
@@ -398,6 +444,31 @@ const Dashboard: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* Modals */}
+      <Modal
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setIsInvoiceModalOpen(false)}
+        title="Scanner une Facture"
+        width="lg"
+      >
+        <InvoiceModal
+          onValidate={handleValidateInvoice}
+          onClose={() => setIsInvoiceModalOpen(false)}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isMenuModalOpen}
+        onClose={() => setIsMenuModalOpen(false)}
+        title="Générateur de Menu du Jour"
+        width="md"
+      >
+        <MenuIdeasModal
+          onValidate={handleValidateMenu}
+          onClose={() => setIsMenuModalOpen(false)}
+        />
+      </Modal>
     </div>
   );
 };

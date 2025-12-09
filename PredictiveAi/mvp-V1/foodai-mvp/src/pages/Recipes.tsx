@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import Card from "../components/common/Card";
 import Button from "../components/common/Button";
 import Badge from "../components/common/Badge";
+import RecordProductionModal from "../components/recipes/RecordProductionModal";
+import ProductionConfirmModal from "../components/recipes/ProductionConfirmModal";
 import { Clock, ChefHat, CheckCircle, Leaf, AlertTriangle } from "lucide-react";
-import { MOCK_RECIPES, MOCK_PRODUCTS } from "../utils/mockData";
+import { MOCK_RECIPES, MOCK_PRODUCTS, type Recipe } from "../utils/mockData";
 import { format, parseISO, isSameWeek } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useToast } from "../context/ToastContext";
@@ -14,6 +16,36 @@ const Recipes: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"history" | "anti-waste">(
     "history"
   );
+  const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
+  const [isProductionModalOpen, setIsProductionModalOpen] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [selectedMaxYield, setSelectedMaxYield] = useState(0);
+  const [producedRecipes, setProducedRecipes] = useState<string[]>([]);
+
+  const handleRecordProduction = (data: any) => {
+    addToast(
+      "success",
+      "Production enregistrée",
+      `${data.portions} portions de ${data.recipeName} ont été enregistrées.`
+    );
+  };
+
+  const handleStartProduction = (recipe: Recipe, maxYield: number) => {
+    setSelectedRecipe(recipe);
+    setSelectedMaxYield(maxYield);
+    setIsProductionModalOpen(true);
+  };
+
+  const handleConfirmProduction = (quantity: number) => {
+    if (selectedRecipe) {
+      setProducedRecipes((prev) => [...prev, selectedRecipe.id]);
+      addToast(
+        "success",
+        "Production lancée",
+        `${quantity} portions de ${selectedRecipe.name} en cours. Ingrédients déduits du stock.`
+      );
+    }
+  };
 
   // Helper to find product name by ID
   const getProductName = (id: string) =>
@@ -46,7 +78,7 @@ const Recipes: React.FC = () => {
 
   return (
     <div className="recipes-container">
-      <header className="page-header">
+      <header className="page-header glass-header">
         <div>
           <h1 className="page-title">Carnet de Recettes</h1>
           <p className="page-subtitle">
@@ -115,7 +147,11 @@ const Recipes: React.FC = () => {
                 className="mx-auto mb-4 text-secondary opacity-50"
               />
               <p>Aucune recette enregistrée cette semaine.</p>
-              <Button variant="outline" className="mt-4">
+              <Button
+                variant="outline"
+                className="mt-4"
+                onClick={() => setIsRecordModalOpen(true)}
+              >
                 Enregistrer une production
               </Button>
             </div>
@@ -126,108 +162,122 @@ const Recipes: React.FC = () => {
       {/* TAB 2: ANTI-WASTE SUGGESTIONS */}
       {activeTab === "anti-waste" && (
         <div className="recipes-grid">
-          {antiWasteRecipes.map((recipe) => (
-            <Card key={recipe.id} className="recipe-card border-optimal">
-              {/* Special styling for recommended items */}
-              <div className="recipe-header">
-                <span className="recipe-title text-optimal">{recipe.name}</span>
-                <Badge label="Faisable" status="optimal" />
-              </div>
-              <div className="recipe-meta">
-                <span className="recipe-meta-item">
-                  <Clock size={14} /> {recipe.prepTime} min
-                </span>
-                <span className="recipe-meta-item text-optimal font-medium">
-                  100% Stock dispo
-                </span>
-              </div>
-
-              <div className="recipe-ingredients bg-green-50 p-2 rounded-md mb-2">
-                <div className="stock-match-badge w-full justify-center mb-2">
-                  <CheckCircle size={16} />
-                  Vous pouvez faire {recipe.maxYield} portions
+          {antiWasteRecipes.map((recipe) => {
+            const isProduced = producedRecipes.includes(recipe.id);
+            return (
+              <Card
+                key={recipe.id}
+                className={`recipe-card border-optimal ${
+                  isProduced ? "produced" : ""
+                }`}
+              >
+                {isProduced && (
+                  <div className="produced-badge">
+                    <CheckCircle size={16} />
+                    <span>Produit</span>
+                  </div>
+                )}
+                {/* Special styling for recommended items */}
+                <div className="recipe-header">
+                  <span className="recipe-title text-optimal">
+                    {recipe.name}
+                  </span>
+                  <Badge label="Faisable" status="optimal" />
+                </div>
+                <div className="recipe-meta">
+                  <span className="recipe-meta-item">
+                    <Clock size={14} /> {recipe.prepTime} min
+                  </span>
+                  <span className="recipe-meta-item text-optimal font-medium">
+                    100% Stock dispo
+                  </span>
                 </div>
 
-                {/* Economics Section */}
-                <div className="flex justify-between items-center mb-2 pb-2 border-b border-green-100 text-xs">
-                  <div className="flex flex-col">
-                    <span className="text-secondary">Coût Matière</span>
-                    <span className="font-bold text-gray-700">
-                      {recipe.ingredients
-                        .reduce((sum, ing) => {
-                          const p = MOCK_PRODUCTS.find(
-                            (p) => p.id === ing.productId
-                          );
-                          return sum + (p ? p.pricePerUnit * ing.quantity : 0);
-                        }, 0)
-                        .toFixed(2)}
-                      €
-                    </span>
+                <div className="ingredients-box">
+                  <div className="stock-match-badge w-full justify-center mb-2">
+                    <CheckCircle size={16} />
+                    Vous pouvez faire {recipe.maxYield} portions
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-secondary">Marge Est. (75%)</span>
-                    <span className="font-bold text-optimal">
-                      +
-                      {(
-                        recipe.ingredients.reduce((sum, ing) => {
-                          const p = MOCK_PRODUCTS.find(
-                            (p) => p.id === ing.productId
-                          );
-                          return sum + (p ? p.pricePerUnit * ing.quantity : 0);
-                        }, 0) * 3
-                      ).toFixed(2)}
-                      €
-                    </span>
-                  </div>
-                </div>
 
-                {recipe.ingredients.map((ing, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-between text-xs py-1 border-b border-green-100 last:border-0"
-                  >
-                    <span>{getProductName(ing.productId)}</span>
-                    <span className="font-medium text-optimal">Stock OK</span>
+                  {/* Economics Section */}
+                  <div className="cost-row">
+                    <div className="cost-col">
+                      <span className="cost-label">Coût Matière</span>
+                      <span className="cost-value">
+                        {recipe.ingredients
+                          .reduce((sum, ing) => {
+                            const p = MOCK_PRODUCTS.find(
+                              (p) => p.id === ing.productId
+                            );
+                            return (
+                              sum + (p ? p.pricePerUnit * ing.quantity : 0)
+                            );
+                          }, 0)
+                          .toFixed(2)}
+                        €
+                      </span>
+                    </div>
+                    <div className="cost-col items-end">
+                      <span className="cost-label">Marge Est. (75%)</span>
+                      <span className="cost-value margin">
+                        +
+                        {(
+                          recipe.ingredients.reduce((sum, ing) => {
+                            const p = MOCK_PRODUCTS.find(
+                              (p) => p.id === ing.productId
+                            );
+                            return (
+                              sum + (p ? p.pricePerUnit * ing.quantity : 0)
+                            );
+                          }, 0) * 3
+                        ).toFixed(2)}
+                        €
+                      </span>
+                    </div>
                   </div>
-                ))}
-              </div>
-              <div className="flex gap-2 mt-auto">
-                <Button
-                  size="sm"
-                  className="flex-1"
-                  onClick={() =>
-                    addToast(
-                      "success",
-                      "Production Lancée",
-                      `Les ingrédients pour ${recipe.name} ont été déstockés.`
-                    )
-                  }
-                >
-                  Produire
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="text-red-600 border-red-200 hover:bg-red-50"
-                  icon={<AlertTriangle size={14} />}
-                  onClick={() => {
-                    const qty = window.prompt(
-                      `Combien de ${recipe.name} refusés faute de stock ?`
-                    );
-                    if (qty && parseInt(qty) > 0) {
-                      addToast(
-                        "success",
-                        "Prévision Ajustée",
-                        `La demande pour ${recipe.name} (+${qty}) a été enregistrée.`
-                      );
+
+                  {recipe.ingredients.map((ing, i) => (
+                    <div key={i} className="ingredient-row">
+                      <span>{getProductName(ing.productId)}</span>
+                      <span className="font-medium text-optimal">Stock OK</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2 mt-auto">
+                  <Button
+                    size="sm"
+                    className="flex-1"
+                    onClick={() =>
+                      handleStartProduction(recipe, recipe.maxYield)
                     }
-                  }}
-                >
-                  Refus
-                </Button>
-              </div>
-            </Card>
-          ))}
+                    disabled={isProduced}
+                  >
+                    {isProduced ? "Produit ✓" : "Produire"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="btn-danger-outline"
+                    icon={<AlertTriangle size={14} />}
+                    onClick={() => {
+                      const qty = window.prompt(
+                        `Combien de ${recipe.name} refusés faute de stock ?`
+                      );
+                      if (qty && parseInt(qty) > 0) {
+                        addToast(
+                          "success",
+                          "Prévision Ajustée",
+                          `La demande pour ${recipe.name} (+${qty}) a été enregistrée.`
+                        );
+                      }
+                    }}
+                  >
+                    Refus
+                  </Button>
+                </div>
+              </Card>
+            );
+          })}
           {antiWasteRecipes.length === 0 && (
             <div className="empty-week col-span-full">
               <p>Pas assez de stock pour des recettes complètes sans achat.</p>
@@ -235,6 +285,20 @@ const Recipes: React.FC = () => {
           )}
         </div>
       )}
+
+      <RecordProductionModal
+        isOpen={isRecordModalOpen}
+        onClose={() => setIsRecordModalOpen(false)}
+        onRecord={handleRecordProduction}
+      />
+
+      <ProductionConfirmModal
+        isOpen={isProductionModalOpen}
+        onClose={() => setIsProductionModalOpen(false)}
+        recipe={selectedRecipe}
+        maxYield={selectedMaxYield}
+        onConfirm={handleConfirmProduction}
+      />
     </div>
   );
 };

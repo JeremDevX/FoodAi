@@ -19,10 +19,10 @@ const Settings: React.FC = () => {
 
   return (
     <div className="settings-container">
-      <header className="page-header">
+      <header className="page-header glass-header">
         <div>
           <h1 className="page-title">Paramètres</h1>
-          <p className="page-subtitle">Gérez vor configuration</p>
+          <p className="page-subtitle">Gérez vos configuration</p>
         </div>
         <Button icon={<Save size={18} />}>Enregistrer</Button>
       </header>

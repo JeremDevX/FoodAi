@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import TopNav from "./TopNav";
 import "../../styles/index.css";
+import "./Layout.css";
 
 const Layout: React.FC = () => {
   return (
@@ -14,27 +15,6 @@ const Layout: React.FC = () => {
           <Outlet />
         </main>
       </div>
-
-      <style>{`
-                .layout-container {
-                    display: flex;
-                    min-height: 100vh;
-                    background-color: var(--color-bg);
-                }
-
-                .main-content-wrapper {
-                    flex: 1;
-                    margin-left: 260px; /* Width of sidebar */
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .main-content {
-                    padding: var(--spacing-xl);
-                    flex: 1;
-                    overflow-y: auto;
-                }
-            `}</style>
     </div>
   );
 };

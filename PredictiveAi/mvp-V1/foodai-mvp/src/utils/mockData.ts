@@ -323,7 +323,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     recommendation: {
       action: "buy",
       quantity: 30,
-      reason: "Gros volume attendu ce weekend (Météo)",
+      reason: "Gros volume attendu ce weekend",
     },
   },
   {
@@ -391,6 +391,19 @@ export const MOCK_PREDICTIONS: Prediction[] = [
       reason: "Risque de perte (Date courte)",
     },
   },
+  {
+    id: "pred10",
+    productId: "p10",
+    productName: "Pommes de Terre",
+    predictedDate: getDate(2),
+    predictedConsumption: 25,
+    confidence: 0.89,
+    recommendation: {
+      action: "buy",
+      quantity: 50,
+      reason: "Forte demande frites maison",
+    },
+  },
 ];
 
 export const getStatus = (product: Product): ProductStatus => {
@@ -438,6 +451,16 @@ export const MOCK_ANALYTICS = {
     { name: "Salade", accuracy: 91, avoidedStockout: 2 },
   ],
 };
+
+export const MOCK_DASHBOARD_ACTIVITY = [
+  { name: "Lun", revenue: 4000, reservations: 120, consumption: 45 },
+  { name: "Mar", revenue: 3000, reservations: 80, consumption: 32 },
+  { name: "Mer", revenue: 5500, reservations: 160, consumption: 68 },
+  { name: "Jeu", revenue: 4500, reservations: 110, consumption: 51 },
+  { name: "Ven", revenue: 8000, reservations: 210, consumption: 85 },
+  { name: "Sam", revenue: 9500, reservations: 240, consumption: 105 },
+  { name: "Dim", revenue: 7000, reservations: 190, consumption: 78 },
+];
 
 // RECIPES DATA (Anti-Waste)
 export interface Recipe {

@@ -49,7 +49,7 @@
 }
 
 .nav-item.active {
-  background-color: rgba(33, 128, 141, 0.1); /* Primary with opacity */
+  background-color: var(--color-primary-light);
   color: var(--color-primary);
 }
 
@@ -68,9 +68,18 @@
   text-align: left;
   cursor: pointer;
   font-size: var(--font-size-base);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  /* padding, flex, gap, alignment inherited from .nav-item */
 }
 
 .logout-btn:hover {
   color: var(--color-urgent);
-  background-color: rgba(192, 21, 47, 0.05);
+  background-color: rgba(
+    192,
+    21,
+    47,
+    0.05
+  ); /* Keep inline or make variable if used elsewhere */
 }
