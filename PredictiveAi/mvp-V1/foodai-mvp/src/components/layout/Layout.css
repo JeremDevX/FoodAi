@@ -13,7 +13,7 @@
 }
 
 .main-content {
-  padding: var(--spacing-xl);
+  padding: 0 var(--spacing-xl) var(--spacing-xl);
   flex: 1;
   overflow-y: auto;
 }

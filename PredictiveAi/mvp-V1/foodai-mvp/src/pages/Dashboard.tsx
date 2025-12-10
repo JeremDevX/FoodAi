@@ -5,10 +5,9 @@ import InvoiceModal from "../components/dashboard/InvoiceModal";
 import MenuIdeasModal from "../components/dashboard/MenuIdeasModal";
 import DashboardKPIs from "../components/dashboard/DashboardKPIs";
 import RecommendationsSection from "../components/dashboard/RecommendationsSection";
-import ActivityChart from "../components/dashboard/ActivityChart";
 import OrderGenerator from "../components/dashboard/OrderGenerator";
 import { useToast } from "../context/ToastContext";
-import { Calendar, FileText, ChefHat } from "lucide-react";
+import { Calendar, FileText, ChefHat, ShoppingBag } from "lucide-react";
 import { MOCK_PREDICTIONS } from "../utils/mockData";
 import "./Dashboard.css";
 
@@ -83,32 +82,6 @@ const Dashboard: React.FC = () => {
     month: "long",
   });
 
-  // Filter recommendations: pass all that are not selected (to show in list)
-  // But wait, the list usually shows pending actions.
-  // The original logic was: visiblePredictions = MOCK_PREDICTIONS.filter(pred => !selectedPredictionIds.includes(pred.id))
-  // BUT the map actually checked `isSelected` inside the map.
-  // Wait, let's look at the original code (lines 102-104 and 259-261):
-  // visiblePredictions excluded selectedIds.
-  // BUT inside the map: `const isSelected = selectedPredictionIds.includes(pred.id);`
-  // This implies visiblePredictions would NEVER be selected if we filter them out.
-  // Ah, the original code filtered them out of the list if selected?
-  // Line 102: `const visiblePredictions = MOCK_PREDICTIONS.filter((pred) => !selectedPredictionIds.includes(pred.id));`
-  // Then line 260: `visiblePredictions.map(...)`.
-  // So yes, selected items disappered from the list?
-  // BUT `handleTogglePrediction` (line 72) adds to selection.
-  // AND `OrderGenerator` (line 98) used `selectedPredictions` which are the ones in the ID list.
-  // So the workflow is: User clicks "Validate", it moves to "selected" state (and disappears from the main list?)
-  // Let's re-read the original render logic.
-  // Line 267: `${isSelected ? "border-optimal bg-green-50/10" : ""}`
-  // If `visiblePredictions` excludes selected, then `isSelected` is ALWAYS false inside the map.
-  // So the styling for "selected" state was unreachable code if the filter was active.
-  // UNLESS the intent was to show them but visually marked.
-  // However, line 102 was explicit.
-  // I will PRESERVE the `visiblePredictions` filter logic to maintain existing behavior,
-  // BUT I should check if I should pass `MOCK_PREDICTIONS` directly if I want to show selection state.
-  // Actually, if they disappear, the "Generated Orders" count updates.
-  // I think I'll pass `visiblePredictions` to `RecommendationsSection`.
-
   const visiblePredictions = MOCK_PREDICTIONS.filter(
     (pred) => !selectedPredictionIds.includes(pred.id)
   );
@@ -136,7 +109,7 @@ const Dashboard: React.FC = () => {
               icon={<FileText size={14} />}
               onClick={handleScanInvoice}
             >
-              Scanner Facture
+              Facture
             </Button>
             <Button
               variant="outline"
@@ -144,7 +117,16 @@ const Dashboard: React.FC = () => {
               icon={<ChefHat size={14} />}
               onClick={handleMenuGen}
             >
-              Menu du Jour
+              Menu
+            </Button>
+            <Button
+              variant={selectedPredictionIds.length > 0 ? "primary" : "outline"}
+              size="sm"
+              icon={<ShoppingBag size={14} />}
+              onClick={handleGenerateOrders}
+              className="generate-btn"
+            >
+              Générer Commandes ({selectedPredictionIds.length})
             </Button>
           </div>
         </div>
@@ -154,28 +136,27 @@ const Dashboard: React.FC = () => {
       <DashboardKPIs />
 
       <div className="dashboard-main-grid">
-        {/* Left Column: Recommendations extracted */}
+        {/* Full Width Recommendations */}
         <RecommendationsSection
           predictions={visiblePredictions}
           selectedIds={selectedPredictionIds}
           onTogglePrediction={handleTogglePrediction}
-          onGenerateOrders={handleGenerateOrders}
         />
-
-        {showOrderGenerator && (
-          <OrderGenerator
-            recommendations={selectedPredictions}
-            onClose={() => setShowOrderGenerator(false)}
-          />
-        )}
-
-        {/* Right Column: Chart extracted */}
-        <div className="chart-section">
-          <ActivityChart />
-        </div>
       </div>
 
       {/* Modals */}
+      <Modal
+        isOpen={showOrderGenerator}
+        onClose={() => setShowOrderGenerator(false)}
+        title="Générateur de Commandes"
+        width="lg"
+      >
+        <OrderGenerator
+          recommendations={selectedPredictions}
+          onClose={() => setShowOrderGenerator(false)}
+        />
+      </Modal>
+
       <Modal
         isOpen={isInvoiceModalOpen}
         onClose={() => setIsInvoiceModalOpen(false)}

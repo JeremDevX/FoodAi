@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Bell, AlertTriangle, TrendingDown, Info, X } from "lucide-react";
-import Card from "../common/Card";
+import { Bell, AlertTriangle, TrendingDown, Info } from "lucide-react";
+import Modal from "../common/Modal";
 
 interface Notification {
   id: string;
@@ -48,26 +48,30 @@ const Notifications: React.FC = () => {
     setNotifications(notifications.map((n) => ({ ...n, read: true })));
   };
 
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) markAsRead();
+  const handleOpen = () => {
+    setIsOpen(true);
+    markAsRead();
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
   };
 
   const getIcon = (type: string) => {
     switch (type) {
       case "alert":
-        return <AlertTriangle size={16} className="text-red-500" />;
+        return <AlertTriangle size={16} className="text-urgent" />;
       case "warning":
-        return <TrendingDown size={16} className="text-orange-500" />;
+        return <TrendingDown size={16} className="text-moderate" />;
       default:
-        return <Info size={16} className="text-blue-500" />;
+        return <Info size={16} className="text-primary" />;
     }
   };
 
   return (
-    <div className="relative">
+    <>
       <button
-        onClick={toggleOpen}
+        onClick={handleOpen}
         className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
       >
         <Bell size={20} className="text-secondary" />
@@ -76,53 +80,52 @@ const Notifications: React.FC = () => {
         )}
       </button>
 
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsOpen(false)}
-          ></div>
-          <Card className="absolute right-0 mt-2 w-80 z-50 shadow-xl p-0 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-3 border-b flex justify-between items-center bg-gray-50">
-              <h4 className="font-semibold text-sm">Notifications</h4>
-              <button onClick={() => setIsOpen(false)}>
-                <X size={14} className="text-secondary" />
-              </button>
+      <Modal
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="Notifications"
+        width="sm"
+      >
+        <div className="max-h-80 overflow-y-auto -mx-6 -mt-2">
+          {notifications.length === 0 ? (
+            <div className="text-center py-8 text-secondary">
+              Aucune notification
             </div>
-            <div className="max-h-64 overflow-y-auto">
-              {notifications.map((notif) => (
-                <div
-                  key={notif.id}
-                  className={`p-3 border-b last:border-0 hover:bg-gray-50 transition-colors ${
-                    !notif.read ? "bg-blue-50/50" : ""
-                  }`}
-                >
-                  <div className="flex gap-3">
-                    <div className="mt-1">{getIcon(notif.type)}</div>
-                    <div>
-                      <p className="text-sm font-medium text-primary">
-                        {notif.title}
-                      </p>
-                      <p className="text-xs text-secondary mt-1">
-                        {notif.message}
-                      </p>
-                      <p className="text-[10px] text-secondary mt-2 font-mono uppercase">
-                        {notif.time}
-                      </p>
-                    </div>
+          ) : (
+            notifications.map((notif) => (
+              <div
+                key={notif.id}
+                className={`px-6 py-4 border-b last:border-0 hover:bg-gray-50 transition-colors ${
+                  !notif.read ? "bg-blue-50/30" : ""
+                }`}
+              >
+                <div className="flex gap-3">
+                  <div className="mt-1 flex-shrink-0">
+                    {getIcon(notif.type)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-primary">
+                      {notif.title}
+                    </p>
+                    <p className="text-xs text-secondary mt-1 leading-relaxed">
+                      {notif.message}
+                    </p>
+                    <p className="text-[10px] text-secondary mt-2 font-mono uppercase tracking-wide">
+                      {notif.time}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="p-2 border-t bg-gray-50 text-center">
-              <button className="text-xs text-primary font-medium hover:underline">
-                Voir tout
-              </button>
-            </div>
-          </Card>
-        </>
-      )}
-    </div>
+              </div>
+            ))
+          )}
+        </div>
+        <div className="pt-4 border-t text-center -mx-6 -mb-2 pb-2">
+          <button className="text-xs text-primary font-medium hover:underline">
+            Tout marquer comme lu
+          </button>
+        </div>
+      </Modal>
+    </>
   );
 };
 

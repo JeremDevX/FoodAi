@@ -1,111 +1,100 @@
 import React from "react";
-import Card from "../common/Card";
-import Badge from "../common/Badge";
 import Button from "../common/Button";
-import { Zap, ShoppingBag, AlertTriangle } from "lucide-react";
-import type { Prediction } from "../../utils/mockData";
+import Card from "../common/Card";
+import { ShoppingCart, Check } from "lucide-react";
+import type { Prediction } from "../../types";
 
 interface RecommendationsSectionProps {
   predictions: Prediction[];
   selectedIds: string[];
   onTogglePrediction: (id: string, productName: string) => void;
-  onGenerateOrders: () => void;
 }
 
 const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   predictions,
   selectedIds,
   onTogglePrediction,
-  onGenerateOrders,
 }) => {
   return (
     <div className="recommendations-section">
-      <div className="flex justify-between items-center mb-md">
-        <h2 className="section-title mb-0 flex items-center gap-sm">
-          <Zap size={20} className="text-moderate" />
-          Actions Prioritaires
-        </h2>
-        <Button
-          size="sm"
-          variant={selectedIds.length > 0 ? "primary" : "outline"}
-          onClick={onGenerateOrders}
-          icon={<ShoppingBag size={16} />}
-          className="shadow-md"
-        >
-          Générer Commandes ({selectedIds.length})
-        </Button>
+      <div className="section-header flex justify-between items-center mb-4">
+        <h3 className="section-title">Actions Prioritaires</h3>
       </div>
 
-      <div className="recommendations-list">
+      <div className="recommendations-list grid-layout">
         {predictions.length > 0 ? (
           predictions.map((pred) => {
             const isSelected = selectedIds.includes(pred.id);
+            const isUrgent = pred.recommendation?.action === "buy";
+
             return (
               <Card
                 key={pred.id}
                 className={`recommendation-card ${
-                  pred.confidence > 0.9 ? "urgent" : "moderate"
-                } ${isSelected ? "border-optimal bg-green-50/10" : ""}`}
+                  isUrgent ? "urgent" : "moderate"
+                } ${
+                  isSelected ? "border-optimal bg-green-50/10" : "hover-lift"
+                }`}
               >
-                <div className="rec-header">
-                  <div className="flex items-center gap-md">
-                    <div
-                      className={`status-indicator ${
-                        pred.confidence > 0.9 ? "urgent" : "moderate"
-                      }`}
-                    ></div>
-                    <div>
-                      <h3 className="rec-product-name">{pred.productName}</h3>
-                      <span className="rec-reason flex items-center gap-xs">
-                        <AlertTriangle size={12} className="text-secondary" />
-                        {pred.recommendation?.reason}
-                      </span>
+                <div className="p-4 flex flex-col h-full justify-between">
+                  <div>
+                    <div className="rec-header mb-3">
+                      <h4 className="rec-product-name">{pred.productName}</h4>
+                      <div
+                        className={`status-indicator ${
+                          isUrgent ? "urgent" : "moderate"
+                        }`}
+                      />
+                    </div>
+
+                    <p className="rec-reason mb-4">
+                      {pred.recommendation?.reason}
+                    </p>
+
+                    <div className="rec-details mb-4">
+                      <div className="rec-detail-item">
+                        <span className="label">Prévision</span>
+                        <span className="value">
+                          {pred.predictedConsumption} kg
+                        </span>
+                      </div>
+                      <div className="rec-detail-item">
+                        <span className="label">Recommandé</span>
+                        <span className="value">
+                          {pred.recommendation?.quantity} kg
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <Badge
-                    label={pred.confidence > 0.9 ? "Urgent" : "Modéré"}
-                    status={pred.confidence > 0.9 ? "urgent" : "moderate"}
-                  />
-                </div>
 
-                <div className="rec-details">
-                  <div className="rec-detail-item">
-                    <span className="label">Besoin</span>
-                    <span className="value text-primary">
-                      {pred.predictedConsumption} kg
+                  <div className="rec-action">
+                    <span className="rec-order-info">
+                      {isUrgent ? "Stock critique" : "Optimisation stock"}
                     </span>
+                    <Button
+                      size="sm"
+                      variant={isSelected ? "primary" : "outline"}
+                      className={isSelected ? "bg-optimal border-optimal" : ""}
+                      onClick={() =>
+                        onTogglePrediction(pred.id, pred.productName)
+                      }
+                      icon={
+                        isSelected ? (
+                          <Check size={16} />
+                        ) : (
+                          <ShoppingCart size={16} />
+                        )
+                      }
+                    >
+                      {isSelected ? "Ajouté" : "Ajouter"}
+                    </Button>
                   </div>
-                  <div className="rec-detail-item">
-                    <span className="label">Fiabilité IA</span>
-                    <span className="value text-optimal">
-                      {(pred.confidence * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                </div>
-
-                <div className="rec-action">
-                  <div className="rec-order-info">
-                    Commander{" "}
-                    <strong className="text-primary text-lg mx-1">
-                      {pred.recommendation?.quantity}
-                    </strong>{" "}
-                    unités
-                  </div>
-                  <Button
-                    size="sm"
-                    variant={isSelected ? "primary" : "outline"}
-                    onClick={() =>
-                      onTogglePrediction(pred.id, pred.productName)
-                    }
-                  >
-                    {isSelected ? "Ajouté" : "Valider"}
-                  </Button>
                 </div>
               </Card>
             );
           })
         ) : (
-          <div className="p-8 text-center text-secondary border border-dashed border-gray-300 rounded-lg">
+          <div className="col-span-3 p-8 text-center text-secondary border border-dashed border-gray-300 rounded-lg">
             <p>Aucune action prioritaire en attente. Bon travail ! 🎉</p>
           </div>
         )}

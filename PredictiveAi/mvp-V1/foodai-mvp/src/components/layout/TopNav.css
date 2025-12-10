@@ -8,7 +8,7 @@
   padding: 0 var(--spacing-xl);
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 50;
 }
 
 .breadcrumbs {
