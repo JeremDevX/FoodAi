@@ -176,10 +176,7 @@ const Stocks: React.FC = () => {
                   className="clickable-row"
                 >
                   <td>
-                    <div className="product-cell">
-                      <span className="product-name">{product.name}</span>
-                      <span className="product-category">{product.id}</span>
-                    </div>
+                    <span className="product-name">{product.name}</span>
                   </td>
                   <td className="text-secondary">{product.category}</td>
                   <td>
