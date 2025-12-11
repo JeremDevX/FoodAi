@@ -129,20 +129,20 @@
 .recommendation-box {
   background: linear-gradient(
     135deg,
-    rgba(33, 128, 141, 0.08) 0%,
-    rgba(33, 128, 141, 0.03) 100%
+    rgba(0, 199, 150, 0.08) 0%,
+    rgba(0, 199, 150, 0.03) 100%
   );
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
   margin-bottom: var(--spacing-md);
-  border: 1.5px solid rgba(33, 128, 141, 0.25);
-  box-shadow: 0 2px 8px rgba(33, 128, 141, 0.08);
+  border: 1.5px solid rgba(0, 199, 150, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 199, 150, 0.08);
 }
 .rec-label {
   display: block;
   font-size: 11px;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   font-weight: 700;
   margin-bottom: 6px;
   letter-spacing: 0.05em;
@@ -230,7 +230,7 @@
   background: linear-gradient(
     135deg,
     var(--color-surface) 0%,
-    rgba(33, 128, 141, 0.03) 100%
+    rgba(0, 199, 150, 0.03) 100%
   );
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
@@ -270,7 +270,7 @@
 
 .summary-stat.cost {
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   background: var(--color-primary-light);
   padding: 4px 12px;
   border-radius: var(--radius-full);
@@ -302,7 +302,7 @@
 
 .calendar-day-card.today {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(33, 128, 141, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 199, 150, 0.15);
 }
 
 .calendar-day-card.has-critical {
@@ -350,7 +350,7 @@
 }
 
 .today-badge {
-  background: linear-gradient(135deg, var(--color-primary) 0%, #2aa5a8 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #00e0a6 100%);
   color: white;
   font-size: 10px;
   font-weight: 700;
@@ -528,7 +528,7 @@
 
 .day-cost {
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 /* Legend */
@@ -628,7 +628,7 @@
 
 .featured-day-card.is-today {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(33, 128, 141, 0.1), var(--shadow-lg);
+  box-shadow: 0 0 0 4px rgba(0, 199, 150, 0.15), var(--shadow-lg);
 }
 
 .featured-header {
@@ -636,7 +636,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--spacing-xl);
-  background: linear-gradient(135deg, var(--color-primary) 0%, #2aa5a8 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #00e0a6 100%);
   color: white;
 }
 
@@ -749,7 +749,7 @@
 
 .featured-pred-item.normal {
   border-top-color: var(--color-primary);
-  box-shadow: 0 2px 8px rgba(33, 128, 141, 0.1), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 199, 150, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .pred-left {
@@ -847,7 +847,7 @@
 
 .confidence-avg {
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 /* Other Days Section */
@@ -1082,7 +1082,7 @@
   border-color: var(--color-primary);
   background: linear-gradient(
     135deg,
-    rgba(33, 128, 141, 0.02) 0%,
+    rgba(0, 199, 150, 0.03) 0%,
     var(--color-surface) 100%
   );
 }
@@ -1150,10 +1150,10 @@
   border: 2px solid var(--color-primary);
   background: linear-gradient(
     135deg,
-    rgba(33, 128, 141, 0.08) 0%,
+    rgba(0, 199, 150, 0.1) 0%,
     var(--color-surface) 100%
   );
-  box-shadow: 0 0 0 4px rgba(33, 128, 141, 0.15), var(--shadow-md);
+  box-shadow: 0 0 0 4px rgba(0, 199, 150, 0.18), var(--shadow-md);
   transform: scale(1.02);
   position: relative;
 }
@@ -1183,7 +1183,7 @@
 /* Override hover for selected */
 .mini-day-card.selected:hover {
   transform: scale(1.02);
-  box-shadow: 0 0 0 4px rgba(33, 128, 141, 0.2), var(--shadow-lg);
+  box-shadow: 0 0 0 4px rgba(0, 199, 150, 0.25), var(--shadow-lg);
 }
 
 /* Selected badge indicator - just arrow, no text */
@@ -1222,14 +1222,14 @@
 }
 
 .view-toggle-btn:hover {
-  background: rgba(33, 128, 141, 0.08);
+  background: rgba(0, 199, 150, 0.1);
   color: var(--color-text-primary);
 }
 
 .view-toggle-btn.active {
   background: var(--color-primary);
   color: white;
-  box-shadow: 0 2px 6px rgba(33, 128, 141, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 199, 150, 0.35);
 }
 
 /* ============================================
@@ -1295,8 +1295,8 @@
 .month-cell.today {
   background: linear-gradient(
     135deg,
-    rgba(33, 128, 141, 0.1) 0%,
-    rgba(33, 128, 141, 0.05) 100%
+    rgba(0, 199, 150, 0.12) 0%,
+    rgba(0, 199, 150, 0.05) 100%
   );
   border-color: var(--color-primary);
 }
@@ -1307,7 +1307,7 @@
 
 .month-cell.selected {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(33, 128, 141, 0.2);
+  box-shadow: 0 0 0 3px rgba(0, 199, 150, 0.25);
 }
 
 .month-cell.has-critical {

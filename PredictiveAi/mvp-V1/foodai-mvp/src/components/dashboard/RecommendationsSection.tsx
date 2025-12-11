@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../common/Button";
 import Card from "../common/Card";
-import { ShoppingCart, Check } from "lucide-react";
+import { ShoppingCart, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Prediction } from "../../types";
 
 interface RecommendationsSectionProps {
@@ -10,20 +10,53 @@ interface RecommendationsSectionProps {
   onTogglePrediction: (id: string, productName: string) => void;
 }
 
+const ITEMS_PER_PAGE = 6;
+
 const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   predictions,
   selectedIds,
   onTogglePrediction,
 }) => {
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(predictions.length / ITEMS_PER_PAGE);
+  const startIndex = currentPage * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedPredictions = predictions.slice(startIndex, endIndex);
+
+  // Reset to first page if current page becomes invalid
+  React.useEffect(() => {
+    if (currentPage >= totalPages && totalPages > 0) {
+      setCurrentPage(totalPages - 1);
+    }
+  }, [predictions.length, currentPage, totalPages]);
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1));
+  };
+
   return (
     <div className="recommendations-section">
       <div className="section-header flex justify-between items-center mb-4">
         <h3 className="section-title">Actions Prioritaires</h3>
+        {totalPages > 1 && (
+          <div className="pagination-info">
+            <span className="pagination-text">
+              {startIndex + 1}-{Math.min(endIndex, predictions.length)} sur{" "}
+              {predictions.length}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="recommendations-list grid-layout">
-        {predictions.length > 0 ? (
-          predictions.map((pred) => {
+        {paginatedPredictions.length > 0 ? (
+          paginatedPredictions.map((pred) => {
             const isSelected = selectedIds.includes(pred.id);
             const isUrgent = pred.recommendation?.action === "buy";
 
@@ -99,6 +132,42 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           </div>
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="pagination-controls">
+          <button
+            className="pagination-btn"
+            onClick={handlePrevPage}
+            disabled={currentPage === 0}
+            aria-label="Page précédente"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          <div className="pagination-dots">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                className={`pagination-dot ${
+                  i === currentPage ? "active" : ""
+                }`}
+                onClick={() => setCurrentPage(i)}
+                aria-label={`Page ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            className="pagination-btn"
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages - 1}
+            aria-label="Page suivante"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

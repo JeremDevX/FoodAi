@@ -131,7 +131,7 @@
 .product-perf-item:hover {
   transform: translateX(4px);
   border-color: var(--color-primary);
-  box-shadow: 0 2px 8px rgba(33, 128, 141, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 199, 150, 0.15);
 }
 
 .accuracy-bar-bg {
@@ -228,9 +228,9 @@
   background: linear-gradient(
     135deg,
     var(--color-primary-light) 0%,
-    rgba(33, 128, 141, 0.1) 100%
+    rgba(0, 199, 150, 0.15) 100%
   );
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 /* Responsive Grid */

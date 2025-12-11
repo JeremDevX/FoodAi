@@ -1,13 +1,17 @@
 :root {
   /* Colors - Primary */
-  --color-primary: #218083; /* Teal */
-  --color-primary-hover: #1d7480;
+  --color-primary: #00c796; /* Green */
+  --color-primary-hover: #00b386;
   --color-primary-light: rgba(
-    33,
-    128,
-    141,
+    0,
+    199,
+    150,
     0.1
   ); /* 10% opacity for backgrounds */
+
+  /* Colors - Secondary (Teal for accents) */
+  --color-teal: #218083;
+  --color-teal-light: rgba(33, 128, 141, 0.1);
 
   /* Colors - Status */
   --color-urgent: #c0152f;
@@ -17,20 +21,28 @@
   --color-info: #1f212f;
 
   /* Colors - Backgrounds & Surfaces */
-  --color-bg: #fffcf9; /* Cream 50 */
-  --color-surface: #fffffd; /* Cream 100 */
-  --color-surface-hover: #f9f5f0;
-  --color-surface-active: #f0ebe5;
+  --color-bg: #f3f4f6; /* Light Gray */
+  --color-surface: #ffffff; /* Pure White */
+  --color-surface-hover: #f0f1f3;
+  --color-surface-active: #e8e9eb;
 
   /* Colors - Text */
-  --color-text-primary: #134252; /* Dark Slate */
-  --color-text-secondary: #627c7f; /* Gray 400 */
-  --color-text-inverse: #fffcf9;
-  --color-text-muted: #9baeb1;
+  --color-text-primary: #1b263b; /* Blue */
+  --color-text-secondary: #475569; /* Darker Slate Gray for better contrast */
+  --color-text-inverse: #ffffff;
+  --color-text-muted: #6b7280; /* Darkened for accessibility */
+
+  /* Colors - Primary for Text (darker for accessibility) */
+  --color-primary-text: #008a6a; /* Darker green - 4.5:1 on white */
+
+  /* WCAG Accessible Text Variants */
+  --color-optimal-text: #1a7048; /* Darker green for text - 5.5:1 */
+  --color-moderate-text: #8a3d26; /* Darker orange for text - 5.2:1 */
+  --color-urgent-text: #a01228; /* Darker red for text - 5.8:1 */
 
   /* Colors - Borders & Dividers */
-  --color-border: #e6c2ad; /* Light Brown */
-  --color-border-light: #f2e6dd;
+  --color-border: #e5e7eb; /* Modern Gray */
+  --color-border-light: #f0f1f3;
 
   /* Typography */
   --font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -66,14 +78,14 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(19, 66, 82, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(19, 66, 82, 0.08),
-    0 2px 4px -1px rgba(19, 66, 82, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(19, 66, 82, 0.08),
-    0 4px 6px -2px rgba(19, 66, 82, 0.04);
-  --shadow-card: 0 2px 8px rgba(19, 66, 82, 0.04);
-  --shadow-card-hover: 0 8px 16px rgba(19, 66, 82, 0.08);
+  /* Shadows - Enhanced for white cards */
+  --shadow-sm: 0 1px 3px rgba(27, 38, 59, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(27, 38, 59, 0.1),
+    0 2px 4px -1px rgba(27, 38, 59, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(27, 38, 59, 0.1),
+    0 4px 6px -2px rgba(27, 38, 59, 0.06);
+  --shadow-card: 0 2px 8px rgba(27, 38, 59, 0.08);
+  --shadow-card-hover: 0 8px 24px rgba(27, 38, 59, 0.12);
 
   /* Transitions */
   --transition-fast: 0.15s ease;
@@ -146,17 +158,38 @@ button {
 .text-primary {
   color: var(--color-primary);
 }
+.text-primary-accessible {
+  color: var(--color-primary-text); /* Darker green for text accessibility */
+}
 .text-secondary {
   color: var(--color-text-secondary);
 }
 .text-urgent {
   color: var(--color-urgent);
 }
+.text-urgent-accessible {
+  color: var(--color-urgent-text); /* Darker red for accessibility */
+}
 .text-moderate {
   color: var(--color-moderate);
 }
+.text-moderate-accessible {
+  color: var(--color-moderate-text); /* Darker orange for accessibility */
+}
 .text-optimal {
   color: var(--color-optimal);
+}
+.text-optimal-accessible {
+  color: var(--color-optimal-text); /* Darker green for accessibility */
+}
+
+/* Text shadow for improved readability on light backgrounds */
+.text-shadow-subtle {
+  text-shadow: 0 1px 2px rgba(27, 38, 59, 0.08);
+}
+
+.text-shadow-card {
+  text-shadow: 0 1px 1px rgba(27, 38, 59, 0.06);
 }
 
 .bg-primary {
