@@ -1,0 +1,177 @@
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 50%, #f3f4f6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.6s ease-out;
+}
+
+.splash-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.splash-logo {
+  width: 280px;
+  height: auto;
+  filter: drop-shadow(0 8px 24px rgba(27, 38, 59, 0.15));
+}
+
+/* Letter animations - staggered appearance */
+.logo-letter {
+  opacity: 0;
+  animation: letterFade 0.5s ease-out forwards;
+}
+
+.letter-k {
+  animation-delay: 0.1s;
+}
+.letter-o {
+  animation-delay: 0.2s;
+}
+.letter-m {
+  animation-delay: 0.3s;
+}
+.letter-i {
+  animation-delay: 0.4s;
+}
+.letter-a {
+  animation-delay: 0.5s;
+}
+
+/* Eye animations */
+.eye-group {
+  transform-origin: 85.08px 53.98px; /* Center of the O */
+  animation: eyeWink 3s ease-in-out 1.8s forwards;
+}
+
+.eye-pupil {
+  opacity: 0;
+  transform-origin: 85.08px 53.98px;
+  animation: pupilAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
+}
+
+.eye-reflex {
+  transform-origin: 85.08px 53.98px;
+  opacity: 0;
+  animation: reflexAppearAndSpin 2s ease-out 0.8s forwards;
+}
+
+/* Tagline */
+.splash-tagline {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  animation: taglineFade 0.6s ease-out 0.8s forwards;
+}
+
+/* Keyframes */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes letterFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pupilAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes reflexAppearAndSpin {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+}
+
+/* Wink animation - squish the eye vertically */
+@keyframes eyeWink {
+  0%,
+  30% {
+    transform: scaleY(1);
+  }
+  35% {
+    transform: scaleY(0.1);
+  }
+  45% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes taglineFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulse effect on the green A */
+.letter-a {
+  animation: letterFade 0.5s ease-out 0.5s forwards,
+    pulseGlow 2s ease-in-out infinite 1s;
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(0, 199, 150, 0.5));
+  }
+}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
@@ -6,12 +7,16 @@ import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
 import Recipes from "./pages/Recipes";
+import SplashScreen from "./components/common/SplashScreen";
 
-import { ToastProvider } from "./context/ToastContext"; // Added import for ToastProvider
+import { ToastProvider } from "./context/ToastContext";
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
     <ToastProvider>
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
