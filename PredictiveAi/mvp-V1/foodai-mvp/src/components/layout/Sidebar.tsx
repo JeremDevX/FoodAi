@@ -26,7 +26,7 @@ const Sidebar: React.FC = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <img src="/logo_Komia.svg" alt="KookiA" className="logo-img" />
+        <img src="/logo_kookia.svg" alt="KookiA" className="logo-img" />
       </div>
 
       <nav className="sidebar-nav">
