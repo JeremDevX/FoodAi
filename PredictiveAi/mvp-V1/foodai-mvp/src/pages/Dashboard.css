@@ -3,7 +3,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xl);
-  padding-bottom: 2rem;
+  padding: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
 }
 
 /* KPI Grid */
@@ -193,6 +194,7 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 

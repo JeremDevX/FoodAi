@@ -2,13 +2,50 @@ import React, { useState } from "react";
 import Card from "../components/common/Card";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
+import IntegrationModal from "../components/settings/IntegrationModal";
 import { Store, Package, Users, Plug, Save } from "lucide-react";
 import "./Settings.css";
+
+interface Integration {
+  id: string;
+  name: string;
+  shortName: string;
+  gradient: string;
+}
+
+const INTEGRATIONS: Integration[] = [
+  {
+    id: "innovorder",
+    name: "Innovorder",
+    shortName: "IO",
+    gradient: "linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)",
+  },
+  {
+    id: "lightspeed",
+    name: "Lightspeed",
+    shortName: "LS",
+    gradient: "linear-gradient(135deg, #00D4AA 0%, #00B894 100%)",
+  },
+  {
+    id: "sumup",
+    name: "SumUp",
+    shortName: "SU",
+    gradient: "linear-gradient(135deg, #0066FF 0%, #0052CC 100%)",
+  },
+];
 
 const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     "restaurant" | "products" | "suppliers" | "integrations"
   >("restaurant");
+  const [selectedIntegration, setSelectedIntegration] =
+    useState<Integration | null>(null);
+  const [isIntegrationModalOpen, setIsIntegrationModalOpen] = useState(false);
+
+  const handleOpenIntegrationModal = (integration: Integration) => {
+    setSelectedIntegration(integration);
+    setIsIntegrationModalOpen(true);
+  };
 
   const tabs = [
     { id: "restaurant", label: "Restaurant", icon: Store },
@@ -94,22 +131,44 @@ const Settings: React.FC = () => {
 
           {activeTab === "integrations" && (
             <Card title="Intégrations Externes">
-              <div className="integration-item">
-                <div className="int-info">
-                  <div className="int-icon">POS</div>
-                  <div>
-                    <h4>iiko POS</h4>
-                    <span className="status connected">Connecté</span>
+              {INTEGRATIONS.map((integration) => (
+                <div key={integration.id} className="integration-item">
+                  <div className="int-info">
+                    <div
+                      className="int-icon"
+                      style={{
+                        background: integration.gradient,
+                        color: "white",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {integration.shortName}
+                    </div>
+                    <div>
+                      <h4>{integration.name}</h4>
+                      <span className="status connected">Connecté</span>
+                    </div>
                   </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleOpenIntegrationModal(integration)}
+                  >
+                    Gérer
+                  </Button>
                 </div>
-                <Button variant="outline" size="sm">
-                  Configurer
-                </Button>
-              </div>
+              ))}
             </Card>
           )}
         </div>
       </div>
+
+      {/* Integration Configuration Modal */}
+      <IntegrationModal
+        isOpen={isIntegrationModalOpen}
+        onClose={() => setIsIntegrationModalOpen(false)}
+        integration={selectedIntegration}
+      />
     </div>
   );
 };

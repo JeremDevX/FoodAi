@@ -257,6 +257,139 @@ const getDateTime = (daysOffset: number, hours: number) => {
 };
 
 export const MOCK_PREDICTIONS: Prediction[] = [
+  // === PAST DAYS (already delivered) ===
+  {
+    id: "pred-past1",
+    productId: "p1",
+    productName: "Tomates",
+    predictedDate: getDate(-3), // 3 days ago
+    predictedConsumption: 10,
+    confidence: 0.94,
+    recommendation: {
+      action: "buy",
+      quantity: 30,
+      reason: "Stock critique - Livré ✓",
+    },
+  },
+  {
+    id: "pred-past2",
+    productId: "p2",
+    productName: "Mozzarella",
+    predictedDate: getDate(-3),
+    predictedConsumption: 6,
+    confidence: 0.88,
+    recommendation: {
+      action: "buy",
+      quantity: 15,
+      reason: "Réappro hebdo - Livré ✓",
+    },
+  },
+  {
+    id: "pred-past3",
+    productId: "p6",
+    productName: "Viande Hachée",
+    predictedDate: getDate(-2), // 2 days ago
+    predictedConsumption: 8,
+    confidence: 0.91,
+    recommendation: {
+      action: "buy",
+      quantity: 20,
+      reason: "Weekend chargé - Livré ✓",
+    },
+  },
+  {
+    id: "pred-past4",
+    productId: "p7",
+    productName: "Poulet Fermier",
+    predictedDate: getDate(-2),
+    predictedConsumption: 5,
+    confidence: 0.85,
+    recommendation: {
+      action: "buy",
+      quantity: 12,
+      reason: "Promo fournisseur - Livré ✓",
+    },
+  },
+  {
+    id: "pred-past5",
+    productId: "p10",
+    productName: "Pommes de Terre",
+    predictedDate: getDate(-2),
+    predictedConsumption: 30,
+    confidence: 0.92,
+    recommendation: {
+      action: "buy",
+      quantity: 60,
+      reason: "Stock bas - Livré ✓",
+    },
+  },
+  {
+    id: "pred-past6",
+    productId: "p3",
+    productName: "Oeufs",
+    predictedDate: getDate(-1), // Yesterday
+    predictedConsumption: 4,
+    confidence: 0.86,
+    recommendation: {
+      action: "buy",
+      quantity: 18,
+      reason: "Brunch du dimanche - Livré ✓",
+    },
+  },
+  {
+    id: "pred-past7",
+    productId: "p11",
+    productName: "Crème Fraîche",
+    predictedDate: getDate(-1),
+    predictedConsumption: 3,
+    confidence: 0.79,
+    recommendation: {
+      action: "buy",
+      quantity: 8,
+      reason: "Carbonara populaire - Livré ✓",
+    },
+  },
+  {
+    id: "pred-past8",
+    productId: "p14",
+    productName: "Champignons",
+    predictedDate: getDate(-1),
+    predictedConsumption: 2,
+    confidence: 0.82,
+    recommendation: {
+      action: "buy",
+      quantity: 4,
+      reason: "Pizza Reine - Livré ✓",
+    },
+  },
+  // === TODAY ===
+  {
+    id: "pred-today1",
+    productId: "p5",
+    productName: "Farine T55",
+    predictedDate: getDate(0), // Today
+    predictedConsumption: 15,
+    confidence: 0.93,
+    recommendation: {
+      action: "buy",
+      quantity: 40,
+      reason: "Stock critique aujourd'hui",
+    },
+  },
+  {
+    id: "pred-today2",
+    productId: "p4",
+    productName: "Huile d'olive",
+    predictedDate: getDate(0),
+    predictedConsumption: 5,
+    confidence: 0.76,
+    recommendation: {
+      action: "wait",
+      quantity: 0,
+      reason: "Stock OK pour 5 jours",
+    },
+  },
+  // === FUTURE DAYS ===
   {
     id: "pred1",
     productId: "p1",

@@ -84,9 +84,9 @@ const Notifications: React.FC = () => {
         isOpen={isOpen}
         onClose={handleClose}
         title="Notifications"
-        width="sm"
+        width="md"
       >
-        <div className="max-h-80 overflow-y-auto -mx-6 -mt-2">
+        <div className="max-h-80 overflow-y-auto">
           {notifications.length === 0 ? (
             <div className="text-center py-8 text-secondary">
               Aucune notification
@@ -95,7 +95,7 @@ const Notifications: React.FC = () => {
             notifications.map((notif) => (
               <div
                 key={notif.id}
-                className={`px-6 py-4 border-b last:border-0 hover:bg-gray-50 transition-colors ${
+                className={`py-4 border-b last:border-0 hover:bg-gray-50 transition-colors ${
                   !notif.read ? "bg-blue-50/30" : ""
                 }`}
               >
@@ -103,7 +103,7 @@ const Notifications: React.FC = () => {
                   <div className="mt-1 flex-shrink-0">
                     {getIcon(notif.type)}
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-primary">
                       {notif.title}
                     </p>
@@ -119,7 +119,7 @@ const Notifications: React.FC = () => {
             ))
           )}
         </div>
-        <div className="pt-4 border-t text-center -mx-6 -mb-2 pb-2">
+        <div className="pt-4 mt-2 border-t text-center">
           <button className="text-xs text-primary font-medium hover:underline">
             Tout marquer comme lu
           </button>
