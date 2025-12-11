@@ -44,14 +44,18 @@
 .letter-o {
   animation-delay: 0.2s;
 }
-.letter-m {
+.letter-o2 {
   animation-delay: 0.3s;
 }
+.letter-k2 {
+  opacity: 0;
+  animation: letterFade 0.5s ease-out 0.4s forwards;
+}
 .letter-i {
-  animation-delay: 0.4s;
+  animation-delay: 0.5s;
 }
 .letter-a {
-  animation-delay: 0.5s;
+  animation-delay: 0.6s;
 }
 
 /* Eye animations */
