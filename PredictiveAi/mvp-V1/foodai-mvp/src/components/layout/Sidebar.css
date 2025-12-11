@@ -16,11 +16,9 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.logo {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: -0.5px;
+.logo-img {
+  max-height: 36px;
+  width: auto;
 }
 
 .sidebar-nav {
