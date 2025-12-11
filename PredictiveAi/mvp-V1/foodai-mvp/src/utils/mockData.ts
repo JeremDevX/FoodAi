@@ -266,7 +266,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 10,
     confidence: 0.94,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 30,
       reason: "Stock critique - Livré ✓",
     },
@@ -292,7 +292,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 8,
     confidence: 0.91,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 20,
       reason: "Weekend chargé - Livré ✓",
     },
@@ -318,7 +318,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 30,
     confidence: 0.92,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 60,
       reason: "Stock bas - Livré ✓",
     },
@@ -344,7 +344,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 3,
     confidence: 0.79,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 8,
       reason: "Carbonara populaire - Livré ✓",
     },
@@ -371,7 +371,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 15,
     confidence: 0.93,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 40,
       reason: "Stock critique aujourd'hui",
     },
@@ -424,7 +424,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 6,
     confidence: 0.84,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 24,
       reason: "Seuil atteint samedi",
     },
@@ -463,7 +463,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 3.5,
     confidence: 0.88,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 5,
       reason: "Stock critique < seuil",
     },
@@ -489,7 +489,7 @@ export const MOCK_PREDICTIONS: Prediction[] = [
     predictedConsumption: 8.0,
     confidence: 0.91,
     recommendation: {
-      action: "buy",
+      action: "wait",
       quantity: 15,
       reason: "Promo fournisseur fin de semaine",
     },

@@ -1,7 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Button from "../common/Button";
 import Card from "../common/Card";
-import { ShoppingCart, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ShoppingCart,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  AlertTriangle,
+  TrendingUp,
+  ArrowUpDown,
+} from "lucide-react";
 import type { Prediction } from "../../types";
 
 interface RecommendationsSectionProps {
@@ -18,19 +26,42 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   onTogglePrediction,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [sortMode, setSortMode] = useState<
+    "original" | "urgentFirst" | "urgentLast"
+  >("original");
+
+  // Sort predictions based on sort mode
+  const sortedPredictions = useMemo(() => {
+    if (sortMode === "original") return predictions;
+    return [...predictions].sort((a, b) => {
+      const aUrgent = a.recommendation?.action === "buy" ? 1 : 0;
+      const bUrgent = b.recommendation?.action === "buy" ? 1 : 0;
+      return sortMode === "urgentFirst" ? bUrgent - aUrgent : aUrgent - bUrgent;
+    });
+  }, [predictions, sortMode]);
 
   // Calculate pagination
-  const totalPages = Math.ceil(predictions.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(sortedPredictions.length / ITEMS_PER_PAGE);
   const startIndex = currentPage * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedPredictions = predictions.slice(startIndex, endIndex);
+  const paginatedPredictions = sortedPredictions.slice(startIndex, endIndex);
+
+  // Count urgent items
+  const urgentCount = predictions.filter(
+    (p) => p.recommendation?.action === "buy"
+  ).length;
+
+  // Reset to first page when sorting changes
+  React.useEffect(() => {
+    setCurrentPage(0);
+  }, [sortMode]);
 
   // Reset to first page if current page becomes invalid
   React.useEffect(() => {
     if (currentPage >= totalPages && totalPages > 0) {
       setCurrentPage(totalPages - 1);
     }
-  }, [predictions.length, currentPage, totalPages]);
+  }, [sortedPredictions.length, currentPage, totalPages]);
 
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(0, prev - 1));
@@ -42,16 +73,42 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
 
   return (
     <div className="recommendations-section">
-      <div className="section-header flex justify-between items-center mb-4">
-        <h3 className="section-title">Actions Prioritaires</h3>
-        {totalPages > 1 && (
-          <div className="pagination-info">
-            <span className="pagination-text">
-              {startIndex + 1}-{Math.min(endIndex, predictions.length)} sur{" "}
-              {predictions.length}
+      <div className="section-header">
+        <div className="section-header-left">
+          <h3 className="section-title">Actions Prioritaires</h3>
+          {urgentCount > 0 && (
+            <span className="urgent-count-badge">
+              <AlertTriangle size={14} />
+              {urgentCount} urgent{urgentCount > 1 ? "s" : ""}
             </span>
+          )}
+        </div>
+        <div className="section-header-right">
+          <div className="sort-select-wrapper">
+            <ArrowUpDown size={16} />
+            <select
+              className="sort-select"
+              value={sortMode}
+              onChange={(e) =>
+                setSortMode(
+                  e.target.value as "original" | "urgentFirst" | "urgentLast"
+                )
+              }
+            >
+              <option value="original">Original</option>
+              <option value="urgentFirst">Plus important d'abord</option>
+              <option value="urgentLast">Moins important d'abord</option>
+            </select>
           </div>
-        )}
+          {totalPages > 1 && (
+            <div className="pagination-info">
+              <span className="pagination-text">
+                {startIndex + 1}-{Math.min(endIndex, sortedPredictions.length)}{" "}
+                sur {sortedPredictions.length}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="recommendations-list grid-layout">
@@ -71,13 +128,27 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
               >
                 <div className="p-4 flex flex-col h-full justify-between">
                   <div>
+                    {/* Status Badge with text */}
+                    <div
+                      className={`status-badge ${
+                        isUrgent ? "urgent" : "normal"
+                      }`}
+                    >
+                      {isUrgent ? (
+                        <>
+                          <AlertTriangle size={14} />
+                          <span>Urgent</span>
+                        </>
+                      ) : (
+                        <>
+                          <TrendingUp size={14} />
+                          <span>Optimisation</span>
+                        </>
+                      )}
+                    </div>
+
                     <div className="rec-header mb-3">
                       <h4 className="rec-product-name">{pred.productName}</h4>
-                      <div
-                        className={`status-indicator ${
-                          isUrgent ? "urgent" : "moderate"
-                        }`}
-                      />
                     </div>
 
                     <p className="rec-reason mb-4">
