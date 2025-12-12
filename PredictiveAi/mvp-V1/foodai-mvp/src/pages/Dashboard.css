@@ -94,6 +94,13 @@
   margin-top: var(--spacing-xs);
 }
 
+.kpi-subtitle {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
 .kpi-value {
   font-size: 2rem;
   font-weight: 800;
@@ -127,6 +134,14 @@
 }
 .progress-fill.red {
   background: linear-gradient(90deg, var(--color-urgent) 0%, #e63946 100%);
+}
+
+/* Badge AGEC responsive - version courte masquée par défaut */
+.kpi-agec-short {
+  display: none;
+}
+.kpi-agec-full {
+  display: inline;
 }
 
 /* Dashboard Main Grid - Now full width */
@@ -444,31 +459,37 @@
 
   .kpi-card {
     min-height: auto;
+    padding: var(--spacing-md) !important;
   }
 
   .kpi-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     flex-shrink: 0;
   }
 
   .kpi-icon svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
   }
 
   .kpi-value {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
   }
 
   .kpi-label {
-    font-size: 12px;
-    white-space: nowrap;
+    font-size: 11px;
   }
 
-  .kpi-value-row .text-sm {
-    font-size: 11px;
+  .kpi-subtitle {
+    font-size: 10px;
+  }
+
+  .kpi-card .badge,
+  .kpi-card .badge-optimal {
+    font-size: 9px;
+    padding: 3px 6px;
   }
 }
 
@@ -488,26 +509,25 @@
   }
 
   .kpi-card {
-    padding: var(--spacing-sm) var(--spacing-md) !important;
+    padding: var(--spacing-sm) !important;
   }
 
-  /* Header row: icon + badge */
+  /* Card header: icon left, badge right */
   .kpi-card > .flex.justify-between {
-    margin-bottom: var(--spacing-sm) !important;
-    flex-wrap: nowrap;
+    margin-bottom: var(--spacing-xs) !important;
     align-items: center;
   }
 
   .kpi-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     flex-shrink: 0;
   }
 
   .kpi-icon svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
   }
 
   .kpi-label {
@@ -515,34 +535,39 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .kpi-value {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .kpi-value-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 
-  .kpi-value-row .text-sm,
-  .kpi-value-row .text-secondary {
-    font-size: 10px;
-    line-height: 1.2;
+  .kpi-subtitle {
+    font-size: 9px;
   }
 
   .progress-bar {
     height: 4px;
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
   }
 
   .kpi-card .badge,
   .kpi-card .badge-optimal {
     font-size: 8px;
-    padding: 2px 6px;
-    white-space: nowrap;
+    padding: 2px 5px;
+  }
+
+  /* Switch vers version courte du badge AGEC */
+  .kpi-agec-full {
+    display: none;
+  }
+  .kpi-agec-short {
+    display: inline;
   }
 }
 
@@ -554,21 +579,71 @@
 
   .kpi-grid {
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xs);
+    gap: 6px;
   }
 
   .kpi-card {
-    padding: var(--spacing-sm) !important;
+    padding: 8px !important;
   }
 
   .kpi-card > .flex.justify-between {
-    margin-bottom: var(--spacing-xs) !important;
+    margin-bottom: 4px !important;
+  }
+
+  .kpi-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+  }
+
+  .kpi-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .kpi-label {
+    font-size: 9px;
+  }
+
+  .kpi-value {
+    font-size: 1.1rem;
+  }
+
+  .kpi-subtitle {
+    font-size: 8px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    margin-top: 4px;
+  }
+
+  .kpi-card .badge,
+  .kpi-card .badge-optimal {
+    font-size: 7px;
+    padding: 2px 4px;
+  }
+
+  /* Masquer les badges secondaires */
+  .kpi-card .text-moderate {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .kpi-card {
+    padding: 6px !important;
   }
 
   .kpi-icon {
     width: 24px;
     height: 24px;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 
   .kpi-icon svg {
@@ -577,73 +652,16 @@
   }
 
   .kpi-label {
-    font-size: 9px;
+    font-size: 8px;
   }
 
   .kpi-value {
-    font-size: 0.9rem;
-    letter-spacing: -0.03em;
-  }
-
-  .kpi-value-row .text-sm,
-  .kpi-value-row .text-secondary {
-    font-size: 9px;
+    font-size: 1rem;
   }
 
   .progress-bar {
-    height: 3px;
-    margin-top: var(--spacing-xs);
-  }
-
-  .kpi-card .badge,
-  .kpi-card .badge-optimal {
-    font-size: 7px;
-    padding: 1px 4px;
-  }
-
-  /* Hide badges on very small screens if needed */
-  .kpi-card .text-moderate {
-    display: none;
-  }
-}
-
-@media (max-width: 360px) {
-  .kpi-grid {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-sm);
-  }
-
-  .kpi-card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md) !important;
-  }
-
-  .kpi-card > .flex.justify-between {
-    flex-shrink: 0;
-    margin-bottom: 0 !important;
-  }
-
-  .kpi-content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .kpi-value {
-    font-size: 1.25rem;
-  }
-
-  .kpi-value-row {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--spacing-xs);
-  }
-
-  .progress-bar {
-    margin-top: var(--spacing-sm);
+    height: 2px;
+    margin-top: 3px;
   }
 
   .kpi-card .badge,

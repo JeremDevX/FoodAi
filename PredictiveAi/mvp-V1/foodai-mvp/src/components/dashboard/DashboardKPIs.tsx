@@ -1,6 +1,5 @@
 import React from "react";
 import Card from "../common/Card";
-import Badge from "../common/Badge";
 import {
   Users,
   DollarSign,
@@ -29,8 +28,8 @@ const DashboardKPIs: React.FC = () => {
           <span className="kpi-label">Couverts (Hier)</span>
           <div className="kpi-value-row">
             <span className="kpi-value">347</span>
-            <span className="text-secondary text-sm">/ 400 cap.</span>
           </div>
+          <span className="kpi-subtitle">/ 400 cap.</span>
           {/* KPI Progress Bar */}
           <div className="progress-bar">
             <div className="progress-fill blue" style={{ width: "86%" }}></div>
@@ -50,6 +49,7 @@ const DashboardKPIs: React.FC = () => {
           <div className="kpi-value-row">
             <span className="kpi-value">4 892 €</span>
           </div>
+          <span className="kpi-subtitle">ce mois</span>
           <div className="progress-bar">
             <div
               className="progress-fill orange"
@@ -70,8 +70,8 @@ const DashboardKPIs: React.FC = () => {
           <span className="kpi-label">Prévus Demain</span>
           <div className="kpi-value-row">
             <span className="kpi-value">420</span>
-            <span className="text-secondary text-sm">clients</span>
           </div>
+          <span className="kpi-subtitle">clients</span>
           <div className="progress-bar">
             <div className="progress-fill green" style={{ width: "95%" }}></div>
           </div>
@@ -83,14 +83,17 @@ const DashboardKPIs: React.FC = () => {
           <div className="kpi-icon red">
             <AlertTriangle size={24} />
           </div>
-          <Badge label="Objectif AGEC" status="optimal" />
+          <span className="badge badge-optimal kpi-agec-badge">
+            <span className="kpi-agec-full">Objectif AGEC</span>
+            <span className="kpi-agec-short">AGEC</span>
+          </span>
         </div>
         <div className="kpi-content">
           <span className="kpi-label">Gaspillage Est.</span>
           <div className="kpi-value-row">
             <span className="kpi-value text-optimal">-2.3%</span>
-            <span className="text-secondary text-sm">cette semaine</span>
           </div>
+          <span className="kpi-subtitle">cette semaine</span>
           <div className="progress-bar">
             <div
               className="progress-fill green"
