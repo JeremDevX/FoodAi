@@ -130,6 +130,48 @@ const Recipes: React.FC = () => {
                       </span>
                     </div>
                   ))}
+                  {/* Economics Section */}
+                  <div className="cost-row mt-3">
+                    <div className="cost-col">
+                      <span className="cost-label">Coût Matière</span>
+                      <span className="cost-value">
+                        {calculateIngredientCost(recipe.ingredients).toFixed(2)}
+                        €
+                      </span>
+                    </div>
+                    <div className="cost-col items-end">
+                      <span className="cost-label">Marge Est. (75%)</span>
+                      <span className="cost-value margin">
+                        +
+                        {(
+                          calculateIngredientCost(recipe.ingredients) * 3
+                        ).toFixed(2)}
+                        €
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="recipe-actions mt-auto pt-3">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="btn-danger-outline w-full"
+                    icon={<AlertTriangle size={14} />}
+                    onClick={() => {
+                      const qty = window.prompt(
+                        `Combien de "${recipe.name}" refusés par manque de stock ?`
+                      );
+                      if (qty && parseInt(qty) > 0) {
+                        addToast(
+                          "success",
+                          "Demande enregistrée",
+                          `L'IA ajustera les prévisions pour ${recipe.name} (+${qty} demandes).`
+                        );
+                      }
+                    }}
+                  >
+                    Signaler Refus
+                  </Button>
                 </div>
               </Card>
             ))
@@ -220,36 +262,16 @@ const Recipes: React.FC = () => {
                     </div>
                   ))}
                 </div>
-                <div className="flex gap-2 mt-auto">
+                <div className="recipe-actions">
                   <Button
                     size="sm"
-                    className="flex-1"
+                    className="w-full"
                     onClick={() =>
                       handleStartProduction(recipe, recipe.maxYield)
                     }
                     disabled={isProduced}
                   >
-                    {isProduced ? "Produit ✓" : "Produire"}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="btn-danger-outline"
-                    icon={<AlertTriangle size={14} />}
-                    onClick={() => {
-                      const qty = window.prompt(
-                        `Combien de ${recipe.name} refusés faute de stock ?`
-                      );
-                      if (qty && parseInt(qty) > 0) {
-                        addToast(
-                          "success",
-                          "Prévision Ajustée",
-                          `La demande pour ${recipe.name} (+${qty}) a été enregistrée.`
-                        );
-                      }
-                    }}
-                  >
-                    Refus
+                    {isProduced ? "Produit ✓" : "Lancer Production"}
                   </Button>
                 </div>
               </Card>

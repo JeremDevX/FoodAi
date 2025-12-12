@@ -610,7 +610,7 @@ export const MOCK_RECIPES: Recipe[] = [
       { productId: "p12", quantity: 0.05 }, // 50g Parmesan
       { productId: "p11", quantity: 0.05 }, // 50ml Crème (optionnel mais courant)
     ],
-    // Not made recently
+    lastMade: getDateTime(-2, 13), // 2 days ago
   },
   {
     id: "r4",
@@ -624,7 +624,7 @@ export const MOCK_RECIPES: Recipe[] = [
       { productId: "p13", quantity: 0.08 }, // Jambon
       { productId: "p14", quantity: 0.05 }, // Champignons
     ],
-    lastMade: getDateTime(1, 19), // Tomorrow 19h (Planned)
+    lastMade: getDateTime(0, 19), // Today 19h
   },
   {
     id: "r5",
@@ -637,6 +637,7 @@ export const MOCK_RECIPES: Recipe[] = [
       { productId: "p1", quantity: 0.05 }, // 50g Tomate
       { productId: "p9", quantity: 0.02 }, // Oignon
     ],
+    lastMade: getDateTime(-3, 12), // 3 days ago
   },
   {
     id: "r6",
@@ -649,6 +650,7 @@ export const MOCK_RECIPES: Recipe[] = [
       { productId: "p12", quantity: 0.03 }, // Parmesan
       { productId: "p3", quantity: 0.08 }, // 1 oeuf
     ],
+    lastMade: getDateTime(-1, 12), // Yesterday 12h
   },
   {
     id: "r7",
@@ -671,6 +673,7 @@ export const MOCK_RECIPES: Recipe[] = [
       { productId: "p10", quantity: 0.3 }, // 300g Patates
       { productId: "p4", quantity: 0.02 }, // Huile
     ],
+    lastMade: getDateTime(-2, 18), // 2 days ago 18h
   },
   {
     id: "r9",
@@ -682,5 +685,73 @@ export const MOCK_RECIPES: Recipe[] = [
       { productId: "p14", quantity: 0.1 }, // Champignons
       { productId: "p11", quantity: 0.02 }, // Crème
     ],
+    lastMade: getDateTime(-4, 11), // 4 days ago
+  },
+  {
+    id: "r10",
+    name: "Bruschetta Tomates",
+    category: "Entrée",
+    prepTime: 8,
+    ingredients: [
+      { productId: "p1", quantity: 0.12 }, // Tomates
+      { productId: "p4", quantity: 0.02 }, // Huile olive
+      { productId: "p15", quantity: 1 }, // Basilic
+    ],
+    lastMade: getDateTime(-1, 18), // Yesterday 18h
+  },
+  {
+    id: "r11",
+    name: "Gratin Dauphinois",
+    category: "Plat",
+    prepTime: 45,
+    ingredients: [
+      { productId: "p10", quantity: 0.4 }, // Pommes de terre
+      { productId: "p11", quantity: 0.15 }, // Crème
+    ],
+    lastMade: getDateTime(-3, 17), // 3 days ago
+  },
+  {
+    id: "r12",
+    name: "Panna Cotta",
+    category: "Dessert",
+    prepTime: 20,
+    ingredients: [
+      { productId: "p11", quantity: 0.2 }, // Crème
+    ],
+    lastMade: getDateTime(0, 10), // Today 10h
+  },
+  {
+    id: "r13",
+    name: "Escalope Milanaise",
+    category: "Plat",
+    prepTime: 25,
+    ingredients: [
+      { productId: "p7", quantity: 0.2 }, // Poulet
+      { productId: "p3", quantity: 0.08 }, // Oeuf
+      { productId: "p5", quantity: 0.05 }, // Farine
+    ],
+    lastMade: getDateTime(-2, 19), // 2 days ago
+  },
+  {
+    id: "r14",
+    name: "Soupe à l'Oignon",
+    category: "Entrée",
+    prepTime: 35,
+    ingredients: [
+      { productId: "p9", quantity: 0.3 }, // Oignons
+      { productId: "p2", quantity: 0.05 }, // Fromage gratiné
+    ],
+    lastMade: getDateTime(-5, 12), // 5 days ago
+  },
+  {
+    id: "r15",
+    name: "Frites Maison",
+    category: "Plat",
+    prepTime: 20,
+    ingredients: [
+      { productId: "p10", quantity: 0.35 }, // Pommes de terre
+      { productId: "p4", quantity: 0.1 }, // Huile
+    ],
+    lastMade: getDateTime(0, 11), // Today
   },
 ];

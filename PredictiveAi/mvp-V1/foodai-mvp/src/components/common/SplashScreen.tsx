@@ -142,9 +142,9 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         <div className="splash-tagline-container">
           <p className="splash-tagline">L'IA au service de la restauration</p>
           <div className="loading-dots">
-            <span className="dot"></span>
-            <span className="dot"></span>
-            <span className="dot"></span>
+            <span className="loading-dot"></span>
+            <span className="loading-dot"></span>
+            <span className="loading-dot"></span>
           </div>
         </div>
       </div>

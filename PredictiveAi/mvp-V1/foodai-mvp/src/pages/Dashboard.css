@@ -245,21 +245,10 @@
     rgba(192, 21, 47, 0.03) 0%,
     var(--color-surface) 100%
   );
-  animation: urgentPulse 3s ease-in-out infinite;
 }
 
 .recommendation-card.moderate {
   border-left-color: var(--color-moderate);
-}
-
-@keyframes urgentPulse {
-  0%,
-  100% {
-    box-shadow: var(--shadow-card);
-  }
-  50% {
-    box-shadow: 0 4px 20px rgba(192, 21, 47, 0.15);
-  }
 }
 
 /* Urgent count badge in header */
@@ -274,19 +263,8 @@
   font-size: 12px;
   font-weight: 600;
   border-radius: var(--radius-full);
-  animation: badgePulse 2s ease-in-out infinite;
   height: 24px;
   line-height: 1;
-}
-
-@keyframes badgePulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
 }
 
 /* Sort toggle button */
