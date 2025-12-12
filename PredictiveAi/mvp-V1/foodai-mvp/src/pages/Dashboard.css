@@ -37,12 +37,17 @@
 }
 
 .hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .hover-lift:hover::after {
   transform: scaleX(1);
+}
+
+/* Désactiver le dot animé dans les KPI cards */
+.kpi-card .dot {
+  animation: none !important;
 }
 
 .kpi-icon {
@@ -417,7 +422,17 @@
   }
 
   .kpi-value {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+  }
+
+  .kpi-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .kpi-icon svg {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -432,19 +447,19 @@
   }
 
   .kpi-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     flex-shrink: 0;
   }
 
   .kpi-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 
   .kpi-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .kpi-label {
@@ -484,26 +499,26 @@
   }
 
   .kpi-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
     flex-shrink: 0;
   }
 
   .kpi-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
   }
 
   .kpi-label {
-    font-size: 11px;
+    font-size: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .kpi-value {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .kpi-value-row {
@@ -551,22 +566,22 @@
   }
 
   .kpi-icon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 6px;
   }
 
   .kpi-icon svg {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
   }
 
   .kpi-label {
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .kpi-value {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     letter-spacing: -0.03em;
   }
 
