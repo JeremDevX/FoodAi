@@ -119,3 +119,137 @@
   background-color: var(--color-optimal);
   border-radius: 50%;
 }
+
+/* ===========================================
+   RESPONSIVE STYLES
+   =========================================== */
+
+@media (max-width: 768px) {
+  .settings-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .settings-layout {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .settings-nav-card {
+    padding: var(--spacing-xs);
+  }
+
+  .settings-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  .nav-tab {
+    flex: 1;
+    min-width: fit-content;
+    padding: var(--spacing-sm);
+    justify-content: center;
+    font-size: var(--font-size-sm);
+  }
+
+  .nav-tab span {
+    display: none;
+  }
+
+  .nav-tab svg {
+    margin: 0;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .integration-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .integration-item .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-container {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .nav-tab {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .form-grid {
+    gap: var(--spacing-md);
+  }
+
+  .empty-state {
+    padding: var(--spacing-xl);
+  }
+
+  .int-info {
+    gap: var(--spacing-sm);
+  }
+
+  .int-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 9px;
+  }
+
+  .int-info h4 {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 375px) {
+  .settings-container {
+    padding: var(--spacing-xs);
+  }
+
+  .settings-nav {
+    gap: 2px;
+  }
+
+  .nav-tab {
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .form-grid {
+    gap: var(--spacing-sm);
+  }
+
+  .integration-item {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .int-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .status.connected {
+    font-size: 10px;
+  }
+
+  .status.connected::before {
+    width: 5px;
+    height: 5px;
+  }
+
+  .empty-state {
+    padding: var(--spacing-lg);
+    font-size: var(--font-size-sm);
+  }
+}

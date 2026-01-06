@@ -88,3 +88,41 @@
     opacity: 1;
   }
 }
+
+/* ===========================================
+   RESPONSIVE STYLES
+   =========================================== */
+
+@media (max-width: 768px) {
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .toast {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 375px) {
+  .toast-container {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .toast {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .toast-title {
+    font-size: 0.813rem;
+  }
+
+  .toast-message {
+    font-size: 0.75rem;
+  }
+}

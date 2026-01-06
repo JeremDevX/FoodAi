@@ -9,11 +9,17 @@ import {
   HelpCircle,
   LogOut,
   BookOpen,
+  X,
 } from "lucide-react";
 // Styles are imported in Sidebar.css
 import "./Sidebar.css";
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/" },
     { icon: Package, label: "Stocks", path: "/stocks" },
@@ -23,36 +29,60 @@ const Sidebar: React.FC = () => {
     { icon: Settings, label: "Paramètres", path: "/settings" },
   ];
 
+  // Close sidebar on navigation (for mobile)
+  const handleNavClick = () => {
+    onClose();
+  };
+
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <img src="/logo_kookia.svg" alt="KookiA" className="logo-img" />
-      </div>
+    <>
+      {/* Mobile overlay backdrop */}
+      <div
+        className={`sidebar-overlay ${isOpen ? "open" : ""}`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
-      <nav className="sidebar-nav">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+      <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <img src="/logo_kookia.svg" alt="KookiA" className="logo-img" />
+          <button
+            className="sidebar-close-btn"
+            onClick={onClose}
+            aria-label="Fermer le menu"
           >
-            <item.icon size={20} />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
-      </nav>
+            <X size={24} />
+          </button>
+        </div>
 
-      <div className="sidebar-footer">
-        <a href="#" className="nav-item">
-          <HelpCircle size={20} />
-          <span>Support</span>
-        </a>
-        <button className="nav-item logout-btn">
-          <LogOut size={20} />
-          <span>Déconnexion</span>
-        </button>
-      </div>
-    </aside>
+        <nav className="sidebar-nav">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              onClick={handleNavClick}
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active" : ""}`
+              }
+            >
+              <item.icon size={20} />
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <a href="#" className="nav-item" onClick={handleNavClick}>
+            <HelpCircle size={20} />
+            <span>Support</span>
+          </a>
+          <button className="nav-item logout-btn">
+            <LogOut size={20} />
+            <span>Déconnexion</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };
 

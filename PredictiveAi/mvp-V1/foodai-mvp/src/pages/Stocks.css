@@ -188,6 +188,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .stocks-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
   .stocks-table th,
   .stocks-table td {
     padding: var(--spacing-sm) var(--spacing-md);
@@ -196,5 +201,125 @@
   .stocks-table th:first-child,
   .stocks-table td:first-child {
     padding-left: var(--spacing-md);
+  }
+
+  .toolbar-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-wrapper {
+    max-width: 100%;
+  }
+
+  .filters-wrapper {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .stocks-container {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .stocks-toolbar {
+    padding: var(--spacing-sm);
+  }
+
+  .stocks-table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .stocks-table {
+    min-width: 500px;
+  }
+
+  .stocks-table th,
+  .stocks-table td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .product-name {
+    font-size: var(--font-size-sm);
+  }
+
+  .stock-value {
+    font-size: var(--font-size-sm);
+  }
+
+  .stock-action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .actions-cell {
+    gap: var(--spacing-sm);
+  }
+
+  .category-select {
+    padding: 8px 10px;
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 375px) {
+  .stocks-container {
+    padding: var(--spacing-xs);
+  }
+
+  .stocks-toolbar {
+    padding: var(--spacing-xs);
+  }
+
+  .toolbar-content {
+    gap: var(--spacing-sm);
+  }
+
+  .filters-wrapper {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .category-select {
+    width: 100%;
+  }
+
+  .stocks-table {
+    min-width: 450px;
+  }
+
+  .stocks-table th,
+  .stocks-table td {
+    padding: 6px 8px;
+  }
+
+  .product-name {
+    font-size: var(--font-size-xs);
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .stock-value {
+    font-size: var(--font-size-xs);
+  }
+
+  .unit {
+    font-size: 9px;
+  }
+
+  .stock-action-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .stock-adjust {
+    gap: 2px;
   }
 }

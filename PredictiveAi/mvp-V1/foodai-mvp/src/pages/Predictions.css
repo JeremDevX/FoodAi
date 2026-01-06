@@ -591,6 +591,95 @@
   .week-summary {
     flex-wrap: wrap;
   }
+
+  /* Prediction card list layout */
+  .pred-main {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .predictions-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .view-toggles {
+    width: 100%;
+  }
+
+  .view-toggles > * {
+    flex: 1;
+  }
+
+  .pred-main {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .pred-header {
+    flex-wrap: wrap;
+  }
+
+  .product-name {
+    font-size: var(--font-size-lg);
+    width: 100%;
+  }
+
+  .pred-stats {
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .stat .value {
+    font-size: var(--font-size-base);
+  }
+
+  .recommendation-box {
+    padding: var(--spacing-sm);
+  }
+
+  .rec-value {
+    font-size: var(--font-size-base);
+  }
+
+  .rec-sub {
+    font-size: var(--font-size-xs);
+    word-break: break-word;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .action-buttons button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Compact card mobile */
+  .pred-compact {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .pred-meta {
+    flex-wrap: wrap;
+  }
+
+  .compact-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ordered-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    top: 8px;
+    right: 8px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1399,4 +1488,252 @@
 
 .month-legend-dot.normal {
   background: var(--color-primary);
+}
+
+/* ===========================================
+   MOBILE RESPONSIVE STYLES (375px)
+   =========================================== */
+
+@media (max-width: 480px) {
+  .predictions-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .view-mode-toggle {
+    width: 100%;
+  }
+
+  .view-toggle-btn {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: var(--font-size-xs);
+  }
+
+  .featured-predictions {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .featured-pred-item {
+    min-height: 60px;
+    padding: var(--spacing-xs);
+  }
+
+  .pred-name {
+    font-size: var(--font-size-xs);
+  }
+
+  .pred-qty {
+    font-size: 16px;
+  }
+
+  .featured-day-number {
+    font-size: 48px;
+  }
+
+  .month-grid {
+    gap: 2px;
+  }
+
+  .month-cell {
+    min-height: 50px;
+    padding: 4px;
+  }
+
+  .month-day-number {
+    font-size: 12px;
+  }
+
+  .month-count {
+    font-size: 9px;
+    padding: 1px 4px;
+  }
+
+  .month-legend {
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .month-legend-item {
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .month-legend-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 375px) {
+  .predictions-container {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .calendar-header {
+    padding: var(--spacing-sm);
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .calendar-title {
+    font-size: var(--font-size-base);
+  }
+
+  .calendar-nav button {
+    width: 28px;
+    height: 28px;
+  }
+
+  .week-summary {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .summary-stat {
+    font-size: var(--font-size-xs);
+  }
+
+  .featured-header {
+    padding: var(--spacing-md);
+  }
+
+  .featured-day-name {
+    font-size: var(--font-size-sm);
+  }
+
+  .featured-day-number {
+    font-size: 40px;
+  }
+
+  .featured-month {
+    font-size: var(--font-size-sm);
+  }
+
+  .featured-content {
+    padding: var(--spacing-sm);
+  }
+
+  .featured-predictions {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .featured-pred-item {
+    min-height: 55px;
+    border-top-width: 2px;
+  }
+
+  .pred-name {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pred-reason {
+    display: none;
+  }
+
+  .pred-qty {
+    font-size: 14px;
+  }
+
+  .pred-qty .unit {
+    font-size: 10px;
+  }
+
+  .pred-badge {
+    font-size: 8px;
+    padding: 2px 6px;
+  }
+
+  .quick-order-btn {
+    padding: 8px 12px;
+    font-size: var(--font-size-xs);
+  }
+
+  .featured-footer {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  /* Other days section */
+  .other-days-grid {
+    padding-left: 15px;
+    gap: var(--spacing-sm);
+  }
+
+  .mini-day-card {
+    padding: var(--spacing-sm);
+    min-height: 120px;
+  }
+
+  .mini-day-number {
+    font-size: var(--font-size-lg);
+  }
+
+  .mini-day-name {
+    font-size: var(--font-size-xs);
+  }
+
+  .mini-pred {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  /* Monthly view mobile */
+  .monthly-view {
+    padding: var(--spacing-sm);
+  }
+
+  .month-header-row {
+    gap: 1px;
+  }
+
+  .month-day-header {
+    font-size: 9px;
+    padding: 6px 0;
+  }
+
+  .month-grid {
+    gap: 1px;
+  }
+
+  .month-cell {
+    min-height: 44px;
+    padding: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  .month-day-number {
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .month-day-info {
+    gap: 2px;
+  }
+
+  .month-count {
+    font-size: 8px;
+    padding: 1px 3px;
+  }
+
+  .month-legend {
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+  }
+
+  .month-legend-item {
+    font-size: 9px;
+  }
+
+  .month-legend-dot {
+    width: 8px;
+    height: 8px;
+  }
 }

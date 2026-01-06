@@ -1,13 +1,27 @@
 import React from "react";
+import { Menu } from "lucide-react";
 import Notifications from "./Notifications";
 import "../../styles/index.css";
 import "./TopNav.css";
 
-const TopNav: React.FC = () => {
+interface TopNavProps {
+  onMenuClick: () => void;
+}
+
+const TopNav: React.FC<TopNavProps> = ({ onMenuClick }) => {
   return (
     <header className="top-nav">
-      <div className="breadcrumbs">
-        <span className="current-page">Dashboard</span>
+      <div className="top-nav-left">
+        <button
+          className="hamburger-btn"
+          onClick={onMenuClick}
+          aria-label="Ouvrir le menu"
+        >
+          <Menu size={24} />
+        </button>
+        <div className="breadcrumbs">
+          <span className="current-page">Dashboard</span>
+        </div>
       </div>
 
       <div className="top-nav-actions">

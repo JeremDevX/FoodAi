@@ -728,3 +728,79 @@
   border-radius: var(--radius-full);
   box-shadow: 0 2px 6px rgba(0, 199, 150, 0.35);
 }
+
+/* Mobile pagination adjustments */
+@media (max-width: 480px) {
+  .pagination-controls {
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+  }
+
+  .pagination-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .pagination-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .pagination-dot.active {
+    width: 20px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .urgent-count-badge {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 375px) {
+  .pagination-controls {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs);
+    flex-wrap: wrap;
+  }
+
+  .pagination-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .pagination-text {
+    font-size: var(--font-size-xs);
+  }
+
+  .recommendation-card {
+    padding: var(--spacing-sm);
+  }
+
+  .rec-product-name {
+    font-size: var(--font-size-base);
+  }
+
+  .rec-details {
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .rec-detail-item .label {
+    font-size: 9px;
+  }
+
+  .rec-detail-item .value {
+    font-size: var(--font-size-sm);
+  }
+}

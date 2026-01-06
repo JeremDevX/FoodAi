@@ -184,3 +184,129 @@
   border: 1px dashed var(--color-border);
   grid-column: 1 / -1;
 }
+
+/* ===========================================
+   RESPONSIVE STYLES
+   =========================================== */
+
+@media (max-width: 768px) {
+  .recipes-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .recipe-header {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .recipe-title {
+    font-size: var(--font-size-base);
+  }
+
+  .recipe-meta {
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .cost-row {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .empty-week {
+    padding: var(--spacing-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .recipes-container {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .recipe-card .card-content {
+    gap: var(--spacing-sm);
+  }
+
+  .recipe-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .recipe-meta {
+    flex-wrap: wrap;
+  }
+
+  .ingredients-box {
+    padding: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .ingredient-row {
+    font-size: 10px;
+    padding: 3px 0;
+  }
+
+  .recipe-actions {
+    padding-top: var(--spacing-xs);
+  }
+
+  .recipe-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 375px) {
+  .recipes-container {
+    padding: var(--spacing-xs);
+  }
+
+  .recipe-card {
+    padding: var(--spacing-sm);
+  }
+
+  .recipe-title {
+    font-size: var(--font-size-sm);
+  }
+
+  .recipe-meta-item {
+    font-size: 10px;
+  }
+
+  .stock-match-badge {
+    font-size: var(--font-size-xs);
+    padding: 3px 6px;
+  }
+
+  .cost-row {
+    font-size: 10px;
+  }
+
+  .cost-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cost-value {
+    font-size: var(--font-size-sm);
+  }
+
+  .produced-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .empty-week {
+    padding: var(--spacing-lg);
+    font-size: var(--font-size-sm);
+  }
+}
