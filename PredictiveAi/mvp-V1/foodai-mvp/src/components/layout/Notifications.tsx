@@ -440,27 +440,22 @@ const Notifications: React.FC = () => {
                                 gap: "10px",
                                 fontSize: "13px",
                                 fontWeight: 600,
-                                color: "white",
-                                background:
-                                  "linear-gradient(135deg, var(--color-primary, #00c796) 0%, #00b386 100%)",
-                                border: "none",
-                                padding: "12px 16px",
+                                color: "var(--color-primary, #00c796)",
+                                background: "transparent",
+                                border:
+                                  "1.5px solid var(--color-primary, #00c796)",
+                                padding: "10px 16px",
                                 borderRadius: "8px",
                                 cursor: "pointer",
                                 transition: "all 0.2s ease",
-                                boxShadow: "0 4px 12px rgba(0, 199, 150, 0.25)",
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.transform =
-                                  "translateY(-1px)";
-                                e.currentTarget.style.boxShadow =
-                                  "0 6px 16px rgba(0, 199, 150, 0.35)";
+                                e.currentTarget.style.background =
+                                  "rgba(0, 199, 150, 0.08)";
                               }}
                               onMouseLeave={(e) => {
-                                e.currentTarget.style.transform =
-                                  "translateY(0)";
-                                e.currentTarget.style.boxShadow =
-                                  "0 4px 12px rgba(0, 199, 150, 0.25)";
+                                e.currentTarget.style.background =
+                                  "transparent";
                               }}
                             >
                               <ShoppingCart size={16} />
