@@ -11,7 +11,7 @@
 
   /* Colors - Secondary (Teal for accents) */
   --color-teal: #218083;
-  --color-teal-light: rgba(33, 128, 141, 0.1);
+  --color-teal-light: #21808d1a;
 
   /* Colors - Status */
   --color-urgent: #c0152f;

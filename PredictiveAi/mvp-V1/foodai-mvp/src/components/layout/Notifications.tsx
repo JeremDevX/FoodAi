@@ -28,6 +28,8 @@ interface Notification {
   productName?: string;
   suggestedQuantity?: number;
   unit?: string;
+  currentStock?: number;
+  estimatedRunout?: string;
 }
 
 const MOCK_NOTIFICATIONS: Notification[] = [
@@ -36,7 +38,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     type: "alert",
     title: "Alerte Météo",
     message:
-      "Orages violents prévus demain soir. Impact terrasse estimé : -30%.",
+      "Orages violents prévus demain soir. Impact terrasse estimé : -30%. Réduisez les commandes de produits frais.",
     time: "Il y a 10 min",
     read: false,
     actionable: false,
@@ -44,28 +46,34 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: "n2",
     type: "warning",
-    title: "Stock Critique",
-    message: "Mozzarella à épuisement dans 2 services.",
+    title: "🚨 Stock Critique - Mozzarella",
+    message:
+      "Stock actuel : 2 kg | Épuisement prévu dans 2 services (~18h). Consommation moyenne : 4 kg/jour.",
     time: "Il y a 1h",
     read: false,
     actionable: true,
     productId: "p2",
     productName: "Mozzarella di Bufala",
-    suggestedQuantity: 5,
+    suggestedQuantity: 8,
     unit: "kg",
+    currentStock: 2,
+    estimatedRunout: "2 services",
   },
   {
     id: "n3",
-    type: "info",
-    title: "Opportunité Achat",
-    message: "Promo -20% sur la Tomate chez Franck Légumes.",
-    time: "Il y a 3h",
+    type: "warning",
+    title: "⚠️ Stock Critique - Tomates",
+    message:
+      "Stock actuel : 5 kg | Épuisement prévu demain matin. Consommation moyenne : 6 kg/jour.",
+    time: "Il y a 2h",
     read: false,
     actionable: true,
     productId: "p1",
     productName: "Tomates San Marzano",
-    suggestedQuantity: 10,
+    suggestedQuantity: 15,
     unit: "kg",
+    currentStock: 5,
+    estimatedRunout: "demain matin",
   },
 ];
 
@@ -274,7 +282,7 @@ const Notifications: React.FC = () => {
       >
         <div
           style={{
-            maxHeight: "400px",
+            maxHeight: "65vh",
             overflowY: "auto",
             padding: "8px 4px",
           }}
@@ -388,32 +396,37 @@ const Notifications: React.FC = () => {
                               style={{
                                 display: "inline-flex",
                                 alignItems: "center",
-                                gap: "6px",
-                                fontSize: "12px",
+                                gap: "8px",
+                                fontSize: "13px",
                                 color: "var(--color-optimal, #228b5b)",
-                                fontWeight: 500,
+                                fontWeight: 600,
+                                background: "rgba(34, 139, 91, 0.08)",
+                                padding: "10px 14px",
+                                borderRadius: "8px",
                               }}
                             >
-                              <Check size={14} />
-                              Ajouté au panier
+                              <Check size={16} />✓ {notif.suggestedQuantity}{" "}
+                              {notif.unit} ajoutés au panier
                             </div>
                           ) : processingId === notif.id ? (
                             <div
                               style={{
                                 display: "inline-flex",
                                 alignItems: "center",
-                                gap: "6px",
-                                fontSize: "12px",
+                                gap: "8px",
+                                fontSize: "13px",
                                 color: "var(--color-primary, #00c796)",
-                                fontWeight: 500,
+                                fontWeight: 600,
+                                background: "rgba(0, 199, 150, 0.08)",
+                                padding: "10px 14px",
+                                borderRadius: "8px",
                               }}
                             >
                               <Loader2
-                                size={14}
-                                className="animate-spin"
+                                size={16}
                                 style={{ animation: "spin 1s linear infinite" }}
                               />
-                              Ajout en cours...
+                              Ajout de {notif.suggestedQuantity} {notif.unit}...
                             </div>
                           ) : (
                             <button
@@ -422,30 +435,38 @@ const Notifications: React.FC = () => {
                                 handleAddToCart(notif);
                               }}
                               style={{
-                                display: "inline-flex",
+                                display: "flex",
                                 alignItems: "center",
-                                gap: "6px",
-                                fontSize: "12px",
+                                gap: "10px",
+                                fontSize: "13px",
                                 fontWeight: 600,
-                                color: "var(--color-primary, #00c796)",
-                                background: "rgba(0, 199, 150, 0.1)",
-                                border: "1px solid rgba(0, 199, 150, 0.3)",
-                                padding: "6px 12px",
-                                borderRadius: "6px",
+                                color: "white",
+                                background:
+                                  "linear-gradient(135deg, var(--color-primary, #00c796) 0%, #00b386 100%)",
+                                border: "none",
+                                padding: "12px 16px",
+                                borderRadius: "8px",
                                 cursor: "pointer",
                                 transition: "all 0.2s ease",
+                                boxShadow: "0 4px 12px rgba(0, 199, 150, 0.25)",
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background =
-                                  "rgba(0, 199, 150, 0.2)";
+                                e.currentTarget.style.transform =
+                                  "translateY(-1px)";
+                                e.currentTarget.style.boxShadow =
+                                  "0 6px 16px rgba(0, 199, 150, 0.35)";
                               }}
                               onMouseLeave={(e) => {
-                                e.currentTarget.style.background =
-                                  "rgba(0, 199, 150, 0.1)";
+                                e.currentTarget.style.transform =
+                                  "translateY(0)";
+                                e.currentTarget.style.boxShadow =
+                                  "0 4px 12px rgba(0, 199, 150, 0.25)";
                               }}
                             >
-                              <ShoppingCart size={14} />+ Ajouter{" "}
-                              {notif.suggestedQuantity}
+                              <ShoppingCart size={16} />
+                              <span>
+                                Commander {notif.suggestedQuantity} {notif.unit}
+                              </span>
                             </button>
                           )}
                         </div>
