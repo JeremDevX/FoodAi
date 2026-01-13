@@ -88,7 +88,7 @@ const Settings: React.FC = () => {
               <div className="form-grid">
                 <Input
                   label="Nom du restaurant"
-                  defaultValue="La Pizzeria de Jean"
+                  defaultValue="La Pizzeria de Camille"
                 />
                 <div className="grid-2">
                   <Input label="Type" defaultValue="Pizzeria / Crêperie" />
@@ -96,7 +96,7 @@ const Settings: React.FC = () => {
                 </div>
                 <Input
                   label="Adresse"
-                  defaultValue="12 Rue de Paris, 75001 Paris"
+                  defaultValue="12 Rue de Grenoble, 38000 Grenoble"
                 />
                 <div className="grid-2">
                   <Input label="Téléphone" defaultValue="+33 1 23 45 67 89" />

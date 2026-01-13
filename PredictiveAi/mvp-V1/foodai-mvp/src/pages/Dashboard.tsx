@@ -128,9 +128,9 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <header className="page-header glass-header">
         <div>
-          <h1 className="page-title">Bienvenue, Jean ! 👋</h1>
+          <h1 className="page-title">Bienvenue, Camille ! 👋</h1>
           <p className="page-subtitle flex items-center gap-sm">
-            <Calendar size={14} /> {todayDate} • Paris • ☀️ 18°C
+            <Calendar size={14} /> {todayDate} • Grenoble • ☀️ 18°C
           </p>
         </div>
         <div className="header-actions">

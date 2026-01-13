@@ -27,8 +27,8 @@ const TopNav: React.FC<TopNavProps> = ({ onMenuClick }) => {
       <div className="top-nav-actions">
         <Notifications />
         <div className="user-profile">
-          <div className="avatar">JM</div>
-          <span className="username">Jean Martin</span>
+          <div className="avatar">CM</div>
+          <span className="username">Camille MM</span>
         </div>
       </div>
     </header>

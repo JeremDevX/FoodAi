@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Bell,
   AlertTriangle,
@@ -11,8 +10,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Modal from "../common/Modal";
+import OrderGenerator from "../dashboard/OrderGenerator";
 import { useToast } from "../../context/ToastContext";
-import { useCart } from "../../context/CartContext";
+import { useCart, type CartItem } from "../../context/CartContext";
+import { MOCK_PRODUCTS, type Prediction } from "../../utils/mockData";
 
 interface Notification {
   id: string;
@@ -88,14 +89,16 @@ const iconBadgeStyles = {
 };
 
 const Notifications: React.FC = () => {
-  const navigate = useNavigate();
   const { addToast } = useToast();
   const {
     addToCart: addToGlobalCart,
     addMultipleToCart,
     cartCount,
+    cartItems,
+    clearCart,
   } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
   const [addedToCart, setAddedToCart] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -179,15 +182,34 @@ const Notifications: React.FC = () => {
     );
   };
 
-  // Navigate to Dashboard to generate order
+  // Convert cart items to Prediction format for OrderGenerator
+  const cartPredictions: Prediction[] = cartItems.map((item: CartItem) => {
+    const product = MOCK_PRODUCTS.find((p) => p.id === item.productId);
+    return {
+      id: item.id,
+      productId: item.productId,
+      productName: item.productName,
+      predictedDate: new Date().toISOString().split("T")[0],
+      predictedConsumption: item.quantity,
+      confidence: 0.95,
+      recommendation: {
+        action: "buy" as const,
+        quantity: item.quantity,
+        reason: `Depuis notifications - ${product?.category || "Stock"}`,
+      },
+    };
+  });
+
+  // Open OrderGenerator modal directly
   const handleGenerateOrder = () => {
     setIsOpen(false);
-    navigate("/");
-    addToast(
-      "info",
-      "Redirection",
-      'Utilisez le bouton "Générer Commandes" sur le Dashboard.'
-    );
+    setIsOrderModalOpen(true);
+  };
+
+  const handleCloseOrderModal = () => {
+    setIsOrderModalOpen(false);
+    clearCart();
+    setAddedToCart([]);
   };
 
   const handleOpen = () => {
@@ -528,6 +550,19 @@ const Notifications: React.FC = () => {
             </button>
           )}
         </div>
+      </Modal>
+
+      {/* Order Generator Modal */}
+      <Modal
+        isOpen={isOrderModalOpen}
+        onClose={handleCloseOrderModal}
+        title="Générateur de Commandes"
+        width="lg"
+      >
+        <OrderGenerator
+          recommendations={cartPredictions}
+          onClose={handleCloseOrderModal}
+        />
       </Modal>
     </>
   );

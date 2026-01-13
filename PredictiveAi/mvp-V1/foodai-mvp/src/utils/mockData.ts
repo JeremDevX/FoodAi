@@ -47,7 +47,7 @@ export const MOCK_SUPPLIERS: Supplier[] = [
   },
   {
     id: "sup3",
-    name: "Avicole Martin",
+    name: "Avicole MM",
     email: "oeufs@martin.fr",
     phone: "+33 6 00 11 22 33",
   },

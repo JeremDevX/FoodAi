@@ -72,7 +72,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
             <option value="all">Tous les fournisseurs</option>
             <option value="sup1">Franck Légumes</option>
             <option value="sup2">Fromages Dupont</option>
-            <option value="sup3">Avicole Martin</option>
+            <option value="sup3">Avicole MM</option>
             <option value="sup4">Viandes de Rungis</option>
             <option value="sup5">Bio Local IDF</option>
           </select>
