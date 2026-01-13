@@ -1,6 +1,18 @@
 import React, { useState } from "react";
-import { Bell, AlertTriangle, CloudRain, Lightbulb } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+  Bell,
+  AlertTriangle,
+  CloudRain,
+  Lightbulb,
+  ShoppingCart,
+  Check,
+  Loader2,
+  ArrowRight,
+} from "lucide-react";
 import Modal from "../common/Modal";
+import { useToast } from "../../context/ToastContext";
+import { useCart } from "../../context/CartContext";
 
 interface Notification {
   id: string;
@@ -9,6 +21,12 @@ interface Notification {
   message: string;
   time: string;
   read: boolean;
+  // Fields for quick cart feature
+  actionable?: boolean;
+  productId?: string;
+  productName?: string;
+  suggestedQuantity?: number;
+  unit?: string;
 }
 
 const MOCK_NOTIFICATIONS: Notification[] = [
@@ -20,6 +38,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
       "Orages violents prévus demain soir. Impact terrasse estimé : -30%.",
     time: "Il y a 10 min",
     read: false,
+    actionable: false,
   },
   {
     id: "n2",
@@ -28,6 +47,11 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     message: "Mozzarella à épuisement dans 2 services.",
     time: "Il y a 1h",
     read: false,
+    actionable: true,
+    productId: "p2",
+    productName: "Mozzarella di Bufala",
+    suggestedQuantity: 5,
+    unit: "kg",
   },
   {
     id: "n3",
@@ -36,6 +60,11 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     message: "Promo -20% sur la Tomate chez Franck Légumes.",
     time: "Il y a 3h",
     read: false,
+    actionable: true,
+    productId: "p1",
+    productName: "Tomates San Marzano",
+    suggestedQuantity: 10,
+    unit: "kg",
   },
 ];
 
@@ -47,7 +76,7 @@ const iconBadgeStyles = {
     boxShadow: "0 4px 12px rgba(33, 128, 131, 0.35)",
   },
   warning: {
-    // Moderate (orange) pour warnings
+    // Urgent (rouge) pour warnings
     background: "linear-gradient(135deg, #c0152f 0%, #a01228 100%)",
     boxShadow: "0 4px 12px rgba(192, 21, 47, 0.35)",
   },
@@ -59,12 +88,106 @@ const iconBadgeStyles = {
 };
 
 const Notifications: React.FC = () => {
+  const navigate = useNavigate();
+  const { addToast } = useToast();
+  const {
+    addToCart: addToGlobalCart,
+    addMultipleToCart,
+    cartCount,
+  } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+  const [addedToCart, setAddedToCart] = useState<string[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingId, setProcessingId] = useState<string | null>(null);
   const unreadCount = notifications.filter((n) => !n.read).length;
+  const actionableNotifications = notifications.filter(
+    (n) => n.actionable && !addedToCart.includes(n.id)
+  );
 
   const markAsRead = () => {
     setNotifications(notifications.map((n) => ({ ...n, read: true })));
+  };
+
+  // Add single item to cart
+  const handleAddToCart = (notif: Notification) => {
+    if (!notif.productName || !notif.productId) return;
+
+    setAddedToCart((prev) => [...prev, notif.id]);
+
+    // Add to global cart context
+    addToGlobalCart({
+      id: notif.id,
+      productId: notif.productId,
+      productName: notif.productName,
+      quantity: notif.suggestedQuantity || 0,
+      unit: notif.unit || "kg",
+      source: "notification",
+    });
+
+    addToast(
+      "success",
+      "Ajouté au panier",
+      `${notif.productName} (${notif.suggestedQuantity} ${notif.unit}) ajouté à la commande.`
+    );
+  };
+
+  // Add all actionable items to cart with animated processing
+  const handleAddAllToCart = async () => {
+    if (actionableNotifications.length === 0) {
+      addToast(
+        "info",
+        "Panier à jour",
+        "Tous les articles sont déjà dans le panier."
+      );
+      return;
+    }
+
+    setIsProcessing(true);
+    const itemsToAdd: typeof actionableNotifications = [];
+
+    // Process each notification with a delay for visual feedback
+    for (const notif of actionableNotifications) {
+      setProcessingId(notif.id);
+      await new Promise((resolve) => setTimeout(resolve, 600)); // 600ms per item
+      setAddedToCart((prev) => [...prev, notif.id]);
+      if (notif.productId && notif.productName) {
+        itemsToAdd.push(notif);
+      }
+    }
+
+    // Add all to global cart
+    addMultipleToCart(
+      itemsToAdd.map((n) => ({
+        id: n.id,
+        productId: n.productId!,
+        productName: n.productName!,
+        quantity: n.suggestedQuantity || 0,
+        unit: n.unit || "kg",
+        source: "notification" as const,
+      }))
+    );
+
+    setProcessingId(null);
+    setIsProcessing(false);
+
+    // Summary toast
+    addToast(
+      "success",
+      "Commande prête !",
+      `${actionableNotifications.length} article(s) ajouté(s). Cliquez sur "Générer la commande" pour continuer.`
+    );
+  };
+
+  // Navigate to Dashboard to generate order
+  const handleGenerateOrder = () => {
+    setIsOpen(false);
+    navigate("/");
+    addToast(
+      "info",
+      "Redirection",
+      'Utilisez le bouton "Générer Commandes" sur le Dashboard.'
+    );
   };
 
   const handleOpen = () => {
@@ -234,6 +357,77 @@ const Notifications: React.FC = () => {
                       >
                         {notif.message}
                       </p>
+
+                      {/* Action button for actionable notifications */}
+                      {notif.actionable && (
+                        <div style={{ marginTop: "12px" }}>
+                          {addedToCart.includes(notif.id) ? (
+                            <div
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "6px",
+                                fontSize: "12px",
+                                color: "var(--color-optimal, #228b5b)",
+                                fontWeight: 500,
+                              }}
+                            >
+                              <Check size={14} />
+                              Ajouté au panier
+                            </div>
+                          ) : processingId === notif.id ? (
+                            <div
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "6px",
+                                fontSize: "12px",
+                                color: "var(--color-primary, #00c796)",
+                                fontWeight: 500,
+                              }}
+                            >
+                              <Loader2
+                                size={14}
+                                className="animate-spin"
+                                style={{ animation: "spin 1s linear infinite" }}
+                              />
+                              Ajout en cours...
+                            </div>
+                          ) : (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(notif);
+                              }}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "6px",
+                                fontSize: "12px",
+                                fontWeight: 600,
+                                color: "var(--color-primary, #00c796)",
+                                background: "rgba(0, 199, 150, 0.1)",
+                                border: "1px solid rgba(0, 199, 150, 0.3)",
+                                padding: "6px 12px",
+                                borderRadius: "6px",
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background =
+                                  "rgba(0, 199, 150, 0.2)";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background =
+                                  "rgba(0, 199, 150, 0.1)";
+                              }}
+                            >
+                              <ShoppingCart size={14} />+ Ajouter{" "}
+                              {notif.suggestedQuantity}
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -242,42 +436,97 @@ const Notifications: React.FC = () => {
           )}
         </div>
 
-        {/* Footer avec séparateur et bouton stylisé */}
+        {/* Footer avec boutons d'action */}
         <div
           style={{
             marginTop: "20px",
             paddingTop: "16px",
             borderTop: "1px solid var(--color-border, #e5e7eb)",
             display: "flex",
+            gap: "12px",
             justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
+          {/* Commander tout button */}
           <button
+            onClick={handleAddAllToCart}
+            disabled={isProcessing || actionableNotifications.length === 0}
             style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
               fontSize: "13px",
               fontWeight: 600,
               color: "white",
-              background: "linear-gradient(135deg, #00c796 0%, #00b386 100%)",
+              background:
+                isProcessing || actionableNotifications.length === 0
+                  ? "#d1d5db"
+                  : "linear-gradient(135deg, #00c796 0%, #00b386 100%)",
               border: "none",
-              padding: "10px 24px",
+              padding: "10px 20px",
               borderRadius: "var(--radius-md, 10px)",
-              cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(0, 199, 150, 0.3)",
+              cursor:
+                isProcessing || actionableNotifications.length === 0
+                  ? "not-allowed"
+                  : "pointer",
+              boxShadow:
+                isProcessing || actionableNotifications.length === 0
+                  ? "none"
+                  : "0 4px 12px rgba(0, 199, 150, 0.3)",
               transition: "all 0.2s ease",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow =
-                "0 6px 16px rgba(0, 199, 150, 0.4);";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 4px 12px rgba(0, 199, 150, 0.3)";
-            }}
           >
-            ✓ Tout marquer comme lu
+            {isProcessing ? (
+              <>
+                <Loader2
+                  size={16}
+                  style={{ animation: "spin 1s linear infinite" }}
+                />
+                Traitement...
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={16} />
+                Commander tout ({actionableNotifications.length})
+              </>
+            )}
           </button>
+
+          {/* Générer la commande button - shows when cart has items */}
+          {cartCount > 0 && (
+            <button
+              onClick={handleGenerateOrder}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "white",
+                background: "linear-gradient(135deg, #1b263b 0%, #0f172a 100%)",
+                border: "none",
+                padding: "10px 20px",
+                borderRadius: "var(--radius-md, 10px)",
+                cursor: "pointer",
+                boxShadow: "0 4px 12px rgba(27, 38, 59, 0.3)",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-1px)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 16px rgba(27, 38, 59, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 12px rgba(27, 38, 59, 0.3)";
+              }}
+            >
+              <ArrowRight size={16} />
+              Générer la commande ({cartCount})
+            </button>
+          )}
         </div>
       </Modal>
     </>

@@ -7,8 +7,10 @@ import DashboardKPIs from "../components/dashboard/DashboardKPIs";
 import RecommendationsSection from "../components/dashboard/RecommendationsSection";
 import OrderGenerator from "../components/dashboard/OrderGenerator";
 import { useToast } from "../context/ToastContext";
+import { useCart } from "../context/CartContext";
 import { Calendar, FileText, ChefHat, ShoppingBag } from "lucide-react";
-import { MOCK_PREDICTIONS } from "../utils/mockData";
+import { MOCK_PREDICTIONS, MOCK_PRODUCTS } from "../utils/mockData";
+import type { Prediction } from "../utils/mockData";
 import "./Dashboard.css";
 
 const Dashboard: React.FC = () => {
@@ -20,6 +22,7 @@ const Dashboard: React.FC = () => {
   );
 
   const { addToast } = useToast();
+  const { cartItems, clearCart } = useCart();
 
   const handleScanInvoice = () => {
     setIsInvoiceModalOpen(true);
@@ -64,8 +67,11 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  // Total count includes both dashboard selections and notification cart items
+  const totalCartCount = selectedPredictionIds.length + cartItems.length;
+
   const handleGenerateOrders = () => {
-    if (selectedPredictionIds.length > 0) {
+    if (totalCartCount > 0) {
       setShowOrderGenerator(true);
     } else {
       addToast(
@@ -74,6 +80,12 @@ const Dashboard: React.FC = () => {
         "Veuillez valider au moins une action."
       );
     }
+  };
+
+  const handleCloseOrderGenerator = () => {
+    setShowOrderGenerator(false);
+    // Clear notification cart after order generation
+    clearCart();
   };
 
   const todayDate = new Date().toLocaleDateString("fr-FR", {
@@ -86,10 +98,31 @@ const Dashboard: React.FC = () => {
     (pred) => !selectedPredictionIds.includes(pred.id)
   );
 
-  // For OrderGenerator
+  // For OrderGenerator - combine dashboard selections with notification cart items
   const selectedPredictions = MOCK_PREDICTIONS.filter((pred) =>
     selectedPredictionIds.includes(pred.id)
   );
+
+  // Convert cart items to Prediction-like objects for OrderGenerator
+  const cartPredictions: Prediction[] = cartItems.map((item) => {
+    const product = MOCK_PRODUCTS.find((p) => p.id === item.productId);
+    return {
+      id: item.id,
+      productId: item.productId,
+      productName: item.productName,
+      predictedDate: new Date().toISOString().split("T")[0],
+      predictedConsumption: item.quantity,
+      confidence: 0.95,
+      recommendation: {
+        action: "buy" as const,
+        quantity: item.quantity,
+        reason: `Depuis notifications - ${product?.category || "Stock"}`,
+      },
+    };
+  });
+
+  // Merge both sources
+  const allRecommendations = [...selectedPredictions, ...cartPredictions];
 
   return (
     <div className="dashboard-container">
@@ -120,13 +153,13 @@ const Dashboard: React.FC = () => {
               Menu
             </Button>
             <Button
-              variant={selectedPredictionIds.length > 0 ? "primary" : "outline"}
+              variant={totalCartCount > 0 ? "primary" : "outline"}
               size="sm"
               icon={<ShoppingBag size={14} />}
               onClick={handleGenerateOrders}
               className="generate-btn"
             >
-              Générer Commandes ({selectedPredictionIds.length})
+              Générer Commandes ({totalCartCount})
             </Button>
           </div>
         </div>
@@ -147,13 +180,13 @@ const Dashboard: React.FC = () => {
       {/* Modals */}
       <Modal
         isOpen={showOrderGenerator}
-        onClose={() => setShowOrderGenerator(false)}
+        onClose={handleCloseOrderGenerator}
         title="Générateur de Commandes"
         width="lg"
       >
         <OrderGenerator
-          recommendations={selectedPredictions}
-          onClose={() => setShowOrderGenerator(false)}
+          recommendations={allRecommendations}
+          onClose={handleCloseOrderGenerator}
         />
       </Modal>
 
